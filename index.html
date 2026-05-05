@@ -2790,7 +2790,9 @@ async function refreshFromSheets() {
     }
     if (json.trials) DB.trials=json.trials;
     if (json.onboarding) DB.onboarding=json.onboarding;
-    saveToStorage();
+    // Save locally only — do NOT call saveToStorage() here because that would
+    // immediately POST back to the sheet and cause a green→red flash.
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(DB));
     setSyncState('synced');
     renderCurrentPage();
     toast('Data pulled from Google Sheets ✅','success');
