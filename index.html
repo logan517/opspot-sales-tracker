@@ -1284,11 +1284,11 @@ function loadFromStorage() {
       const parsed = JSON.parse(saved);
       DB = { ...DB, ...parsed };
     }
-    const url = localStorage.getItem('opspot_sheets_url');
-    if (url) {
-      DB.sheetsUrl = url;
-      showSyncStatus();
-    }
+    const DEFAULT_SHEETS_URL = 'https://script.google.com/macros/s/AKfycby1qZgxXJWtkuFLMc6gK0kKuAiFQRUf4xrHbX8S7f9j1chSkYgwNh7VhozIWH0NHLz0/exec';
+    const url = localStorage.getItem('opspot_sheets_url') || DEFAULT_SHEETS_URL;
+    DB.sheetsUrl = url;
+    localStorage.setItem('opspot_sheets_url', url);
+    showSyncStatus();
   } catch(e) {}
 }
 
