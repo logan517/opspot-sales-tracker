@@ -2737,9 +2737,15 @@ async function syncToSheets() {
   if (!DB.sheetsUrl) return;
   setSyncState('loading');
   try {
-    await fetch(DB.sheetsUrl, {method:'POST',body:JSON.stringify({action:'sync',data:DB}),headers:{'Content-Type':'application/json'}});
+    // text/plain avoids a CORS preflight — Apps Script reads e.postData.contents
+    const res = await fetch(DB.sheetsUrl, {
+      method: 'POST', redirect: 'follow',
+      headers: {'Content-Type': 'text/plain'},
+      body: JSON.stringify({action:'sync', data:DB})
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
     setSyncState('synced');
-  } catch(e) { setSyncState('failed'); }
+  } catch(e) { console.error('Sync error:', e); setSyncState('failed'); }
 }
 
 async function refreshFromSheets() {
