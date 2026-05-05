@@ -1472,7 +1472,7 @@ function renderStageTable(tbodyId, list, stage) {
             <button class="btn-icon" title="Message history" onclick="openMsgHistory(${c.id})">📋</button>
             ${(DB.templates||[]).length?`<button class="btn-icon" title="Use template" onclick="openUseTemplate(${c.id})">📨</button>`:''}
             <button class="btn-icon" onclick="openEditContact(${c.id})">✏️</button>
-            ${nextS?`<button class="btn btn-sm btn-promote" onclick="promoteContact(${c.id},'${nextS}')">${nextStageLabel[stage]}</button>`:''}
+            ${nextS&&stage!=='discovery'?`<button class="btn btn-sm btn-promote" onclick="promoteContact(${c.id},'${nextS}')">${nextStageLabel[stage]}</button>`:''}
             ${stage==='discovery'?`<button class="btn btn-sm btn-promote" onclick="promoteToTrial(${c.id})" style="background:var(--teal-light);color:var(--teal)">→ Trial</button>`:''}
             <button class="btn btn-sm btn-freeze ${c.frozen?'frozen':''}" onclick="${c.frozen?`unfreezeContact(${c.id})`:`openFreezeModal(${c.id})`}">${c.frozen?'❄️ Unfreeze':'❄️ Freeze'}</button>
             <button class="btn-icon btn-danger-sm" onclick="deleteContact(${c.id})">🗑</button>
