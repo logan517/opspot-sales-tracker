@@ -1312,6 +1312,10 @@ function backfillMessageDates() {
 
 function backfillStageHistory() {
   DB.contacts.forEach(c => {
+    // v1 → v2: assign stage from the old replied boolean if stage is missing
+    if (!c.stage) {
+      c.stage = c.replied === 'Yes' ? 'qualified' : 'cold';
+    }
     if (!c.stageHistory) {
       c.stageHistory = [{stage: 'Added', date: c.addedAt ? new Date(c.addedAt).toISOString().split('T')[0] : today(), note: 'Contact created'}];
     }
@@ -3234,8 +3238,23 @@ async function refreshFromSheets() {
     if (Array.isArray(json.trials))   DB.trials   = json.trials;
     if (json.nextContactId) DB.nextContactId = json.nextContactId;
     if (json.nextTrialId)   DB.nextTrialId   = json.nextTrialId;
+    // v1 → v2: auto-migrate contacts that lack the stage field
+    // (v1 used replied:"Yes/No"; v2 uses stage:"qualified"/"cold"/etc.)
+    let migrated = false;
+    DB.contacts = DB.contacts.map(c => {
+      if (!c.stage) {
+        c.stage = c.replied === 'Yes' ? 'qualified' : 'cold';
+        if (!c.stageHistory) {
+          c.stageHistory = [{ stage: c.stage === 'qualified' ? 'Qualified' : 'Cold Lead', date: today(), note: 'Migrated from v1' }];
+        }
+        migrated = true;
+      }
+      return c;
+    });
     // Persist locally so offline mode has latest
     localStorage.setItem('opspot_db', JSON.stringify(DB));
+    // If we just upgraded v1 data, write the v2 format back to Sheets
+    if (migrated && DB.sheetsUrl) syncToSheets();
     updateBrandDatalist();
     updateAllBadges();
     renderCurrentPage();
