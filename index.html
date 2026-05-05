@@ -2769,7 +2769,25 @@ async function refreshFromSheets() {
   try {
     const res=await fetch(DB.sheetsUrl+'?action=get');
     const json=await res.json();
-    if (json.contacts) { DB.contacts=json.contacts; backfillStageHistory(); }
+    if (json.contacts) {
+      // Merge remote contacts with local, preserving the more advanced stage.
+      // This prevents a sheet with stale v1 data from reverting moves made locally.
+      const STAGE_ORDER = ['outreach','qualified','discovery','trials','onboarding'];
+      const local = DB.contacts;
+      DB.contacts = json.contacts.map(rc => {
+        const lc = local.find(x => x.id === rc.id);
+        if (lc) {
+          const remoteStage = rc.stage || (rc.replied==='Yes' ? 'qualified' : 'outreach');
+          const localStage  = lc.stage  || 'outreach';
+          if (STAGE_ORDER.indexOf(localStage) > STAGE_ORDER.indexOf(remoteStage)) {
+            rc.stage = lc.stage;
+            rc.stageHistory = lc.stageHistory;
+          }
+        }
+        return rc;
+      });
+      backfillStageHistory();
+    }
     if (json.trials) DB.trials=json.trials;
     if (json.onboarding) DB.onboarding=json.onboarding;
     saveToStorage();
