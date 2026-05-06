@@ -2048,11 +2048,13 @@ function renderFollowups() {
   const connected = list.filter(c=>c.linkedin==='Yes'&&(!c.messages||c.messages===0));
   const notConnected = list.filter(c=>c.linkedin!=='Yes'&&(!c.messages||c.messages===0));
 
+  const frozen = DB.contacts.filter(c=>c.frozen);
   document.getElementById('followup-metrics').innerHTML = `
     ${mchip('Overdue (14+ days)',overdue.length,'red')}
     ${mchip('Due soon (10–13d)',dueSoon.length,'amber')}
     ${mchip('Ready to message',connected.length,'green')}
     ${mchip('Not yet connected',notConnected.length)}
+    ${frozen.length?mchip('Frozen',frozen.length,''):''}
   `;
 
   const scroll = document.getElementById('followup-scroll');
@@ -2110,6 +2112,30 @@ function renderFollowups() {
     </div>`;
     scroll.appendChild(div);
   });
+
+  // Frozen contacts section
+  if (frozen.length) {
+    const frozenDiv = document.createElement('div');
+    frozenDiv.className = 'followup-section';
+    frozenDiv.innerHTML = `<h2>❄️ Frozen <span class="badge badge-gray">${frozen.length}</span></h2>
+    <div class="followup-cards">${frozen.map(c=>`
+      <div class="fu-card" style="opacity:.75;border-left:3px solid #93c5fd">
+        <div class="fc-brand">${esc(c.brand)}</div>
+        <div class="fc-contact">${esc(c.contact)}${c.role?' · '+esc(c.role):''}</div>
+        ${c.frozenReason?`<div style="font-size:11px;color:var(--text-muted);margin-top:4px">Reason: ${esc(c.frozenReason)}</div>`:''}
+        ${c.frozenAt?`<div style="font-size:11px;color:var(--text-muted);margin-top:2px">Frozen: ${fmtDate(c.frozenAt)}</div>`:''}
+        <div class="fc-tags" style="margin-top:6px">
+          ${c.region?`<span class="badge badge-blue">${esc(c.region)}</span>`:''}
+          ${c.sector?`<span class="badge badge-gray">${esc(c.sector)}</span>`:''}
+          <span class="badge badge-gray">${esc(STAGE_LABELS[c.stage]||c.stage)}</span>
+        </div>
+        <div style="margin-top:10px" onclick="event.stopPropagation()">
+          <button class="btn btn-sm btn-secondary" onclick="unfreezeContact(${c.id})">↩ Unfreeze</button>
+        </div>
+      </div>`).join('')}
+    </div>`;
+    scroll.appendChild(frozenDiv);
+  }
 }
 
 // ===================== TRIAL PROGRESS =====================
