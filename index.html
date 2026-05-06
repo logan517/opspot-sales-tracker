@@ -461,8 +461,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
     <div class="nav-item-left"><span class="nav-icon">📡</span> Activity</div>
   </div>
 
+  <!-- Settings -->
+  <div style="padding:8px 12px;margin-top:auto">
+    <button onclick="openModal('settings-modal')" style="width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:6px 10px;color:rgba(255,255,255,.6);font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;text-align:left;display:flex;align-items:center;gap:6px">⚙️ Settings &amp; PINs</button>
+  </div>
+
   <!-- Google Sheets -->
-  <div style="padding:12px;margin-top:auto;border-top:1px solid rgba(255,255,255,.08)">
+  <div style="padding:12px;border-top:1px solid rgba(255,255,255,.08)">
     <div id="sheets-connect-area">
       <div style="font-size:10px;font-weight:600;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Google Sheets</div>
       <input type="text" id="sheets-url-input" placeholder="Paste Apps Script URL…" style="width:100%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:5px;padding:5px 7px;color:#fff;font-size:11px;font-family:'DM Sans',sans-serif;outline:none">
@@ -1076,8 +1081,8 @@ let pendingFreezeId = null;
 let pendingBulkTable = null;
 
 const SALES_PAGES = ['outreach','qualified','discovery','trials','onboarding','followups','trial-progress','templates'];
-const CORRECT_PIN   = '1111';
-const ACTIVITY_PIN  = '2222';
+function getSalesPin() { return localStorage.getItem('opspot_sales_pin') || '1111'; }
+function getActivityPin() { return localStorage.getItem('opspot_activity_pin') || '2222'; }
 
 const REGIONS = ['UK','ANZ','Europe','North America','South America','Africa','Asia','Middle East'];
 
@@ -1118,6 +1123,8 @@ function loadFromStorage() {
 }
 
 function saveToStorage() {
+  const who = localStorage.getItem('opspot_user_v2');
+  if (who) { DB.lastEditedBy = who; DB.lastEditedAt = new Date().toISOString(); }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(DB));
   if (DB.sheetsUrl) syncToSheets();
 }
@@ -1129,6 +1136,8 @@ function backfillStageHistory() {
     if (!c.stageHistory) c.stageHistory = [{stage: c.stage==='qualified'?'Qualified':'Outreach', date: c.addedAt ? new Date(c.addedAt).toISOString().split('T')[0] : today(), note:'Contact created'}];
     if (!c.messageLog) c.messageLog = [];
     c.messageLog.forEach(m => { if (!m.type) m.type='message'; });
+    // Reconcile integer message count with log length to keep them in sync
+    c.messages = c.messageLog.filter(m => !m.type || m.type === 'message').length;
   });
 }
 
@@ -1193,7 +1202,7 @@ function updateLockDots() {
 }
 
 function checkPin() {
-  const expected = lockSection === 'activity' ? ACTIVITY_PIN : CORRECT_PIN;
+  const expected = lockSection === 'activity' ? getActivityPin() : getSalesPin();
   if (lockPin === expected) {
     document.getElementById('lock-overlay').classList.remove('open');
     if (lockSection === 'activity') {
@@ -1464,7 +1473,7 @@ function renderStageTable(tbodyId, list, stage) {
     const checked = sel.has(c.id)?'checked':'';
 
     const frozenBadge = c.frozen
-      ? `<span class="frozen-badge" title="${esc(c.frozenReason||'')}">❄️ Frozen${c.frozenReason?': '+esc(c.frozenReason.substring(0,20)):''}</span>`
+      ? `<span class="frozen-badge" title="${esc(c.frozenReason||'')}${c.frozenAt?' (frozen '+c.frozenAt+')':''}">❄️ Frozen${c.frozenReason?': '+esc(c.frozenReason.substring(0,20)):''}</span>`
       : '';
 
     return `<tr class="${rowClass}" id="cr-${c.id}">
@@ -1515,6 +1524,7 @@ function doFreeze(id) {
   const reason = document.getElementById('freeze-reason-input').value.trim();
   c.frozen = true;
   c.frozenReason = reason;
+  c.frozenAt = today();
   if (!c.stageHistory) c.stageHistory=[];
   c.stageHistory.push({stage:'Frozen', date:today(), note: reason||'Lead frozen'});
   logActivity('updated', `${c.contact||c.brand} frozen${reason?' — '+reason:''}`);
@@ -2762,8 +2772,12 @@ function setSyncState(state) {
   const label=document.getElementById('sync-label');
   if (!pill) return;
   pill.className='';
-  if (state==='synced') { pill.classList.add('synced');if(dot)dot.style.background='#4ade80';if(label)label.textContent='Synced'; }
-  else if (state==='failed') { pill.classList.add('failed');if(dot)dot.style.background='#f87171';if(label)label.textContent='Sync failed'; }
+  if (state==='synced') {
+    const now=new Date(), hh=now.getHours().toString().padStart(2,'0'), mm=now.getMinutes().toString().padStart(2,'0');
+    const who=localStorage.getItem('opspot_user_v2');
+    pill.classList.add('synced');if(dot)dot.style.background='#4ade80';
+    if(label)label.textContent=`Synced ${hh}:${mm}${who?' · '+who:''}`;
+  } else if (state==='failed') { pill.classList.add('failed');if(dot)dot.style.background='#f87171';if(label)label.textContent='Sync failed'; }
   else { pill.classList.add('loading');if(dot)dot.style.background='#fbbf24';if(label)label.textContent='Syncing…'; }
   pill.style.display='flex';
 }
@@ -2822,7 +2836,15 @@ async function refreshFromSheets() {
 
 // ===================== MODALS =====================
 function openModal(id) { document.getElementById(id).classList.add('open'); }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function closeModal(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.remove('open');
+  el.querySelectorAll('input:not([type=checkbox]):not([type=radio]),select,textarea').forEach(f => { f.value = ''; });
+  if (id === 'contact-modal') editingContactId = null;
+  if (id === 'trial-modal') editingTrialId = null;
+  if (id === 'onboarding-modal') editingOnboardingId = null;
+}
 document.querySelectorAll('.modal-overlay').forEach(el=>{
   el.addEventListener('click',e=>{if(e.target===el)el.classList.remove('open');});
 });
@@ -2876,8 +2898,50 @@ function loadSampleData() {
   saveToStorage();
 }
 
+// ===================== SETTINGS / PIN MANAGEMENT =====================
+function openSettingsModal() {
+  document.getElementById('set-sales-pin').value = '';
+  document.getElementById('set-activity-pin').value = '';
+  document.getElementById('set-pin-msg').textContent = '';
+  openModal('settings-modal');
+}
+
+function saveSettings() {
+  const salesPin = document.getElementById('set-sales-pin').value.trim();
+  const activityPin = document.getElementById('set-activity-pin').value.trim();
+  const msg = document.getElementById('set-pin-msg');
+  if (salesPin && !/^\d{4}$/.test(salesPin)) { msg.textContent = 'Sales PIN must be exactly 4 digits.'; return; }
+  if (activityPin && !/^\d{4}$/.test(activityPin)) { msg.textContent = 'Activity PIN must be exactly 4 digits.'; return; }
+  if (salesPin) localStorage.setItem('opspot_sales_pin', salesPin);
+  if (activityPin) localStorage.setItem('opspot_activity_pin', activityPin);
+  msg.style.color = '#4ade80';
+  msg.textContent = 'PINs saved ✓';
+  setTimeout(() => closeModal('settings-modal'), 900);
+}
+
 // ===================== START =====================
 init();
 </script>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay" id="settings-modal">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-header"><h3>Settings &amp; PINs</h3><button class="modal-close" onclick="closeModal('settings-modal')">✕</button></div>
+    <div class="modal-body" style="display:flex;flex-direction:column;gap:14px">
+      <p style="font-size:12px;color:var(--text-muted);margin:0">Leave a field blank to keep the current PIN unchanged.</p>
+      <div>
+        <label class="form-label">Sales pipeline PIN (4 digits)</label>
+        <input id="set-sales-pin" type="password" maxlength="4" inputmode="numeric" placeholder="Enter new PIN" class="form-input">
+      </div>
+      <div>
+        <label class="form-label">Activity log PIN (4 digits)</label>
+        <input id="set-activity-pin" type="password" maxlength="4" inputmode="numeric" placeholder="Enter new PIN" class="form-input">
+      </div>
+      <div id="set-pin-msg" style="font-size:12px;color:#f87171;min-height:16px"></div>
+    </div>
+    <div class="modal-footer"><button class="btn-secondary" onclick="closeModal('settings-modal')">Cancel</button><button class="btn-primary" onclick="saveSettings()">Save PINs</button></div>
+  </div>
+</div>
+
 </body>
 </html>
