@@ -256,7 +256,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 .btn-bulk-danger{background:rgba(220,38,38,.35);color:#fca5a5}
 .btn-bulk-danger:hover{background:rgba(220,38,38,.55)}
 /* Inline edit input */
-.inline-input{border:1px solid var(--blue);border-radius:4px;padding:3px 7px;font-family:'DM Sans',sans-serif;font-size:12px;width:100%;outline:none}
+.inline-input{border:1px solid transparent;border-radius:4px;padding:3px 7px;font-family:'DM Sans',sans-serif;font-size:12px;width:100%;outline:none;background:transparent;cursor:pointer}
+.inline-input:hover{border-color:var(--border);background:var(--white)}
+.inline-input:focus{border-color:var(--blue);background:var(--white)}
 /* Toast */
 #toast-container{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px}
 .toast{background:var(--navy);color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.2);animation:slideIn .25s ease;display:flex;align-items:center;gap:8px}
