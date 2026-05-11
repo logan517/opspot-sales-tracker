@@ -1130,6 +1130,11 @@ function saveToStorage() {
 }
 
 function backfillStageHistory() {
+  // Coerce all IDs to numbers — Sheets can return them as strings, breaking strict === lookups
+  DB.contacts.forEach(c => { c.id = +c.id || c.id; });
+  DB.trials.forEach(t => { t.id = +t.id || t.id; });
+  DB.onboarding.forEach(o => { o.id = +o.id || o.id; });
+
   DB.contacts.forEach(c => {
     // v1 → v2: map the old replied:"Yes/No" boolean to a proper stage
     if (!c.stage) c.stage = c.replied === 'Yes' ? 'qualified' : 'outreach';
@@ -1679,7 +1684,8 @@ function deleteOnboarding(id) {
 }
 
 function toggleLinkedin(id) {
-  const c = DB.contacts.find(x=>x.id===id);
+  const nid = +id;
+  const c = DB.contacts.find(x=>+x.id===nid);
   if (!c) return;
   c.linkedin = c.linkedin==='Yes'?'No':'Yes';
   saveToStorage();
@@ -2849,8 +2855,8 @@ async function refreshFromSheets() {
       });
       backfillStageHistory();
     }
-    if (json.trials) DB.trials=json.trials;
-    if (json.onboarding) DB.onboarding=json.onboarding;
+    if (json.trials) { DB.trials=json.trials; DB.trials.forEach(t=>{t.id=+t.id||t.id;}); }
+    if (json.onboarding) { DB.onboarding=json.onboarding; DB.onboarding.forEach(o=>{o.id=+o.id||o.id;}); }
     // Save locally only — do NOT call saveToStorage() here because that would
     // immediately POST back to the sheet and cause a green→red flash.
     localStorage.setItem(STORAGE_KEY, JSON.stringify(DB));
