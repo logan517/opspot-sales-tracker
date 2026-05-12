@@ -2100,8 +2100,8 @@ function renderOnbGroupsView() {
     const col = onbPctColor(pct);
     const siteCount = (g.sites||[]).length;
     const done = (g.sites||[]).filter(s=>onbSiteSteps(s).pct>=100).length;
-    return `<div class="onb2-group-card" onclick="onbDrill(${g.id})">
-      <button class="gc-del" onclick="event.stopPropagation();deleteOnb2Group(${g.id})" title="Delete group">🗑</button>
+    return `<div class="onb2-group-card" onclick="onbDrill('${g.id}')">
+      <button class="gc-del" onclick="event.stopPropagation();deleteOnb2Group('${g.id}')" title="Delete group">🗑</button>
       <div class="gc-brand">${esc(g.brand)}</div>
       <div class="gc-meta">${[g.contact,g.owner?'Owner: '+g.owner:''].filter(Boolean).map(esc).join(' · ')}</div>
       <div class="onb2-pbar-wrap">
@@ -2113,7 +2113,7 @@ function renderOnbGroupsView() {
         <span class="gc-stat">✅ ${done} complete</span>
         ${g.region?`<span class="gc-stat">🌍 ${esc(displayRegion(g.region))}</span>`:''}
       </div>
-      <button class="gc-add-site" onclick="event.stopPropagation();openAddOnb2Site(${g.id})">+ Add site</button>
+      <button class="gc-add-site" onclick="event.stopPropagation();openAddOnb2Site('${g.id}')">+ Add site</button>
     </div>`;
   }).join('')}</div>`;
 }
@@ -2125,7 +2125,7 @@ function renderOnbGroupView() {
   const g = (DB.onboardingGroups||[]).find(x=>x.id==onbNav.groupId);
   if (!g) { onbBack(); return; }
   if (title) title.innerHTML = `<button onclick="onbBack()" style="background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:15px;font-family:'DM Sans',sans-serif;padding:0">← Onboarding</button> <span style="color:var(--text-muted);margin:0 5px">/</span> ${esc(g.brand)}`;
-  if (tbr) tbr.innerHTML = `<button class="btn btn-secondary" onclick="openEditOnb2Group(${g.id})">✎ Edit group</button><button class="btn btn-primary" style="margin-left:8px" onclick="openAddOnb2Site(${g.id})">+ Add site</button>`;
+  if (tbr) tbr.innerHTML = `<button class="btn btn-secondary" onclick="openEditOnb2Group('${g.id}')">✎ Edit group</button><button class="btn btn-primary" style="margin-left:8px" onclick="openAddOnb2Site('${g.id}')">+ Add site</button>`;
   const pct = onbGroupPct(g);
   const col = onbPctColor(pct);
   const sites = g.sites||[];
@@ -2142,7 +2142,7 @@ function renderOnbGroupView() {
     <div class="onb2-sites-list" id="onb2-sites-list">
       ${sites.length?sites.map(s=>renderOnbSiteCard(g.id,s)).join(''):`<div class="empty-state" style="padding:40px 0"><div class="es-icon">🏪</div><p>No sites yet for ${esc(g.brand)}. Add the first site to start tracking.</p></div>`}
     </div>
-    <button class="onb2-add-site-btn" onclick="openAddOnb2Site(${g.id})">+ Add another site</button>
+    <button class="onb2-add-site-btn" onclick="openAddOnb2Site('${g.id}')">+ Add another site</button>
   `;
 }
 
