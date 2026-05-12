@@ -349,12 +349,68 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 .lock-err{color:var(--red);font-size:12px;font-weight:600;height:16px;margin-top:-8px;margin-bottom:8px}
 [data-tip]{position:relative}
 [data-tip]:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 5px);left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;font-size:11px;padding:4px 8px;border-radius:5px;white-space:nowrap;pointer-events:none;z-index:999}
-/* Onboarding page */
-.onb-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;padding:0 28px 28px;overflow-y:auto}
-.onb-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:18px;border-top:3px solid var(--green)}
-.onb-card-brand{font-size:15px;font-weight:700;color:var(--navy)}
-.onb-card-contact{font-size:12px;color:var(--text-muted);margin-top:2px}
-.onb-card-footer{display:flex;align-items:center;gap:6px;margin-top:12px;flex-wrap:wrap}
+/* Onboarding V2 */
+.onb2-wrap{padding:0 28px 28px;overflow:auto;flex:1}
+.onb2-group-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.onb2-group-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:18px 20px;cursor:pointer;transition:box-shadow .15s,border-color .15s;position:relative}
+.onb2-group-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.07);border-color:#d1cec9}
+.onb2-group-card .gc-brand{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:2px}
+.onb2-group-card .gc-meta{font-size:12px;color:var(--text-muted);margin-bottom:12px}
+.onb2-pbar-wrap{margin-bottom:8px}
+.onb2-pbar-label{display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:4px}
+.onb2-pbar{height:6px;background:#f0ede8;border-radius:3px;overflow:hidden}
+.onb2-pbar-fill{height:100%;border-radius:3px;transition:width .3s}
+.onb2-pbar-fill.pbar-red{background:var(--red)}
+.onb2-pbar-fill.pbar-amber{background:var(--amber)}
+.onb2-pbar-fill.pbar-green{background:var(--green)}
+.onb2-group-card .gc-stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.onb2-group-card .gc-stat{font-size:11px;color:var(--text-muted)}
+.onb2-group-card .gc-del{position:absolute;top:12px;right:12px;opacity:0;background:none;border:none;color:var(--red);cursor:pointer;font-size:14px;padding:4px;border-radius:4px;transition:opacity .15s}
+.onb2-group-card:hover .gc-del{opacity:1}
+.onb2-group-card .gc-add-site{display:flex;align-items:center;justify-content:center;gap:5px;padding:7px 12px;border:1px dashed var(--border);border-radius:8px;font-size:12px;color:var(--text-muted);cursor:pointer;margin-top:12px;background:none;width:100%;transition:all .15s;font-family:'DM Sans',sans-serif}
+.onb2-group-card .gc-add-site:hover{border-color:var(--blue);color:var(--blue)}
+.onb2-group-header{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:18px 22px;margin-bottom:16px}
+.onb2-group-header .gh-brand{font-size:18px;font-weight:700;color:var(--navy)}
+.onb2-group-header .gh-meta{font-size:13px;color:var(--text-muted);margin-top:2px}
+.onb2-sites-list{display:flex;flex-direction:column;gap:10px}
+.onb2-site-card{background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.onb2-site-header{display:flex;align-items:center;gap:10px;padding:14px 18px;cursor:pointer;user-select:none}
+.onb2-site-header:hover{background:#fafaf8}
+.onb2-site-header .sh-name{font-size:14px;font-weight:600;color:var(--navy);flex:1}
+.onb2-site-header .sh-pct{font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px}
+.onb2-site-header .sh-pct.pbar-red{background:var(--red-light);color:var(--red)}
+.onb2-site-header .sh-pct.pbar-amber{background:var(--amber-light);color:var(--amber)}
+.onb2-site-header .sh-pct.pbar-green{background:var(--green-light);color:var(--green)}
+.onb2-site-header .sh-chevron{color:var(--text-muted);font-size:12px;transition:transform .2s;flex-shrink:0}
+.onb2-site-header .sh-chevron.open{transform:rotate(90deg)}
+.onb2-site-body{padding:14px 18px 18px;border-top:1px solid var(--border)}
+.onb2-cl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:8px;margin-bottom:4px}
+.onb2-cl-item{display:flex;align-items:center;gap:8px;padding:9px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);cursor:pointer;transition:background .1s}
+.onb2-cl-item:hover{background:#eef3ff}
+.onb2-cl-item input[type=checkbox]{width:15px;height:15px;accent-color:var(--green);cursor:pointer;flex-shrink:0;pointer-events:none}
+.onb2-cl-item .cl-label{font-size:13px;color:var(--text);font-weight:500}
+.onb2-cl-item.cl-checked{background:var(--green-light);border-color:#86efac}
+.onb2-cl-item.cl-checked .cl-label{color:#065f46}
+.onb2-agg-section{margin-top:14px}
+.onb2-agg-section .agg-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-bottom:7px}
+.onb2-agg-pills{display:flex;flex-wrap:wrap;gap:6px}
+.onb2-agg-pill{padding:5px 11px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--white);color:var(--text-muted);transition:all .15s;user-select:none}
+.onb2-agg-pill:hover{border-color:var(--teal);color:var(--teal)}
+.onb2-agg-pill.agg-active{background:var(--teal-light);color:var(--teal);border-color:var(--teal)}
+.onb2-team-section{margin-top:14px}
+.onb2-team-section .team-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-bottom:7px}
+.onb2-team-row{display:flex;gap:8px}
+.onb2-team-btn{flex:1;padding:8px;border:1px solid var(--border);border-radius:8px;background:var(--white);color:var(--text-muted);font-size:13px;cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+.onb2-team-btn:hover{border-color:var(--blue);color:var(--blue)}
+.onb2-team-btn.team-active{background:var(--blue-light);color:var(--blue);border-color:var(--blue);font-weight:600}
+.onb2-notes-row{margin-top:14px}
+.onb2-notes-row .notes-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-bottom:4px}
+.onb2-notes-row textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-family:'DM Sans',sans-serif;font-size:13px;resize:vertical;background:var(--bg);color:var(--text);min-height:60px;box-sizing:border-box;outline:none}
+.onb2-notes-row textarea:focus{border-color:var(--blue)}
+.onb2-site-foot{display:flex;justify-content:flex-end;margin-top:12px}
+.onb2-site-del{padding:5px 12px;border:1px solid #fca5a5;border-radius:8px;background:var(--red-light);color:var(--red);font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.onb2-add-site-btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:13px;border:1px dashed var(--border);border-radius:12px;background:var(--white);color:var(--text-muted);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;margin-top:4px}
+.onb2-add-site-btn:hover{border-color:var(--blue);color:var(--blue)}
 </style>
 </head>
 <body>
@@ -680,32 +736,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
   <div class="page" id="page-onboarding">
     <div class="page-topbar">
       <div class="ptb-left">
-        <h1>Onboarding</h1>
-        <span class="region-pill" id="onboarding-region-pill">All regions</span>
+        <h1 id="onb2-title">Onboarding</h1>
       </div>
-      <div class="ptb-right">
-        <button class="btn btn-secondary" onclick="exportCSV('onboarding')">⬇ Export</button>
-        <button class="btn btn-primary" onclick="openAddOnboarding()">+ Add</button>
+      <div class="ptb-right" id="onb2-topbar-right">
+        <button class="btn btn-primary" onclick="openAddOnb2Group()">+ Add customer group</button>
       </div>
     </div>
     <div class="stage-header"><div class="stage-banner onboarding">🚀 Stage 5 of 5 — Onboarding. These are converted customers being set up on OpSpot.</div></div>
     <div class="metrics-bar-v2" id="onboarding-metrics"></div>
-    <div class="toolbar-card">
-      <div class="tc-search"><input type="text" id="onboarding-search" placeholder="Search brand, contact, owner…" oninput="renderOnboarding()"></div>
-      <select id="onboarding-sector-filter" onchange="renderOnboarding()">
-        <option value="">All sectors</option><option>Restaurant</option><option>Grocery</option><option>Other</option>
-      </select>
-      <span class="tc-count" id="onboarding-count-label">0 accounts</span>
-    </div>
-    <div class="table-wrap-v2">
-      <table class="table-v2" id="onboarding-table">
-        <thead><tr>
-          <th>Brand</th><th>Contact</th><th>Role</th><th>Region</th><th>Sector</th>
-          <th>Owner</th><th>Sites</th><th>Onboarding status</th><th>Notes</th><th></th>
-        </tr></thead>
-        <tbody id="onboarding-tbody"></tbody>
-      </table>
-    </div>
+    <div class="onb2-wrap" id="onb2-root"></div>
   </div>
 
   <!-- FOLLOW UPS PAGE -->
@@ -859,21 +898,21 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
   </div>
 </div>
 
-<!-- ONBOARDING MODAL -->
-<div class="modal-overlay" id="onboarding-modal">
-  <div class="modal">
+<!-- ONBOARDING GROUP MODAL -->
+<div class="modal-overlay" id="onb2-group-modal">
+  <div class="modal" style="max-width:480px">
     <div class="modal-header">
-      <h2 id="onboarding-modal-title">Add Onboarding</h2>
-      <button class="modal-close" onclick="closeModal('onboarding-modal')">✕</button>
+      <h2 id="onb2-group-modal-title">Add customer group</h2>
+      <button class="modal-close" onclick="closeModal('onb2-group-modal')">✕</button>
     </div>
     <div class="modal-body">
       <div class="form-grid">
-        <div class="form-group form-full"><label>Brand</label><input type="text" id="of-brand" list="brand-list-dl"></div>
-        <div class="form-group"><label>Contact</label><input type="text" id="of-contact"></div>
-        <div class="form-group"><label>Role</label><input type="text" id="of-role"></div>
+        <div class="form-group form-full"><label>Brand / Customer name</label><input type="text" id="onb2g-brand" list="brand-list-dl"></div>
+        <div class="form-group"><label>Contact</label><input type="text" id="onb2g-contact"></div>
+        <div class="form-group"><label>Role</label><input type="text" id="onb2g-role"></div>
         <div class="form-group">
           <label>Region</label>
-          <select id="of-region">
+          <select id="onb2g-region">
             <option value="">Select region</option>
             <option>UK</option><option>ANZ</option><option>Europe</option><option>North America</option>
             <option>South America</option><option>Africa</option><option>Asia</option><option>Middle East</option>
@@ -881,32 +920,32 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
         </div>
         <div class="form-group">
           <label>Sector</label>
-          <select id="of-sector"><option value="">Select sector</option><option>Restaurant</option><option>Grocery</option><option>Other</option></select>
+          <select id="onb2g-sector"><option value="">Select sector</option><option>Restaurant</option><option>Grocery</option><option>Other</option></select>
         </div>
-        <div class="form-group"><label>Owner</label><input type="text" id="of-owner"></div>
-        <div class="form-group"><label>No. of sites</label><input type="number" id="of-dealvalue" placeholder="0"></div>
-        <div class="form-group">
-          <label>Onboarding status</label>
-          <select id="of-status">
-            <option>Paperwork sent</option>
-            <option>Paperwork signed</option>
-            <option>Camera shipped</option>
-            <option>Camera installed</option>
-            <option>Cloud storage bought</option>
-            <option>Hub access</option>
-            <option>Workhorse set up</option>
-            <option>Team assigned (Innovalus)</option>
-            <option>Team assigned (Dagaz)</option>
-            <option>Claims after one week</option>
-            <option>Complete</option>
-          </select>
-        </div>
-        <div class="form-group form-full"><label>Notes</label><textarea id="of-notes" placeholder="Any notes…"></textarea></div>
+        <div class="form-group"><label>Owner</label><input type="text" id="onb2g-owner"></div>
+        <div class="form-group form-full"><label>Notes</label><textarea id="onb2g-notes" placeholder="Any notes…"></textarea></div>
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal('onboarding-modal')">Cancel</button>
-      <button class="btn btn-primary" onclick="saveOnboarding()">Save</button>
+      <button class="btn btn-secondary" onclick="closeModal('onb2-group-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveOnb2Group()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ONBOARDING SITE MODAL -->
+<div class="modal-overlay" id="onb2-site-modal">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-header">
+      <h2 id="onb2-site-modal-title">Add site</h2>
+      <button class="modal-close" onclick="closeModal('onb2-site-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group form-full"><label>Site name</label><input type="text" id="onb2s-name" placeholder="e.g. Manchester, London Bridge…"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('onb2-site-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveOnb2Site()">Add site</button>
     </div>
   </div>
 </div>
@@ -1056,7 +1095,8 @@ const STORAGE_KEY = 'opspot_db_v2';
 let DB = {
   contacts: [],   // stage field: 'outreach' | 'qualified' | 'discovery'
   trials: [],
-  onboarding: [],
+  onboarding: [],        // legacy flat array (kept for Sheets compat / migration source)
+  onboardingGroups: [],  // new two-level store: groups → sites
   nextContactId: 1,
   nextTrialId: 1,
   nextOnboardingId: 1,
@@ -1083,8 +1123,25 @@ let lockTarget = null;
 let lockSection = null;
 let pendingFreezeId = null;
 let pendingBulkTable = null;
+// Onboarding V2 state
+let onbNav = { level: 'groups', groupId: null, expandedSite: null };
+let addingOnbSiteForGroup = null;
+let editingOnbGroupId = null;
 
 const SALES_PAGES = ['outreach','qualified','discovery','trials','onboarding','followups','trial-progress','templates'];
+// Onboarding V2 checklist steps
+const ONB_STEPS = [
+  { key: 'contractSent',    label: 'Contract sent',    type: 'check' },
+  { key: 'contractSigned',  label: 'Contract signed',  type: 'check' },
+  { key: 'cameraShipped',   label: 'Camera shipped',   type: 'check' },
+  { key: 'cameraInstalled', label: 'Camera installed', type: 'check' },
+  { key: 'cloudStorage',    label: 'Cloud storage',    type: 'check' },
+  { key: 'crmSetUp',        label: 'CRM set up',       type: 'check' },
+  { key: 'aggregators',     label: 'Aggregators',      type: 'agg'   },
+  { key: 'teamAssigned',    label: 'Team assigned',    type: 'team'  },
+  { key: 'claimsReceived',  label: 'Claims received',  type: 'check' },
+];
+const ONB_AGGREGATORS = ['Uber Eats','DoorDash','Just Eat','Deliveroo','Grubhub','Postmates','Instacart','SkipTheDishes','Bolt Food','Rappi','Glovo'];
 function getSalesPin() { return localStorage.getItem('opspot_sales_pin') || '1111'; }
 function getActivityPin() { return localStorage.getItem('opspot_activity_pin') || '2222'; }
 
@@ -1097,6 +1154,7 @@ let selectedIds  = {outreach:new Set(),qualified:new Set(),discovery:new Set()};
 function init() {
   loadFromStorage();
   backfillStageHistory();
+  migrateOnbData();
   updateBrandDatalist();
   updateAllBadges();
   renderCurrentPage();
@@ -1117,6 +1175,7 @@ function loadFromStorage() {
       if (!Array.isArray(DB.contacts)) DB.contacts = [];
       if (!Array.isArray(DB.trials)) DB.trials = [];
       if (!Array.isArray(DB.onboarding)) DB.onboarding = [];
+      if (!Array.isArray(DB.onboardingGroups)) DB.onboardingGroups = [];
     }
     const DEFAULT_SHEETS_URL = 'https://script.google.com/macros/s/AKfycby1qZgxXJWtkuFLMc6gK0kKuAiFQRUf4xrHbX8S7f9j1chSkYgwNh7VhozIWH0NHLz0/exec';
     const url = localStorage.getItem('opspot_sheets_url_v2') || DEFAULT_SHEETS_URL;
@@ -1339,6 +1398,7 @@ function getBrands() {
   DB.contacts.forEach(c => { if(c.brand) brands.add(c.brand); });
   DB.trials.forEach(t => { if(t.brand) brands.add(t.brand); });
   DB.onboarding.forEach(o => { if(o.brand) brands.add(o.brand); });
+  (DB.onboardingGroups||[]).forEach(g => { if(g.brand) brands.add(g.brand); });
   return [...brands].sort();
 }
 
@@ -1355,7 +1415,7 @@ function updateAllBadges() {
   document.getElementById('badge-qualified').textContent = byStage('qualified');
   document.getElementById('badge-discovery').textContent = byStage('discovery');
   document.getElementById('badge-trials').textContent = DB.trials.length;
-  document.getElementById('badge-onboarding').textContent = DB.onboarding.length;
+  document.getElementById('badge-onboarding').textContent = (DB.onboardingGroups||[]).length;
   document.getElementById('badge-trial-progress').textContent = DB.trials.length;
   const tplBadge = document.getElementById('badge-templates');
   if (tplBadge) tplBadge.textContent = (DB.templates||[]).length;
@@ -1945,106 +2005,357 @@ function promoteToTrial(id) {
   openModal('trial-modal');
 }
 
-// ===================== ONBOARDING =====================
+// ===================== ONBOARDING V2 =====================
+// Data helpers
+function onbSiteSteps(site) {
+  let done = 0;
+  ONB_STEPS.forEach(s => {
+    if (s.type === 'agg') { if ((site.aggregators||[]).length > 0) done++; }
+    else if (s.type === 'team') { if (site.teamAssigned) done++; }
+    else { if (site[s.key]) done++; }
+  });
+  const total = ONB_STEPS.length;
+  return { done, total, pct: Math.round(done / total * 100) };
+}
+function onbGroupPct(group) {
+  if (!group.sites || !group.sites.length) return 0;
+  const sum = group.sites.reduce((s, site) => s + onbSiteSteps(site).pct, 0);
+  return Math.round(sum / group.sites.length);
+}
+function onbPctColor(pct) {
+  if (pct >= 100) return 'pbar-green';
+  if (pct === 0) return 'pbar-red';
+  return 'pbar-amber';
+}
+
+// Migration: convert old flat DB.onboarding records into onboardingGroups
+function migrateOnbData() {
+  if (!Array.isArray(DB.onboardingGroups)) DB.onboardingGroups = [];
+  if (DB.onboarding && DB.onboarding.length > 0) {
+    const OLD_STATUSES = ['Paperwork sent','Paperwork signed','Camera shipped','Camera installed','Cloud storage bought','Hub access','Workhorse set up','Team assigned (Innovalus)','Team assigned (Dagaz)','Claims after one week','Complete'];
+    const si = s => OLD_STATUSES.indexOf(s);
+    DB.onboarding.forEach(o => {
+      const alreadyMigrated = DB.onboardingGroups.some(g => g._migratedId == o.id);
+      if (alreadyMigrated) return;
+      const idx = si(o.status);
+      DB.onboardingGroups.push({
+        id: uid(),
+        _migratedId: o.id,
+        brand: o.brand||'',
+        contact: o.contact||'',
+        role: o.role||'',
+        region: o.region||'',
+        sector: o.sector||'',
+        owner: o.owner||'',
+        notes: o.notes||'',
+        addedAt: o.addedAt||Date.now(),
+        sites: [{
+          id: uid(),
+          name: o.brand||'Main site',
+          contractSent:    idx >= 0,
+          contractSigned:  idx >= 1,
+          cameraShipped:   idx >= 2,
+          cameraInstalled: idx >= 3,
+          cloudStorage:    idx >= 4,
+          crmSetUp:        idx >= 5,
+          aggregators: [],
+          teamAssigned: o.status==='Team assigned (Dagaz)'||o.status==='Complete'?'Dagaz':o.status==='Team assigned (Innovalus)'?'Innovalus':'',
+          claimsReceived: idx >= 9,
+          notes: '',
+        }]
+      });
+    });
+    DB.onboarding = [];
+    saveToStorage();
+  }
+}
+
+// Rendering
+function renderOnboarding() {
+  const groups = DB.onboardingGroups||[];
+  const totalSites = groups.reduce((s,g)=>s+(g.sites||[]).length,0);
+  const completedGroups = groups.filter(g=>onbGroupPct(g)>=100).length;
+  document.getElementById('onboarding-metrics').innerHTML = `
+    ${mcv2('Customer groups',groups.length,'')}
+    ${mcv2('Total sites',totalSites,'')}
+    ${mcv2('Fully complete',completedGroups,'')}
+  `;
+  if (onbNav.level === 'groups') renderOnbGroupsView();
+  else renderOnbGroupView();
+}
+
+function renderOnbGroupsView() {
+  const root = document.getElementById('onb2-root');
+  const title = document.getElementById('onb2-title');
+  const tbr = document.getElementById('onb2-topbar-right');
+  if (title) title.textContent = 'Onboarding';
+  if (tbr) tbr.innerHTML = `<button class="btn btn-primary" onclick="openAddOnb2Group()">+ Add customer group</button>`;
+  const groups = DB.onboardingGroups||[];
+  if (!groups.length) {
+    root.innerHTML = `<div class="empty-state" style="padding:60px 0"><div class="es-icon">🚀</div><p>No onboarding groups yet. Add your first customer group to get started.</p></div>`;
+    return;
+  }
+  root.innerHTML = `<div class="onb2-group-grid">${groups.map(g=>{
+    const pct = onbGroupPct(g);
+    const col = onbPctColor(pct);
+    const siteCount = (g.sites||[]).length;
+    const done = (g.sites||[]).filter(s=>onbSiteSteps(s).pct>=100).length;
+    return `<div class="onb2-group-card" onclick="onbDrill(${g.id})">
+      <button class="gc-del" onclick="event.stopPropagation();deleteOnb2Group(${g.id})" title="Delete group">🗑</button>
+      <div class="gc-brand">${esc(g.brand)}</div>
+      <div class="gc-meta">${[g.contact,g.owner?'Owner: '+g.owner:''].filter(Boolean).map(esc).join(' · ')}</div>
+      <div class="onb2-pbar-wrap">
+        <div class="onb2-pbar-label"><span>Overall progress</span><span>${pct}%</span></div>
+        <div class="onb2-pbar"><div class="onb2-pbar-fill ${col}" style="width:${pct}%"></div></div>
+      </div>
+      <div class="gc-stats">
+        <span class="gc-stat">📍 ${siteCount} site${siteCount!==1?'s':''}</span>
+        <span class="gc-stat">✅ ${done} complete</span>
+        ${g.region?`<span class="gc-stat">🌍 ${esc(displayRegion(g.region))}</span>`:''}
+      </div>
+      <button class="gc-add-site" onclick="event.stopPropagation();openAddOnb2Site(${g.id})">+ Add site</button>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+function renderOnbGroupView() {
+  const root = document.getElementById('onb2-root');
+  const title = document.getElementById('onb2-title');
+  const tbr = document.getElementById('onb2-topbar-right');
+  const g = (DB.onboardingGroups||[]).find(x=>x.id==onbNav.groupId);
+  if (!g) { onbBack(); return; }
+  if (title) title.innerHTML = `<button onclick="onbBack()" style="background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:15px;font-family:'DM Sans',sans-serif;padding:0">← Onboarding</button> <span style="color:var(--text-muted);margin:0 5px">/</span> ${esc(g.brand)}`;
+  if (tbr) tbr.innerHTML = `<button class="btn btn-secondary" onclick="openEditOnb2Group(${g.id})">✎ Edit group</button><button class="btn btn-primary" style="margin-left:8px" onclick="openAddOnb2Site(${g.id})">+ Add site</button>`;
+  const pct = onbGroupPct(g);
+  const col = onbPctColor(pct);
+  const sites = g.sites||[];
+  root.innerHTML = `
+    <div class="onb2-group-header">
+      <div class="gh-brand">${esc(g.brand)}</div>
+      <div class="gh-meta">${[g.contact,g.role,displayRegion(g.region),g.sector,g.owner?'Owner: '+g.owner:''].filter(Boolean).map(esc).join(' · ')}</div>
+      <div style="margin-top:12px;max-width:420px">
+        <div class="onb2-pbar-label"><span>Overall progress</span><span>${pct}%</span></div>
+        <div class="onb2-pbar"><div class="onb2-pbar-fill ${col}" style="width:${pct}%"></div></div>
+      </div>
+      ${g.notes?`<div style="margin-top:8px;font-size:13px;color:var(--text-muted)">${esc(g.notes)}</div>`:''}
+    </div>
+    <div class="onb2-sites-list" id="onb2-sites-list">
+      ${sites.length?sites.map(s=>renderOnbSiteCard(g.id,s)).join(''):`<div class="empty-state" style="padding:40px 0"><div class="es-icon">🏪</div><p>No sites yet for ${esc(g.brand)}. Add the first site to start tracking.</p></div>`}
+    </div>
+    <button class="onb2-add-site-btn" onclick="openAddOnb2Site(${g.id})">+ Add another site</button>
+  `;
+}
+
+function renderOnbSiteCard(groupId, site) {
+  const {done,total,pct} = onbSiteSteps(site);
+  const col = onbPctColor(pct);
+  const isOpen = String(onbNav.expandedSite) === String(site.id);
+  const checkSteps = ONB_STEPS.filter(s=>s.type==='check');
+  return `<div class="onb2-site-card">
+    <div class="onb2-site-header" onclick="onbToggleSite('${site.id}')">
+      <span class="sh-name">${esc(site.name||'Unnamed site')}</span>
+      <span class="sh-pct ${col}">${pct}% · ${done}/${total}</span>
+      <span class="sh-chevron${isOpen?' open':''}">▶</span>
+    </div>
+    <div class="onb2-site-body" id="onb2-panel-${site.id}" style="display:${isOpen?'block':'none'}">
+      <div class="onb2-cl-grid">
+        ${checkSteps.map(s=>`<div class="onb2-cl-item${site[s.key]?' cl-checked':''}" onclick="onbSetField('${groupId}','${site.id}','${s.key}',${!site[s.key]})">
+          <input type="checkbox" ${site[s.key]?'checked':''} onclick="event.stopPropagation()">
+          <span class="cl-label">${esc(s.label)}</span>
+        </div>`).join('')}
+      </div>
+      <div class="onb2-agg-section">
+        <div class="agg-title">Aggregators</div>
+        <div class="onb2-agg-pills">${ONB_AGGREGATORS.map(a=>`<span class="onb2-agg-pill${(site.aggregators||[]).includes(a)?' agg-active':''}" onclick="onbToggleAgg('${groupId}','${site.id}','${a.replace(/'/g,"\\'")}');">${esc(a)}</span>`).join('')}</div>
+      </div>
+      <div class="onb2-team-section">
+        <div class="team-title">Team assigned</div>
+        <div class="onb2-team-row">
+          <button class="onb2-team-btn${site.teamAssigned==='Dagaz'?' team-active':''}" onclick="onbSetField('${groupId}','${site.id}','teamAssigned','${site.teamAssigned==='Dagaz'?'':'Dagaz'}')">Dagaz</button>
+          <button class="onb2-team-btn${site.teamAssigned==='Innovalus'?' team-active':''}" onclick="onbSetField('${groupId}','${site.id}','teamAssigned','${site.teamAssigned==='Innovalus'?'':'Innovalus'}')">Innovalus</button>
+        </div>
+      </div>
+      <div class="onb2-notes-row">
+        <div class="notes-title">Site notes</div>
+        <textarea placeholder="Any notes for this site…" onchange="onbSetField('${groupId}','${site.id}','notes',this.value)">${esc(site.notes||'')}</textarea>
+      </div>
+      <div class="onb2-site-foot">
+        <button class="onb2-site-del" onclick="deleteOnb2Site('${groupId}','${site.id}')">🗑 Delete site</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+// Navigation
+function onbDrill(groupId) {
+  onbNav = { level: 'group', groupId: groupId, expandedSite: null };
+  renderOnboarding();
+}
+function onbBack() {
+  onbNav = { level: 'groups', groupId: null, expandedSite: null };
+  renderOnboarding();
+}
+function onbToggleSite(siteId) {
+  onbNav.expandedSite = String(onbNav.expandedSite) === String(siteId) ? null : siteId;
+  // Toggle panel visibility without full re-render
+  document.querySelectorAll('[id^="onb2-panel-"]').forEach(p=>p.style.display='none');
+  document.querySelectorAll('.sh-chevron').forEach(c=>c.classList.remove('open'));
+  if (onbNav.expandedSite) {
+    const p = document.getElementById('onb2-panel-'+onbNav.expandedSite);
+    if (p) p.style.display='block';
+    // Find matching chevron by traversing parent
+    if (p) {
+      const hdr = p.previousElementSibling;
+      if (hdr) { const ch = hdr.querySelector('.sh-chevron'); if(ch) ch.classList.add('open'); }
+    }
+  }
+}
+
+// Field setters
+function onbSetField(groupId, siteId, key, value) {
+  const g = (DB.onboardingGroups||[]).find(x=>String(x.id)===String(groupId));
+  if (!g) return;
+  const s = (g.sites||[]).find(x=>String(x.id)===String(siteId));
+  if (!s) return;
+  s[key] = value;
+  saveToStorage();
+  updateAllBadges();
+  // Re-render to update progress badges (keep site expanded)
+  renderOnboarding();
+}
+function onbToggleAgg(groupId, siteId, agg) {
+  const g = (DB.onboardingGroups||[]).find(x=>String(x.id)===String(groupId));
+  if (!g) return;
+  const s = (g.sites||[]).find(x=>String(x.id)===String(siteId));
+  if (!s) return;
+  if (!s.aggregators) s.aggregators = [];
+  const idx = s.aggregators.indexOf(agg);
+  if (idx >= 0) s.aggregators.splice(idx,1); else s.aggregators.push(agg);
+  saveToStorage();
+  updateAllBadges();
+  renderOnboarding();
+}
+
+// Group CRUD
+function openAddOnb2Group() {
+  editingOnbGroupId = null;
+  document.getElementById('onb2-group-modal-title').textContent = 'Add customer group';
+  ['onb2g-brand','onb2g-contact','onb2g-role','onb2g-owner','onb2g-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('onb2g-region').value='';
+  document.getElementById('onb2g-sector').value='';
+  openModal('onb2-group-modal');
+}
+function openEditOnb2Group(groupId) {
+  const g = (DB.onboardingGroups||[]).find(x=>x.id==groupId);
+  if (!g) return;
+  editingOnbGroupId = groupId;
+  document.getElementById('onb2-group-modal-title').textContent = 'Edit customer group';
+  document.getElementById('onb2g-brand').value = g.brand||'';
+  document.getElementById('onb2g-contact').value = g.contact||'';
+  document.getElementById('onb2g-role').value = g.role||'';
+  document.getElementById('onb2g-region').value = g.region||'';
+  document.getElementById('onb2g-sector').value = g.sector||'';
+  document.getElementById('onb2g-owner').value = g.owner||'';
+  document.getElementById('onb2g-notes').value = g.notes||'';
+  openModal('onb2-group-modal');
+}
+function saveOnb2Group() {
+  const brand = document.getElementById('onb2g-brand').value.trim();
+  if (!brand) { toast('Brand is required','error'); return; }
+  const data = {
+    brand,
+    contact: document.getElementById('onb2g-contact').value.trim(),
+    role: document.getElementById('onb2g-role').value.trim(),
+    region: document.getElementById('onb2g-region').value,
+    sector: document.getElementById('onb2g-sector').value,
+    owner: document.getElementById('onb2g-owner').value.trim(),
+    notes: document.getElementById('onb2g-notes').value.trim(),
+  };
+  if (editingOnbGroupId) {
+    const g = (DB.onboardingGroups||[]).find(x=>x.id==editingOnbGroupId);
+    if (g) Object.assign(g, data);
+    toast('Group updated','success');
+  } else {
+    if (!DB.onboardingGroups) DB.onboardingGroups = [];
+    DB.onboardingGroups.push({ id: uid(), ...data, sites: [], addedAt: Date.now() });
+    logActivity('added', `${brand} added to Onboarding`);
+    toast(`${brand} added to Onboarding 🚀`,'success');
+  }
+  editingOnbGroupId = null;
+  saveToStorage();
+  closeModal('onb2-group-modal');
+  updateAllBadges();
+  renderCurrentPage();
+}
+function deleteOnb2Group(groupId) {
+  if (!confirm('Delete this customer group and all its sites? This cannot be undone.')) return;
+  const g = (DB.onboardingGroups||[]).find(x=>x.id==groupId);
+  if (g) logActivity('deleted', `Onboarding group deleted: ${g.brand}`);
+  DB.onboardingGroups = (DB.onboardingGroups||[]).filter(x=>x.id!=groupId);
+  saveToStorage();
+  updateAllBadges();
+  if (onbNav.groupId == groupId) onbBack();
+  else renderCurrentPage();
+  toast('Group deleted');
+}
+
+// Site CRUD
+function openAddOnb2Site(groupId) {
+  addingOnbSiteForGroup = groupId;
+  document.getElementById('onb2-site-modal-title').textContent = 'Add site';
+  document.getElementById('onb2s-name').value = '';
+  openModal('onb2-site-modal');
+}
+function saveOnb2Site() {
+  const name = document.getElementById('onb2s-name').value.trim();
+  if (!name) { toast('Site name is required','error'); return; }
+  const g = (DB.onboardingGroups||[]).find(x=>x.id==addingOnbSiteForGroup);
+  if (!g) return;
+  if (!g.sites) g.sites = [];
+  const newSite = { id: uid(), name, contractSent:false, contractSigned:false, cameraShipped:false, cameraInstalled:false, cloudStorage:false, crmSetUp:false, aggregators:[], teamAssigned:'', claimsReceived:false, notes:'' };
+  g.sites.push(newSite);
+  // Auto-expand the new site
+  onbNav.expandedSite = newSite.id;
+  toast(`Site "${name}" added`,'success');
+  addingOnbSiteForGroup = null;
+  saveToStorage();
+  closeModal('onb2-site-modal');
+  // Ensure we're in group drill-down view
+  if (onbNav.level !== 'group') { onbNav.level = 'group'; onbNav.groupId = g.id; }
+  renderCurrentPage();
+}
+function deleteOnb2Site(groupId, siteId) {
+  if (!confirm('Delete this site? This cannot be undone.')) return;
+  const g = (DB.onboardingGroups||[]).find(x=>x.id==groupId);
+  if (!g) return;
+  const s = (g.sites||[]).find(x=>x.id==siteId);
+  if (s) logActivity('deleted', `Onboarding site deleted: ${s.name}`);
+  g.sites = (g.sites||[]).filter(x=>x.id!=siteId);
+  if (String(onbNav.expandedSite) === String(siteId)) onbNav.expandedSite = null;
+  saveToStorage();
+  updateAllBadges();
+  renderCurrentPage();
+  toast('Site deleted');
+}
+
+// Promote from trials
 function promoteToOnboarding(trialId) {
   const t = DB.trials.find(x=>x.id===trialId);
   if (!t) return;
-  document.getElementById('onboarding-modal-title').textContent = 'Add to Onboarding';
-  editingOnboardingId = null;
-  document.getElementById('of-brand').value = t.brand||'';
-  document.getElementById('of-contact').value = t.contact||'';
-  document.getElementById('of-role').value = t.role||'';
-  document.getElementById('of-region').value = t.region||'';
-  document.getElementById('of-sector').value = t.sector||'';
-  document.getElementById('of-owner').value = t.owner||'';
-  document.getElementById('of-dealvalue').value = t.dealValue||'';
-  document.getElementById('of-status').value = 'Setting up';
-  document.getElementById('of-notes').value = '';
-  openModal('onboarding-modal');
+  editingOnbGroupId = null;
+  document.getElementById('onb2-group-modal-title').textContent = 'Add to Onboarding';
+  document.getElementById('onb2g-brand').value = t.brand||'';
+  document.getElementById('onb2g-contact').value = t.contact||'';
+  document.getElementById('onb2g-role').value = t.role||'';
+  document.getElementById('onb2g-region').value = t.region||'';
+  document.getElementById('onb2g-sector').value = t.sector||'';
+  document.getElementById('onb2g-owner').value = t.owner||'';
+  document.getElementById('onb2g-notes').value = '';
+  openModal('onb2-group-modal');
 }
 
-function openAddOnboarding() {
-  editingOnboardingId = null;
-  document.getElementById('onboarding-modal-title').textContent = 'Add to Onboarding';
-  ['of-brand','of-contact','of-role','of-owner','of-notes'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('of-region').value='';
-  document.getElementById('of-sector').value='';
-  document.getElementById('of-dealvalue').value='';
-  document.getElementById('of-status').value='Setting up';
-  openModal('onboarding-modal');
-}
-
-function saveOnboarding() {
-  const brand = document.getElementById('of-brand').value.trim();
-  if (!brand) { toast('Brand is required','error'); return; }
-  const data = {
-    brand, contact:document.getElementById('of-contact').value.trim(),
-    role:document.getElementById('of-role').value.trim(),
-    region:document.getElementById('of-region').value,
-    sector:document.getElementById('of-sector').value,
-    owner:document.getElementById('of-owner').value.trim(),
-    dealValue:parseFloat(document.getElementById('of-dealvalue').value)||0,
-    status:document.getElementById('of-status').value,
-    notes:document.getElementById('of-notes').value.trim(),
-  };
-  if (editingOnboardingId) {
-    const o = DB.onboarding.find(x=>x.id===editingOnboardingId);
-    if (o) Object.assign(o, data);
-    toast('Onboarding updated','success');
-  } else {
-    DB.onboarding.push({id:DB.nextOnboardingId++, ...data, addedAt:Date.now()});
-    logActivity('added', `${brand} moved to Onboarding`);
-    toast(`${brand} added to Onboarding 🚀`,'success');
-  }
-  saveToStorage();
-  closeModal('onboarding-modal');
-  renderCurrentPage();
-}
-
-function renderOnboarding() {
-  let list = getOnboarding();
-  const q = document.getElementById('onboarding-search')?.value||'';
-  const sectorF = document.getElementById('onboarding-sector-filter')?.value||'';
-  if (q) { const ql=q.toLowerCase(); list=list.filter(o=>(o.brand||'').toLowerCase().includes(ql)||(o.contact||'').toLowerCase().includes(ql)||(o.owner||'').toLowerCase().includes(ql)); }
-  if (sectorF) list=list.filter(o=>o.sector===sectorF);
-
-  const rp = document.getElementById('onboarding-region-pill');
-  if (rp) rp.textContent = activeRegion==='all'?'All regions':displayRegion(activeRegion);
-  const cl = document.getElementById('onboarding-count-label');
-  if (cl) cl.textContent = list.length+' account'+(list.length!==1?'s':'');
-
-  const totalSites = list.reduce((s,o)=>s+(o.dealValue||0),0);
-  const complete = list.filter(o=>o.status==='Complete').length;
-  document.getElementById('onboarding-metrics').innerHTML = `
-    ${mcv2('Total accounts',list.length,'')}
-    ${mcv2('Complete',complete,'')}
-    ${mcv2('Total sites',totalSites,'')}
-  `;
-
-  const tbody = document.getElementById('onboarding-tbody');
-  if (!list.length) {
-    tbody.innerHTML = `<tr><td colspan="9"><div class="empty-state"><div class="es-icon">🚀</div><p>No onboarding accounts yet</p></div></td></tr>`;
-    return;
-  }
-  const statusBadgeOnb = s => {
-    if (s==='Live') return `<span class="status-badge sb-active">Live</span>`;
-    if (s==='Setting up') return `<span class="status-badge sb-starting">Setting up</span>`;
-    if (s==='Complete') return `<span class="status-badge sb-finished">Complete</span>`;
-    return `<span class="status-badge sb-finished">${esc(s)}</span>`;
-  };
-  tbody.innerHTML = list.map(o => `<tr>
-    <td><span class="td-brand ie" onclick="inlineEdit(this,'onboarding',${o.id},'brand')">${esc(o.brand)}</span></td>
-    <td class="td-plain ie" onclick="inlineEdit(this,'onboarding',${o.id},'contact')">${esc(o.contact)}</td>
-    <td class="td-plain ie" onclick="inlineEdit(this,'onboarding',${o.id},'role')">${esc(o.role)}</td>
-    <td class="td-plain"><span class="ie" onclick="inlineRegionEdit(event,${o.id},'onboarding')">${esc(displayRegion(o.region))}</span></td>
-    <td>${sectorPill(o.sector)}</td>
-    <td class="td-plain ie" onclick="inlineEdit(this,'onboarding',${o.id},'owner')">${esc(o.owner)}</td>
-    <td class="td-plain" style="font-family:'DM Mono',monospace;font-size:12px">${o.dealValue?Number(o.dealValue)+' sites':'—'}</td>
-    <td><select class="inline-input" onchange="inlineSelectChange('onboarding',${o.id},'status',this.value)">${['Paperwork sent','Paperwork signed','Camera shipped','Camera installed','Cloud storage bought','Hub access','Workhorse set up','Team assigned (Innovalus)','Team assigned (Dagaz)','Claims after one week','Complete'].map(s=>`<option ${o.status===s?'selected':''}>${s}</option>`).join('')}</select></td>
-    <td class="td-plain ie" onclick="inlineEdit(this,'onboarding',${o.id},'notes')" style="max-width:140px;overflow:hidden;text-overflow:ellipsis">${esc(o.notes)}</td>
-    <td><div class="td-actions"><button class="btn-icon btn-danger-sm" onclick="deleteOnboarding(${o.id})" title="Delete">🗑</button></div></td>
-  </tr>`).join('');
-}
+// Keep legacy stub for any code that might call openAddOnboarding
+function openAddOnboarding() { openAddOnb2Group(); }
 
 // ===================== FOLLOW UPS =====================
 function renderFollowups() {
@@ -2263,7 +2574,7 @@ function renderDashMetrics() {
   const qualified = DB.contacts.filter(c=>c.stage==='qualified');
   const discovery = DB.contacts.filter(c=>c.stage==='discovery');
   const trials = DB.trials;
-  const onboarding = DB.onboarding;
+  const onboarding = DB.onboardingGroups||[];
   const active = trials.filter(t=>t.status==='Active');
   const finished = trials.filter(t=>t.status==='Finished');
   const pipelineVal = trials.filter(t=>t.status!=='Finished').reduce((s,t)=>s+(t.dealValue||0),0);
@@ -2310,7 +2621,7 @@ function renderDetailCards() {
   const qualified = allContacts.filter(c=>c.stage==='qualified');
   const discovery = allContacts.filter(c=>c.stage==='discovery');
   const trials = DB.trials;
-  const onboarding = DB.onboarding;
+  const onboarding = DB.onboardingGroups||[];
   const frozen = allContacts.filter(c=>c.frozen).length;
 
   const overdueF = outreach.filter(c=>{if(c.frozen)return false;const d=lastMsgDate(c);return c.messages>0&&d&&daysSince(d)>=14;});
@@ -2505,9 +2816,14 @@ function exportCSV(type) {
     headers=['Brand','Contact','Role','Start','Duration','Owner','Region','Sector','Status','Deal value','Outcome'];
     rows=list.map(t=>[t.brand,t.contact,t.role,t.startDate,t.duration+'mo',t.owner,t.region,t.sector,t.status,t.dealValue,t.outcome]);
   } else if (type==='onboarding') {
-    list=DB.onboarding;
-    headers=['Brand','Contact','Role','Region','Sector','Owner','Deal value','Status','Notes'];
-    rows=list.map(o=>[o.brand,o.contact,o.role,o.region,o.sector,o.owner,o.dealValue,o.status,o.notes]);
+    headers=['Brand','Contact','Owner','Region','Sector','Site','Progress%','Contract Sent','Contract Signed','Camera Shipped','Camera Installed','Cloud Storage','CRM Set Up','Aggregators','Team','Claims Received','Notes'];
+    rows=[];
+    (DB.onboardingGroups||[]).forEach(g=>{
+      (g.sites||[{name:'(no sites)',aggregators:[],teamAssigned:''}]).forEach(s=>{
+        const {pct}=onbSiteSteps(s);
+        rows.push([g.brand,g.contact,g.owner,g.region,g.sector,s.name||'',pct+'%',s.contractSent?'Yes':'No',s.contractSigned?'Yes':'No',s.cameraShipped?'Yes':'No',s.cameraInstalled?'Yes':'No',s.cloudStorage?'Yes':'No',s.crmSetUp?'Yes':'No',(s.aggregators||[]).join('; '),s.teamAssigned||'',s.claimsReceived?'Yes':'No',s.notes||'']);
+      });
+    });
   } else {
     list=DB.contacts.filter(c=>c.stage===type);
     headers=['Brand','Contact','Role','Location','Region','Sector','LinkedIn','Messages','Owner','Notes'];
@@ -2943,6 +3259,8 @@ function closeModal(id) {
   if (id === 'contact-modal') editingContactId = null;
   if (id === 'trial-modal') editingTrialId = null;
   if (id === 'onboarding-modal') editingOnboardingId = null;
+  if (id === 'onb2-group-modal') editingOnbGroupId = null;
+  if (id === 'onb2-site-modal') addingOnbSiteForGroup = null;
 }
 document.querySelectorAll('.modal-overlay').forEach(el=>{
   el.addEventListener('click',e=>{if(e.target===el)el.classList.remove('open');});
