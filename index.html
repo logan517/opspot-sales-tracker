@@ -951,8 +951,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
       <button class="modal-close" onclick="closeModal('template-modal')">✕</button>
     </div>
     <div class="modal-body">
-      <div class="form-group" style="margin-bottom:14px"><label>Template name</label><input type="text" id="tpl-name" placeholder="e.g. Initial outreach"></div>
-      <div class="form-group"><label>Message body</label><textarea id="tpl-body" style="min-height:120px" placeholder="Hi {{name}}, I noticed {{brand}}…"></textarea></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+        <div class="form-group" style="margin:0"><label>Template name</label><input type="text" id="tpl-name" placeholder="e.g. Initial outreach"></div>
+        <div class="form-group" style="margin:0"><label>Category <span style="font-weight:400;color:var(--text-muted)">(optional)</span></label><input type="text" id="tpl-category" placeholder="e.g. Cold outreach, Follow-up"></div>
+      </div>
+      <div class="form-group"><label>Message body</label><textarea id="tpl-body" style="min-height:140px" placeholder="Hi {{name}}, I noticed {{brand}}…"></textarea></div>
       <p style="font-size:11px;color:var(--text-muted);margin-top:8px">Use {{name}}, {{brand}}, {{role}} as placeholders.</p>
     </div>
     <div class="modal-footer">
@@ -1072,6 +1075,7 @@ let editingContactId = null;
 let editingTrialId = null;
 let editingOnboardingId = null;
 let editingTemplateId = null;
+let previewingTemplateId = null;
 let salesUnlocked = false;
 let activityUnlocked = false;
 let lockPin = '';
@@ -1500,7 +1504,7 @@ function renderStageTable(tbodyId, list, stage) {
           ${frozenBadge}
           <div class="td-actions" style="opacity:1">
             <button class="btn-icon" title="Message history" onclick="openMsgHistory(${c.id})">📋</button>
-            ${(DB.templates||[]).length?`<button class="btn-icon" title="Use template" onclick="openUseTemplate(${c.id})">📨</button>`:''}
+            ${(DB.templates||[]).length?`<button class="btn btn-sm" style="background:var(--teal-light);color:var(--teal);border:none" title="Send message from template" onclick="openUseTemplate(${c.id})">💬 Send</button>`:''}
             <button class="btn-icon" onclick="openEditContact(${c.id})">✏️</button>
             ${nextS&&stage!=='discovery'?`<button class="btn btn-sm btn-promote" onclick="promoteContact(${c.id},'${nextS}')">${nextStageLabel[stage]}</button>`:''}
             ${stage==='discovery'?`<button class="btn btn-sm btn-promote" onclick="promoteToTrial(${c.id})" style="background:var(--teal-light);color:var(--teal)">→ Trial</button>`:''}
@@ -2621,9 +2625,18 @@ function renderTemplates() {
   if (!list.length) { container.innerHTML=`<div class="empty-state"><div class="es-icon">📝</div><p>No templates yet</p></div>`; return; }
   container.innerHTML=list.map(t=>`
     <div class="tpl-card">
-      <div class="tc-body"><div class="tc-name">${esc(t.name)}</div><div class="tc-preview">${esc(t.body)}</div></div>
+      <div class="tc-body">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
+          <span class="tc-name" style="cursor:pointer" onclick="openTemplatePreview('${t.id}')">${esc(t.name)}</span>
+          ${t.category?`<span style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:2px 7px">${esc(t.category)}</span>`:''}
+          ${t.uses?`<span style="font-size:11px;color:var(--text-muted)">Used ${t.uses}×</span>`:''}
+        </div>
+        <div class="tc-preview">${esc(t.body)}</div>
+      </div>
       <div class="tc-btns">
+        <button class="btn btn-primary btn-sm" onclick="openTemplatePreview('${t.id}')">Preview</button>
         <button class="btn btn-secondary btn-sm" onclick="openEditTemplate('${t.id}')">Edit</button>
+        <button class="btn btn-secondary btn-sm" onclick="duplicateTemplate('${t.id}')">Duplicate</button>
         <button class="btn btn-sm btn-danger-sm" onclick="deleteTemplate('${t.id}')">Delete</button>
       </div>
     </div>`).join('');
@@ -2634,6 +2647,7 @@ function openAddTemplate() {
   document.getElementById('template-modal-title').textContent='Add Template';
   document.getElementById('tpl-name').value='';
   document.getElementById('tpl-body').value='';
+  document.getElementById('tpl-category').value='';
   openModal('template-modal');
 }
 
@@ -2644,20 +2658,22 @@ function openEditTemplate(id) {
   document.getElementById('template-modal-title').textContent='Edit Template';
   document.getElementById('tpl-name').value=t.name||'';
   document.getElementById('tpl-body').value=t.body||'';
+  document.getElementById('tpl-category').value=t.category||'';
   openModal('template-modal');
 }
 
 function saveTemplate() {
   const name=document.getElementById('tpl-name').value.trim();
   const body=document.getElementById('tpl-body').value.trim();
+  const category=document.getElementById('tpl-category').value.trim();
   if (!name) { toast('Template name is required','error'); return; }
   if (!DB.templates) DB.templates=[];
   if (editingTemplateId) {
     const t=DB.templates.find(x=>x.id===editingTemplateId);
-    if (t){t.name=name;t.body=body;}
+    if (t) { t.name=name; t.body=body; t.category=category; }
     toast('Template updated','success');
   } else {
-    DB.templates.push({id:uid(),name,body});
+    DB.templates.push({id:uid(),name,body,category,uses:0});
     toast('Template saved','success');
   }
   saveToStorage();
@@ -2673,43 +2689,94 @@ function deleteTemplate(id) {
   toast('Template deleted');
 }
 
+function duplicateTemplate(id) {
+  const t=(DB.templates||[]).find(x=>x.id===id);
+  if (!t) return;
+  const copy={...t, id:uid(), name:'Copy of '+t.name, uses:0};
+  if (!DB.templates) DB.templates=[];
+  DB.templates.push(copy);
+  saveToStorage();
+  renderCurrentPage();
+  openEditTemplate(copy.id);
+  toast('Template duplicated — edit to customise','success');
+}
+
+// ---- Template preview modal ----
+function openTemplatePreview(tplId, prefillName='', prefillBrand='') {
+  const t=(DB.templates||[]).find(x=>x.id===tplId);
+  if (!t) return;
+  previewingTemplateId=tplId;
+  document.getElementById('tpl-prev-title').textContent=t.name;
+  document.getElementById('tpl-prev-category').textContent=t.category||'';
+  document.getElementById('tpl-prev-name-input').value=prefillName;
+  document.getElementById('tpl-prev-brand-input').value=prefillBrand;
+  updateTemplatePreview();
+  openModal('tpl-preview-modal');
+}
+
+function updateTemplatePreview() {
+  const t=(DB.templates||[]).find(x=>x.id===previewingTemplateId);
+  if (!t) return;
+  const name=document.getElementById('tpl-prev-name-input').value;
+  const brand=document.getElementById('tpl-prev-brand-input').value;
+  const filled=(t.body||'')
+    .replace(/\{\{name\}\}/g, name||'{{name}}')
+    .replace(/\{\{brand\}\}/g, brand||'{{brand}}')
+    .replace(/\{\{role\}\}/g, '{{role}}');
+  document.getElementById('tpl-prev-body').textContent=filled;
+}
+
+function copyTemplateMessage() {
+  const t=(DB.templates||[]).find(x=>x.id===previewingTemplateId);
+  if (!t) return;
+  const name=document.getElementById('tpl-prev-name-input').value;
+  const brand=document.getElementById('tpl-prev-brand-input').value;
+  const filled=(t.body||'')
+    .replace(/\{\{name\}\}/g, name||'{{name}}')
+    .replace(/\{\{brand\}\}/g, brand||'{{brand}}')
+    .replace(/\{\{role\}\}/g, '{{role}}');
+  navigator.clipboard.writeText(filled).then(()=>{
+    toast('Copied to clipboard ✓','success');
+    t.uses=(t.uses||0)+1;
+    saveToStorage();
+    renderCurrentPage();
+  }).catch(()=>toast('Copy failed — try selecting manually','error'));
+}
+
+// ---- Quick-use from contact records ----
 function openUseTemplate(contactId) {
-  const c=DB.contacts.find(x=>x.id===contactId);
+  const c=DB.contacts.find(x=>+x.id===+contactId);
   if (!c) return;
   const templates=DB.templates||[];
-  document.getElementById('use-template-title').textContent=`Use Template — ${c.contact||c.brand}`;
+  document.getElementById('use-template-title').textContent=`Send message — ${c.contact||c.brand}`;
   const body=document.getElementById('use-template-body');
-  if (!templates.length) { body.innerHTML=`<div class="empty-state"><div class="es-icon">📝</div><p>No templates yet</p></div>`; openModal('use-template-modal'); return; }
+  if (!templates.length) {
+    body.innerHTML=`<div class="empty-state"><div class="es-icon">📝</div><p>No templates yet</p></div>`;
+    openModal('use-template-modal'); return;
+  }
   body.innerHTML=`
-    <div style="display:flex;gap:14px;height:340px">
-      <div style="width:200px;border-right:1px solid var(--border);padding-right:14px;overflow-y:auto;flex-shrink:0">
-        ${templates.map((t,i)=>`<div id="tpl-pick-${t.id}" class="tpl-pick-item" onclick="previewTemplate('${t.id}',${contactId})"
-          style="padding:8px 10px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;color:var(--text);transition:background .1s;${i===0?'background:var(--blue-light);color:var(--blue)':''}"
-          >${esc(t.name)}</div>`).join('')}
-      </div>
-      <div style="flex:1;display:flex;flex-direction:column;gap:12px">
-        <div id="tpl-preview-area" style="flex:1;background:var(--bg);border-radius:10px;padding:14px;font-size:13px;line-height:1.6;white-space:pre-wrap;overflow-y:auto"></div>
-        <button class="btn btn-primary" id="tpl-copy-btn">Copy to clipboard</button>
-      </div>
+    <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px">Select a template — Name and Brand will be pre-filled from <strong>${esc(c.contact||c.brand)}</strong>.</p>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      ${templates.map(t=>`
+        <div onclick="useTemplateForContact('${t.id}',${c.id})"
+          style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;transition:border-color .15s"
+          onmouseover="this.style.borderColor='var(--blue)';this.style.background='var(--blue-light)'"
+          onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--bg)'">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">
+            <span style="font-weight:700;font-size:13px;color:var(--navy)">${esc(t.name)}</span>
+            ${t.category?`<span style="font-size:10px;font-weight:600;text-transform:uppercase;color:var(--text-muted);background:#fff;border:1px solid var(--border);border-radius:4px;padding:1px 6px">${esc(t.category)}</span>`:''}
+            ${t.uses?`<span style="font-size:11px;color:var(--text-muted);margin-left:auto">Used ${t.uses}×</span>`:''}
+          </div>
+          <div style="font-size:12px;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(t.body)}</div>
+        </div>`).join('')}
     </div>`;
-  if (templates.length) previewTemplate(templates[0].id, contactId);
   openModal('use-template-modal');
 }
 
-function previewTemplate(tplId, contactId) {
-  const t=(DB.templates||[]).find(x=>x.id===tplId);
-  const c=DB.contacts.find(x=>x.id===contactId);
-  if (!t||!c) return;
-  const filled=(t.body||'').replace(/\{\{name\}\}/g,c.contact||'').replace(/\{\{brand\}\}/g,c.brand||'').replace(/\{\{role\}\}/g,c.role||'');
-  const preview=document.getElementById('tpl-preview-area');
-  if (preview) preview.textContent=filled;
-  const copyBtn=document.getElementById('tpl-copy-btn');
-  if (copyBtn) copyBtn.onclick=()=>{navigator.clipboard.writeText(filled).then(()=>toast('Copied','success'));};
-  document.querySelectorAll('.tpl-pick-item').forEach(el=>{
-    const isActive=el.id===`tpl-pick-${tplId}`;
-    el.style.background=isActive?'var(--blue-light)':'';
-    el.style.color=isActive?'var(--blue)':'var(--text)';
-  });
+function useTemplateForContact(tplId, contactId) {
+  const c=DB.contacts.find(x=>+x.id===+contactId);
+  closeModal('use-template-modal');
+  if (c) openTemplatePreview(tplId, c.contact||'', c.brand||'');
 }
 
 // ===================== ACTIVITY LOG =====================
@@ -2954,6 +3021,33 @@ function saveSettings() {
 // ===================== START =====================
 init();
 </script>
+
+<!-- TEMPLATE PREVIEW MODAL -->
+<div class="modal-overlay" id="tpl-preview-modal">
+  <div class="modal" style="max-width:620px;width:100%">
+    <div class="modal-header">
+      <div style="min-width:0">
+        <h3 id="tpl-prev-title" style="margin:0;font-size:16px;color:var(--navy)">Template preview</h3>
+        <div id="tpl-prev-category" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-top:3px"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal('tpl-preview-modal')">✕</button>
+    </div>
+    <div class="modal-body" style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;gap:10px;align-items:flex-end">
+        <div style="flex:1">
+          <label class="form-label" style="font-size:11px">Name</label>
+          <input type="text" id="tpl-prev-name-input" class="form-input" placeholder="{{name}}" oninput="updateTemplatePreview()" style="font-size:13px">
+        </div>
+        <div style="flex:1">
+          <label class="form-label" style="font-size:11px">Brand</label>
+          <input type="text" id="tpl-prev-brand-input" class="form-input" placeholder="{{brand}}" oninput="updateTemplatePreview()" style="font-size:13px">
+        </div>
+        <button class="btn btn-primary" onclick="copyTemplateMessage()" style="flex-shrink:0;height:36px">Copy message</button>
+      </div>
+      <div id="tpl-prev-body" style="background:var(--bg);border-radius:10px;padding:16px;font-size:13px;line-height:1.75;white-space:pre-wrap;min-height:160px;max-height:400px;overflow-y:auto;color:var(--text);border:1px solid var(--border)"></div>
+    </div>
+  </div>
+</div>
 
 <!-- SETTINGS MODAL -->
 <div class="modal-overlay" id="settings-modal">
