@@ -923,6 +923,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
           <select id="onb2g-sector"><option value="">Select sector</option><option>Restaurant</option><option>Grocery</option><option>Other</option></select>
         </div>
         <div class="form-group"><label>Owner</label><input type="text" id="onb2g-owner"></div>
+        <div class="form-group"><label>Contact email</label><input type="email" id="onb2g-email" placeholder="contact@brand.com"></div>
+        <div class="form-group"><label>Aggregators required per site</label><input type="number" id="onb2g-agg-target" min="1" max="20" placeholder="e.g. 3"></div>
         <div class="form-group form-full"><label>Notes</label><textarea id="onb2g-notes" placeholder="Any notes…"></textarea></div>
       </div>
     </div>
@@ -1141,7 +1143,7 @@ const ONB_STEPS = [
   { key: 'teamAssigned',    label: 'Team assigned',    type: 'team'  },
   { key: 'claimsReceived',  label: 'Claims received',  type: 'check' },
 ];
-const ONB_AGGREGATORS = ['Uber Eats','DoorDash','Just Eat','Deliveroo','Grubhub','Postmates','Instacart','SkipTheDishes','Bolt Food','Rappi','Glovo'];
+const ONB_AGGREGATORS = ['Deliveroo','DoorDash','Uber Eats','Just Eat','DiDi','Jahez','Rappi','Talabat','Wolt','GrubHub','Hunger Station'];
 function getSalesPin() { return localStorage.getItem('opspot_sales_pin') || '1111'; }
 function getActivityPin() { return localStorage.getItem('opspot_activity_pin') || '2222'; }
 
@@ -2007,19 +2009,31 @@ function promoteToTrial(id) {
 
 // ===================== ONBOARDING V2 =====================
 // Data helpers
-function onbSiteSteps(site) {
-  let done = 0;
+function onbSiteSteps(site, aggTarget) {
+  aggTarget = parseInt(aggTarget) || 1;
+  let weighted = 0;
   ONB_STEPS.forEach(s => {
-    if (s.type === 'agg') { if ((site.aggregators||[]).length > 0) done++; }
-    else if (s.type === 'team') { if (site.teamAssigned) done++; }
-    else { if (site[s.key]) done++; }
+    if (s.type === 'agg') {
+      weighted += Math.min((site.aggregators||[]).length, aggTarget) / aggTarget;
+    } else if (s.type === 'team') {
+      if (site.teamAssigned) weighted++;
+    } else {
+      if (site[s.key]) weighted++;
+    }
   });
   const total = ONB_STEPS.length;
-  return { done, total, pct: Math.round(done / total * 100) };
+  return {
+    weighted,
+    total,
+    aggCount: (site.aggregators||[]).length,
+    aggTarget,
+    pct: Math.round(weighted / total * 100)
+  };
 }
 function onbGroupPct(group) {
   if (!group.sites || !group.sites.length) return 0;
-  const sum = group.sites.reduce((s, site) => s + onbSiteSteps(site).pct, 0);
+  const aggTarget = parseInt(group.aggregatorTarget) || 1;
+  const sum = group.sites.reduce((s, site) => s + onbSiteSteps(site, aggTarget).pct, 0);
   return Math.round(sum / group.sites.length);
 }
 function onbPctColor(pct) {
@@ -2126,6 +2140,7 @@ function renderOnbGroupView() {
   if (!g) { onbBack(); return; }
   if (title) title.innerHTML = `<button onclick="onbBack()" style="background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:15px;font-family:'DM Sans',sans-serif;padding:0">← Onboarding</button> <span style="color:var(--text-muted);margin:0 5px">/</span> ${esc(g.brand)}`;
   if (tbr) tbr.innerHTML = `<button class="btn btn-secondary" onclick="openEditOnb2Group('${g.id}')">✎ Edit group</button><button class="btn btn-primary" style="margin-left:8px" onclick="openAddOnb2Site('${g.id}')">+ Add site</button>`;
+  const aggTarget = parseInt(g.aggregatorTarget) || 1;
   const pct = onbGroupPct(g);
   const col = onbPctColor(pct);
   const sites = g.sites||[];
@@ -2133,6 +2148,10 @@ function renderOnbGroupView() {
     <div class="onb2-group-header">
       <div class="gh-brand">${esc(g.brand)}</div>
       <div class="gh-meta">${[g.contact,g.role,displayRegion(g.region),g.sector,g.owner?'Owner: '+g.owner:''].filter(Boolean).map(esc).join(' · ')}</div>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:8px">
+        ${g.email?`<span style="font-size:12px;color:var(--text-muted)">✉️ ${esc(g.email)}</span>`:''}
+        <span style="font-size:12px;color:var(--text-muted)">🔗 ${aggTarget} aggregator${aggTarget!==1?'s':''} required per site</span>
+      </div>
       <div style="margin-top:12px;max-width:420px">
         <div class="onb2-pbar-label"><span>Overall progress</span><span>${pct}%</span></div>
         <div class="onb2-pbar"><div class="onb2-pbar-fill ${col}" style="width:${pct}%"></div></div>
@@ -2140,21 +2159,24 @@ function renderOnbGroupView() {
       ${g.notes?`<div style="margin-top:8px;font-size:13px;color:var(--text-muted)">${esc(g.notes)}</div>`:''}
     </div>
     <div class="onb2-sites-list" id="onb2-sites-list">
-      ${sites.length?sites.map(s=>renderOnbSiteCard(g.id,s)).join(''):`<div class="empty-state" style="padding:40px 0"><div class="es-icon">🏪</div><p>No sites yet for ${esc(g.brand)}. Add the first site to start tracking.</p></div>`}
+      ${sites.length?sites.map(s=>renderOnbSiteCard(g.id,s,aggTarget)).join(''):`<div class="empty-state" style="padding:40px 0"><div class="es-icon">🏪</div><p>No sites yet for ${esc(g.brand)}. Add the first site to start tracking.</p></div>`}
     </div>
     <button class="onb2-add-site-btn" onclick="openAddOnb2Site('${g.id}')">+ Add another site</button>
   `;
 }
 
-function renderOnbSiteCard(groupId, site) {
-  const {done,total,pct} = onbSiteSteps(site);
+function renderOnbSiteCard(groupId, site, aggTarget) {
+  aggTarget = parseInt(aggTarget) || 1;
+  const {pct, aggCount} = onbSiteSteps(site, aggTarget);
   const col = onbPctColor(pct);
   const isOpen = String(onbNav.expandedSite) === String(site.id);
   const checkSteps = ONB_STEPS.filter(s=>s.type==='check');
+  const aggDone = Math.min(aggCount, aggTarget);
+  const aggComplete = aggDone >= aggTarget;
   return `<div class="onb2-site-card">
     <div class="onb2-site-header" onclick="onbToggleSite('${site.id}')">
       <span class="sh-name">${esc(site.name||'Unnamed site')}</span>
-      <span class="sh-pct ${col}">${pct}% · ${done}/${total}</span>
+      <span class="sh-pct ${col}">${pct}%</span>
       <span class="sh-chevron${isOpen?' open':''}">▶</span>
     </div>
     <div class="onb2-site-body" id="onb2-panel-${site.id}" style="display:${isOpen?'block':'none'}">
@@ -2165,7 +2187,10 @@ function renderOnbSiteCard(groupId, site) {
         </div>`).join('')}
       </div>
       <div class="onb2-agg-section">
-        <div class="agg-title">Aggregators</div>
+        <div class="agg-title" style="display:flex;align-items:center;justify-content:space-between">
+          <span>Aggregators</span>
+          <span style="font-size:12px;font-weight:700;padding:2px 8px;border-radius:20px;${aggComplete?'background:var(--green-light);color:var(--green)':'background:var(--amber-light);color:var(--amber)'}">${aggDone} / ${aggTarget}</span>
+        </div>
         <div class="onb2-agg-pills">${ONB_AGGREGATORS.map(a=>`<span class="onb2-agg-pill${(site.aggregators||[]).includes(a)?' agg-active':''}" onclick="onbToggleAgg('${groupId}','${site.id}','${a.replace(/'/g,"\\'")}');">${esc(a)}</span>`).join('')}</div>
       </div>
       <div class="onb2-team-section">
@@ -2240,9 +2265,10 @@ function onbToggleAgg(groupId, siteId, agg) {
 function openAddOnb2Group() {
   editingOnbGroupId = null;
   document.getElementById('onb2-group-modal-title').textContent = 'Add customer group';
-  ['onb2g-brand','onb2g-contact','onb2g-role','onb2g-owner','onb2g-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['onb2g-brand','onb2g-contact','onb2g-role','onb2g-owner','onb2g-email','onb2g-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('onb2g-region').value='';
   document.getElementById('onb2g-sector').value='';
+  document.getElementById('onb2g-agg-target').value='1';
   openModal('onb2-group-modal');
 }
 function openEditOnb2Group(groupId) {
@@ -2256,6 +2282,8 @@ function openEditOnb2Group(groupId) {
   document.getElementById('onb2g-region').value = g.region||'';
   document.getElementById('onb2g-sector').value = g.sector||'';
   document.getElementById('onb2g-owner').value = g.owner||'';
+  document.getElementById('onb2g-email').value = g.email||'';
+  document.getElementById('onb2g-agg-target').value = g.aggregatorTarget||1;
   document.getElementById('onb2g-notes').value = g.notes||'';
   openModal('onb2-group-modal');
 }
@@ -2269,6 +2297,8 @@ function saveOnb2Group() {
     region: document.getElementById('onb2g-region').value,
     sector: document.getElementById('onb2g-sector').value,
     owner: document.getElementById('onb2g-owner').value.trim(),
+    email: document.getElementById('onb2g-email').value.trim(),
+    aggregatorTarget: parseInt(document.getElementById('onb2g-agg-target').value)||1,
     notes: document.getElementById('onb2g-notes').value.trim(),
   };
   if (editingOnbGroupId) {
