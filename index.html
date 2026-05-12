@@ -349,6 +349,26 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 .lock-err{color:var(--red);font-size:12px;font-weight:600;height:16px;margin-top:-8px;margin-bottom:8px}
 [data-tip]{position:relative}
 [data-tip]:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 5px);left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;font-size:11px;padding:4px 8px;border-radius:5px;white-space:nowrap;pointer-events:none;z-index:999}
+/* Template tabs */
+.tpl-tabs{display:flex;gap:0;padding:0 28px;flex-shrink:0;border-bottom:2px solid var(--border)}
+.tpl-tab{padding:10px 20px;font-size:13px;font-weight:600;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .15s;user-select:none;white-space:nowrap}
+.tpl-tab:hover{color:var(--navy)}
+.tpl-tab.tpl-tab-active{color:var(--blue);border-bottom-color:var(--blue)}
+.tpl-tab .tpl-tab-count{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;background:var(--bg);border:1px solid var(--border);border-radius:20px;font-size:10px;margin-left:6px}
+.tpl-tab.tpl-tab-active .tpl-tab-count{background:var(--blue-light);border-color:var(--blue);color:var(--blue)}
+/* Trigger badge on checklist items */
+.stage-sent-badge{font-size:10px;color:var(--green);font-weight:600;margin-left:5px;white-space:nowrap}
+/* Comms log */
+.onb-comms-log{margin-top:16px;border-top:1px solid var(--border);padding-top:12px}
+.onb-comms-log .ocl-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-bottom:8px}
+.onb-comms-entry{display:flex;align-items:center;gap:8px;font-size:12px;padding:5px 0;border-bottom:1px solid #f5f3ef;flex-wrap:wrap}
+.onb-comms-entry:last-child{border-bottom:none}
+.onb-comms-entry .oce-name{font-weight:600;color:var(--navy)}
+.onb-comms-entry .oce-stage{color:var(--text-muted)}
+.onb-comms-entry .oce-date{margin-left:auto;color:var(--text-muted);white-space:nowrap}
+/* Trigger modal */
+.otp-body{font-size:13px;color:var(--text);line-height:1.65;white-space:pre-wrap;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;max-height:220px;overflow-y:auto;word-break:break-word}
+.otp-placeholder{background:var(--amber-light);color:#92400e;padding:1px 5px;border-radius:4px;font-weight:700;border:1px solid #fcd34d}
 /* Onboarding V2 */
 .onb2-wrap{padding:0 28px 28px;overflow:auto;flex:1}
 .onb2-group-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
@@ -772,8 +792,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
   <!-- TEMPLATES PAGE -->
   <div class="page" id="page-templates">
     <div class="page-topbar">
-      <div class="ptb-left"><h1>Message Templates</h1></div>
+      <div class="ptb-left"><h1>Templates</h1></div>
       <div class="ptb-right"><button class="btn btn-primary" onclick="openAddTemplate()">+ Add template</button></div>
+    </div>
+    <div class="tpl-tabs" id="tpl-tab-bar">
+      <div class="tpl-tab tpl-tab-active" id="tpl-tab-sales" onclick="switchTemplateTab('sales')">💬 Sales <span class="tpl-tab-count" id="tpl-count-sales">0</span></div>
+      <div class="tpl-tab" id="tpl-tab-onboarding" onclick="switchTemplateTab('onboarding')">🚀 Onboarding <span class="tpl-tab-count" id="tpl-count-onboarding">0</span></div>
+      <div class="tpl-tab" id="tpl-tab-cs" onclick="switchTemplateTab('cs')">⭐ Customer Success <span class="tpl-tab-count" id="tpl-count-cs">0</span></div>
     </div>
     <div id="templates-list" class="tpl-list"></div>
   </div>
@@ -986,18 +1011,36 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 
 <!-- TEMPLATE MODAL -->
 <div class="modal-overlay" id="template-modal">
-  <div class="modal">
+  <div class="modal" style="max-width:540px">
     <div class="modal-header">
-      <h2 id="template-modal-title">Add Template</h2>
+      <div>
+        <h2 id="template-modal-title">Add Template</h2>
+        <div id="template-modal-subtitle" style="font-size:12px;color:var(--text-muted);margin-top:1px"></div>
+      </div>
       <button class="modal-close" onclick="closeModal('template-modal')">✕</button>
     </div>
     <div class="modal-body">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
-        <div class="form-group" style="margin:0"><label>Template name</label><input type="text" id="tpl-name" placeholder="e.g. Initial outreach"></div>
-        <div class="form-group" style="margin:0"><label>Category <span style="font-weight:400;color:var(--text-muted)">(optional)</span></label><input type="text" id="tpl-category" placeholder="e.g. Cold outreach, Follow-up"></div>
+      <div class="form-grid">
+        <div class="form-group form-full"><label>Template name</label><input type="text" id="tpl-name" placeholder="e.g. Initial outreach"></div>
+        <div class="form-group" id="tpl-category-row"><label>Category <span style="font-weight:400;color:var(--text-muted)">(optional)</span></label><input type="text" id="tpl-category" placeholder="e.g. Cold outreach, Follow-up"></div>
+        <div class="form-group" id="tpl-trigger-row" style="display:none">
+          <label>Trigger stage <span style="font-weight:400;color:var(--text-muted)">(fires when stage completed)</span></label>
+          <select id="tpl-trigger-stage">
+            <option value="">No trigger / manual use only</option>
+            <option value="contractSent">Contract sent</option>
+            <option value="contractSigned">Contract signed</option>
+            <option value="cameraShipped">Camera shipped</option>
+            <option value="cameraInstalled">Camera installed</option>
+            <option value="cloudStorage">Cloud storage purchased</option>
+            <option value="crmSetUp">CRM set up</option>
+            <option value="aggregators">Aggregators configured</option>
+            <option value="teamAssigned">Team assigned</option>
+            <option value="claimsReceived">First week check complete</option>
+          </select>
+        </div>
       </div>
-      <div class="form-group"><label>Message body</label><textarea id="tpl-body" style="min-height:140px" placeholder="Hi {{name}}, I noticed {{brand}}…"></textarea></div>
-      <p style="font-size:11px;color:var(--text-muted);margin-top:8px">Use {{name}}, {{brand}}, {{role}} as placeholders.</p>
+      <div class="form-group" style="margin-top:4px"><label>Message body</label><textarea id="tpl-body" style="min-height:140px" placeholder="Hi {{name}}, I noticed {{brand}}…"></textarea></div>
+      <p style="font-size:11px;color:var(--text-muted);margin-top:8px">Use {{name}}, {{brand}}, {{role}} as placeholders. Anything else in {{curly braces}} will be highlighted for review before sending.</p>
     </div>
     <div class="modal-footer">
       <button class="btn btn-secondary" onclick="closeModal('template-modal')">Cancel</button>
@@ -1014,6 +1057,28 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
       <button class="modal-close" onclick="closeModal('use-template-modal')">✕</button>
     </div>
     <div class="modal-body" id="use-template-body"></div>
+  </div>
+</div>
+
+<!-- ONBOARDING TRIGGER MODAL -->
+<div class="modal-overlay" id="onb-trigger-modal">
+  <div class="modal" style="max-width:580px">
+    <div class="modal-header">
+      <div style="min-width:0">
+        <h3 id="onb-trigger-title" style="font-size:16px">Message ready to send</h3>
+        <div id="onb-trigger-meta" style="font-size:12px;color:var(--text-muted);margin-top:2px"></div>
+      </div>
+      <button class="modal-close" onclick="skipOnbTrigger()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Review the personalised message below. <span style="background:var(--amber-light);color:#92400e;padding:1px 5px;border-radius:4px;font-size:11px;font-weight:700">Highlighted</span> placeholders need manual editing before sending.</p>
+      <div id="onb-trigger-body" class="otp-body"></div>
+      <div id="onb-trigger-queue-note" style="font-size:12px;color:var(--text-muted);margin-top:10px;display:none"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="skipOnbTrigger()">Skip for now</button>
+      <button class="btn btn-primary" onclick="approveOnbTrigger()">✓ Approve &amp; copy</button>
+    </div>
   </div>
 </div>
 
@@ -1103,7 +1168,9 @@ let DB = {
   nextTrialId: 1,
   nextOnboardingId: 1,
   sheetsUrl: '',
-  templates: [],
+  templates: [],           // sales templates
+  onboardingTemplates: [], // onboarding templates (with triggerStage)
+  csTemplates: [],         // customer success templates
   activityLog: [],
 };
 
@@ -1129,6 +1196,12 @@ let pendingBulkTable = null;
 let onbNav = { level: 'groups', groupId: null, expandedSite: null };
 let addingOnbSiteForGroup = null;
 let editingOnbGroupId = null;
+// Template tabs
+let activeTemplateTab = 'sales';   // 'sales' | 'onboarding' | 'cs'
+let activeTplCategory = 'sales';   // context when modal is open
+// Onboarding trigger queue
+let onbTriggerQueue = [];
+let currentOnbTrigger = null;
 
 const SALES_PAGES = ['outreach','qualified','discovery','trials','onboarding','followups','trial-progress','templates'];
 // Onboarding V2 checklist steps
@@ -1144,6 +1217,13 @@ const ONB_STEPS = [
   { key: 'claimsReceived',  label: 'Claims received',  type: 'check' },
 ];
 const ONB_AGGREGATORS = ['Deliveroo','DoorDash','Uber Eats','Just Eat','DiDi','Jahez','Rappi','Talabat','Wolt','GrubHub','Hunger Station'];
+const ONB_TRIGGER_STAGE_LABELS = {
+  contractSent:'Contract sent', contractSigned:'Contract signed',
+  cameraShipped:'Camera shipped', cameraInstalled:'Camera installed',
+  cloudStorage:'Cloud storage purchased', crmSetUp:'CRM set up',
+  aggregators:'Aggregators configured', teamAssigned:'Team assigned',
+  claimsReceived:'First week check complete',
+};
 function getSalesPin() { return localStorage.getItem('opspot_sales_pin') || '1111'; }
 function getActivityPin() { return localStorage.getItem('opspot_activity_pin') || '2222'; }
 
@@ -1178,6 +1258,8 @@ function loadFromStorage() {
       if (!Array.isArray(DB.trials)) DB.trials = [];
       if (!Array.isArray(DB.onboarding)) DB.onboarding = [];
       if (!Array.isArray(DB.onboardingGroups)) DB.onboardingGroups = [];
+      if (!Array.isArray(DB.onboardingTemplates)) DB.onboardingTemplates = [];
+      if (!Array.isArray(DB.csTemplates)) DB.csTemplates = [];
     }
     const DEFAULT_SHEETS_URL = 'https://script.google.com/macros/s/AKfycby1qZgxXJWtkuFLMc6gK0kKuAiFQRUf4xrHbX8S7f9j1chSkYgwNh7VhozIWH0NHLz0/exec';
     const url = localStorage.getItem('opspot_sheets_url_v2') || DEFAULT_SHEETS_URL;
@@ -1420,7 +1502,7 @@ function updateAllBadges() {
   document.getElementById('badge-onboarding').textContent = (DB.onboardingGroups||[]).length;
   document.getElementById('badge-trial-progress').textContent = DB.trials.length;
   const tplBadge = document.getElementById('badge-templates');
-  if (tplBadge) tplBadge.textContent = (DB.templates||[]).length;
+  if (tplBadge) tplBadge.textContent = (DB.templates||[]).length + (DB.onboardingTemplates||[]).length + (DB.csTemplates||[]).length;
 
   // Follow-ups badge: overdue outreach contacts (not frozen)
   const outreach = DB.contacts.filter(c=>c.stage==='outreach'&&!c.frozen);
@@ -2173,6 +2255,21 @@ function renderOnbSiteCard(groupId, site, aggTarget) {
   const checkSteps = ONB_STEPS.filter(s=>s.type==='check');
   const aggDone = Math.min(aggCount, aggTarget);
   const aggComplete = aggDone >= aggTarget;
+  const commsLog = site.commsLog||[];
+
+  // Helper: last sent entry for a stepKey
+  function lastSent(key) {
+    const entries = commsLog.filter(e=>e.stepKey===key);
+    return entries.length ? entries[entries.length-1] : null;
+  }
+  function fmtDate(ts) {
+    const d=new Date(ts);
+    return d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'2-digit'});
+  }
+
+  const aggSent = lastSent('aggregators');
+  const teamSent = lastSent('teamAssigned');
+
   return `<div class="onb2-site-card">
     <div class="onb2-site-header" onclick="onbToggleSite('${site.id}')">
       <span class="sh-name">${esc(site.name||'Unnamed site')}</span>
@@ -2181,20 +2278,23 @@ function renderOnbSiteCard(groupId, site, aggTarget) {
     </div>
     <div class="onb2-site-body" id="onb2-panel-${site.id}" style="display:${isOpen?'block':'none'}">
       <div class="onb2-cl-grid">
-        ${checkSteps.map(s=>`<div class="onb2-cl-item${site[s.key]?' cl-checked':''}" onclick="onbSetField('${groupId}','${site.id}','${s.key}',${!site[s.key]})">
-          <input type="checkbox" ${site[s.key]?'checked':''} onclick="event.stopPropagation()">
-          <span class="cl-label">${esc(s.label)}</span>
-        </div>`).join('')}
+        ${checkSteps.map(s=>{
+          const sent=lastSent(s.key);
+          return `<div class="onb2-cl-item${site[s.key]?' cl-checked':''}" onclick="onbSetField('${groupId}','${site.id}','${s.key}',${!site[s.key]})">
+            <input type="checkbox" ${site[s.key]?'checked':''} onclick="event.stopPropagation()">
+            <span class="cl-label">${esc(s.label)}${sent?`<span class="stage-sent-badge" title="${esc(sent.tplName)} sent ${fmtDate(sent.sentAt)}">✉ ${fmtDate(sent.sentAt)}</span>`:''}</span>
+          </div>`;
+        }).join('')}
       </div>
       <div class="onb2-agg-section">
-        <div class="agg-title" style="display:flex;align-items:center;justify-content:space-between">
-          <span>Aggregators</span>
+        <div class="agg-title" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px">
+          <span>Aggregators${aggSent?`<span class="stage-sent-badge" title="${esc(aggSent.tplName)} sent ${fmtDate(aggSent.sentAt)}">✉ ${fmtDate(aggSent.sentAt)}</span>`:''}</span>
           <span style="font-size:12px;font-weight:700;padding:2px 8px;border-radius:20px;${aggComplete?'background:var(--green-light);color:var(--green)':'background:var(--amber-light);color:var(--amber)'}">${aggDone} / ${aggTarget}</span>
         </div>
         <div class="onb2-agg-pills">${ONB_AGGREGATORS.map(a=>`<span class="onb2-agg-pill${(site.aggregators||[]).includes(a)?' agg-active':''}" onclick="onbToggleAgg('${groupId}','${site.id}','${a.replace(/'/g,"\\'")}');">${esc(a)}</span>`).join('')}</div>
       </div>
       <div class="onb2-team-section">
-        <div class="team-title">Team assigned</div>
+        <div class="team-title">Team assigned${teamSent?`<span class="stage-sent-badge" title="${esc(teamSent.tplName)} sent ${fmtDate(teamSent.sentAt)}">✉ ${fmtDate(teamSent.sentAt)}</span>`:''}</div>
         <div class="onb2-team-row">
           <button class="onb2-team-btn${site.teamAssigned==='Dagaz'?' team-active':''}" onclick="onbSetField('${groupId}','${site.id}','teamAssigned','${site.teamAssigned==='Dagaz'?'':'Dagaz'}')">Dagaz</button>
           <button class="onb2-team-btn${site.teamAssigned==='Innovalus'?' team-active':''}" onclick="onbSetField('${groupId}','${site.id}','teamAssigned','${site.teamAssigned==='Innovalus'?'':'Innovalus'}')">Innovalus</button>
@@ -2204,6 +2304,16 @@ function renderOnbSiteCard(groupId, site, aggTarget) {
         <div class="notes-title">Site notes</div>
         <textarea placeholder="Any notes for this site…" onchange="onbSetField('${groupId}','${site.id}','notes',this.value)">${esc(site.notes||'')}</textarea>
       </div>
+      ${commsLog.length?`
+      <div class="onb-comms-log">
+        <div class="ocl-title">✉️ Comms sent (${commsLog.length})</div>
+        ${[...commsLog].reverse().map(e=>`
+          <div class="onb-comms-entry">
+            <span class="oce-name">${esc(e.tplName||'Message')}</span>
+            <span class="oce-stage">· ${esc(e.stepLabel||e.stepKey)}</span>
+            <span class="oce-date">${fmtDate(e.sentAt)}</span>
+          </div>`).join('')}
+      </div>`:''}
       <div class="onb2-site-foot">
         <button class="onb2-site-del" onclick="deleteOnb2Site('${groupId}','${site.id}')">🗑 Delete site</button>
       </div>
@@ -2237,16 +2347,23 @@ function onbToggleSite(siteId) {
 }
 
 // Field setters
+const ONB_CHECK_KEYS = ['contractSent','contractSigned','cameraShipped','cameraInstalled','cloudStorage','crmSetUp','claimsReceived'];
+
 function onbSetField(groupId, siteId, key, value) {
   const g = (DB.onboardingGroups||[]).find(x=>String(x.id)===String(groupId));
   if (!g) return;
   const s = (g.sites||[]).find(x=>String(x.id)===String(siteId));
   if (!s) return;
+  const wasSet = !!s[key];
   s[key] = value;
   saveToStorage();
   updateAllBadges();
-  // Re-render to update progress badges (keep site expanded)
   renderOnboarding();
+  // Fire trigger if step just became truthy
+  const justCompleted = !wasSet && !!value;
+  if (justCompleted && (ONB_CHECK_KEYS.includes(key) || key==='teamAssigned')) {
+    checkOnbTrigger(groupId, siteId, key);
+  }
 }
 function onbToggleAgg(groupId, siteId, agg) {
   const g = (DB.onboardingGroups||[]).find(x=>String(x.id)===String(groupId));
@@ -2255,9 +2372,104 @@ function onbToggleAgg(groupId, siteId, agg) {
   if (!s) return;
   if (!s.aggregators) s.aggregators = [];
   const idx = s.aggregators.indexOf(agg);
+  const wasComplete = (s.aggregators.length >= (g.aggTarget||1));
   if (idx >= 0) s.aggregators.splice(idx,1); else s.aggregators.push(agg);
+  const nowComplete = (s.aggregators.length >= (g.aggTarget||1));
   saveToStorage();
   updateAllBadges();
+  renderOnboarding();
+  // Fire trigger when agg count first reaches target
+  if (!wasComplete && nowComplete) {
+    checkOnbTrigger(groupId, siteId, 'aggregators');
+  }
+}
+
+// ---- Onboarding trigger flow ----
+function checkOnbTrigger(groupId, siteId, stepKey) {
+  const matching = (DB.onboardingTemplates||[]).filter(t=>t.triggerStage===stepKey);
+  if (!matching.length) return;
+  matching.forEach(t => onbTriggerQueue.push({groupId, siteId, tplId:t.id, stepKey}));
+  if (!currentOnbTrigger) showOnbTriggerModal();
+}
+
+function showOnbTriggerModal() {
+  if (!onbTriggerQueue.length) { currentOnbTrigger=null; return; }
+  currentOnbTrigger = onbTriggerQueue.shift();
+  const {groupId, siteId, tplId, stepKey} = currentOnbTrigger;
+  const g = (DB.onboardingGroups||[]).find(x=>String(x.id)===String(groupId));
+  const s = g ? (g.sites||[]).find(x=>String(x.id)===String(siteId)) : null;
+  const found = findTemplateById(tplId);
+  if (!found || !g) { showOnbTriggerModal(); return; }
+  const t = found.template;
+  // Pre-fill name/brand from group
+  const contactName = g.contact||'';
+  const brand = g.brand||s&&s.name||'';
+  // Build body: replace name/brand, highlight remaining {{...}}
+  let body = (t.body||'')
+    .replace(/\{\{name\}\}/g, contactName||'{{name}}')
+    .replace(/\{\{brand\}\}/g, brand||'{{brand}}');
+  // Highlight remaining placeholders
+  const bodyEl = document.getElementById('onb-trigger-body');
+  const titleEl = document.getElementById('onb-trigger-title');
+  const metaEl = document.getElementById('onb-trigger-meta');
+  const queueEl = document.getElementById('onb-trigger-queue-note');
+  if (titleEl) titleEl.textContent = t.name;
+  if (metaEl) metaEl.textContent = `${g.brand||''} · ${s?s.name:''} · Stage: ${ONB_TRIGGER_STAGE_LABELS[stepKey]||stepKey}`;
+  if (bodyEl) {
+    // Escape then highlight placeholders
+    const escaped = esc(body);
+    bodyEl.innerHTML = escaped.replace(/\{\{([^}]+)\}\}/g,
+      (_,p)=>`<span class="otp-placeholder">{{${p}}}</span>`);
+  }
+  if (queueEl) {
+    if (onbTriggerQueue.length) {
+      queueEl.style.display='';
+      queueEl.textContent=`${onbTriggerQueue.length} more message${onbTriggerQueue.length>1?'s':''} queued for this update.`;
+    } else {
+      queueEl.style.display='none';
+    }
+  }
+  // Store filled text on the trigger object for approve
+  currentOnbTrigger._filledBody = body;
+  currentOnbTrigger._tplName = t.name;
+  openModal('onb-trigger-modal');
+}
+
+function approveOnbTrigger() {
+  if (!currentOnbTrigger) return;
+  const text = currentOnbTrigger._filledBody||'';
+  navigator.clipboard.writeText(text).then(()=>{
+    toast('Copied to clipboard ✓ — message marked as sent','success');
+  }).catch(()=>{});
+  markOnbSent(currentOnbTrigger);
+  closeModal('onb-trigger-modal');
+  currentOnbTrigger = null;
+  // Show next queued trigger after a short delay
+  if (onbTriggerQueue.length) setTimeout(showOnbTriggerModal, 350);
+}
+
+function skipOnbTrigger() {
+  closeModal('onb-trigger-modal');
+  currentOnbTrigger = null;
+  if (onbTriggerQueue.length) setTimeout(showOnbTriggerModal, 350);
+}
+
+function markOnbSent(trigObj) {
+  const {groupId, siteId, tplId, stepKey, _tplName} = trigObj;
+  const g = (DB.onboardingGroups||[]).find(x=>String(x.id)===String(groupId));
+  if (!g) return;
+  const s = (g.sites||[]).find(x=>String(x.id)===String(siteId));
+  if (!s) return;
+  if (!s.commsLog) s.commsLog = [];
+  s.commsLog.push({
+    id: uid(),
+    tplId,
+    tplName: _tplName||'',
+    stepKey,
+    stepLabel: ONB_TRIGGER_STAGE_LABELS[stepKey]||stepKey,
+    sentAt: Date.now()
+  });
+  saveToStorage();
   renderOnboarding();
 }
 
@@ -2971,17 +3183,61 @@ function saveLogEntry(id, type) {
 }
 
 // ===================== TEMPLATES =====================
+// ---- Template helpers ----
+function getTplArray(cat) {
+  if (cat==='onboarding') return DB.onboardingTemplates||(DB.onboardingTemplates=[]);
+  if (cat==='cs') return DB.csTemplates||(DB.csTemplates=[]);
+  return DB.templates||(DB.templates=[]);
+}
+function findTemplateById(id) {
+  let t=(DB.templates||[]).find(x=>x.id===id);
+  if (t) return {template:t,category:'sales'};
+  t=(DB.onboardingTemplates||[]).find(x=>x.id===id);
+  if (t) return {template:t,category:'onboarding'};
+  t=(DB.csTemplates||[]).find(x=>x.id===id);
+  if (t) return {template:t,category:'cs'};
+  return null;
+}
+
+function switchTemplateTab(tab) {
+  activeTemplateTab = tab;
+  ['sales','onboarding','cs'].forEach(t=>{
+    const el=document.getElementById('tpl-tab-'+t);
+    if (el) el.classList.toggle('tpl-tab-active', t===tab);
+  });
+  renderTemplates();
+}
+
 function renderTemplates() {
-  const list=DB.templates||[];
+  // Update tab counts
+  const sc=document.getElementById('tpl-count-sales');
+  const oc=document.getElementById('tpl-count-onboarding');
+  const cc=document.getElementById('tpl-count-cs');
+  if(sc) sc.textContent=(DB.templates||[]).length;
+  if(oc) oc.textContent=(DB.onboardingTemplates||[]).length;
+  if(cc) cc.textContent=(DB.csTemplates||[]).length;
+
   const container=document.getElementById('templates-list');
   if (!container) return;
-  if (!list.length) { container.innerHTML=`<div class="empty-state"><div class="es-icon">📝</div><p>No templates yet</p></div>`; return; }
+
+  const cat = activeTemplateTab;
+  const list = getTplArray(cat);
+
+  const emptyIcons={sales:'📝',onboarding:'🚀',cs:'⭐'};
+  const emptyLabels={sales:'No sales templates yet',onboarding:'No onboarding templates yet',cs:'No customer success templates yet'};
+
+  if (!list.length) {
+    container.innerHTML=`<div class="empty-state"><div class="es-icon">${emptyIcons[cat]}</div><p>${emptyLabels[cat]}</p></div>`;
+    return;
+  }
+
   container.innerHTML=list.map(t=>`
     <div class="tpl-card">
       <div class="tc-body">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
           <span class="tc-name" style="cursor:pointer" onclick="openTemplatePreview('${t.id}')">${esc(t.name)}</span>
-          ${t.category?`<span style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:2px 7px">${esc(t.category)}</span>`:''}
+          ${cat==='onboarding'&&t.triggerStage?`<span style="font-size:10px;font-weight:600;background:var(--teal-light);color:var(--teal);border-radius:4px;padding:2px 7px;border:1px solid var(--teal)">⚡ ${esc(ONB_TRIGGER_STAGE_LABELS[t.triggerStage]||t.triggerStage)}</span>`:''}
+          ${cat!=='onboarding'&&t.category?`<span style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:2px 7px">${esc(t.category)}</span>`:''}
           ${t.uses?`<span style="font-size:11px;color:var(--text-muted)">Used ${t.uses}×</span>`:''}
         </div>
         <div class="tc-preview">${esc(t.body)}</div>
@@ -2995,38 +3251,71 @@ function renderTemplates() {
     </div>`).join('');
 }
 
+function _setTplModalForCat(cat) {
+  const isOnb = cat==='onboarding';
+  const subtitleMap={sales:'Sales templates',onboarding:'Onboarding templates',cs:'Customer Success templates'};
+  const sub=document.getElementById('template-modal-subtitle');
+  if(sub) sub.textContent=subtitleMap[cat]||'';
+  const trigRow=document.getElementById('tpl-trigger-row');
+  const catRow=document.getElementById('tpl-category-row');
+  if(trigRow) trigRow.style.display=isOnb?'':'none';
+  if(catRow) catRow.style.display=isOnb?'none':'';
+}
+
 function openAddTemplate() {
   editingTemplateId=null;
+  activeTplCategory=activeTemplateTab;
   document.getElementById('template-modal-title').textContent='Add Template';
   document.getElementById('tpl-name').value='';
   document.getElementById('tpl-body').value='';
   document.getElementById('tpl-category').value='';
+  const ts=document.getElementById('tpl-trigger-stage');
+  if(ts) ts.value='';
+  _setTplModalForCat(activeTplCategory);
   openModal('template-modal');
 }
 
 function openEditTemplate(id) {
-  const t=(DB.templates||[]).find(x=>x.id===id);
-  if (!t) return;
+  const found=findTemplateById(id);
+  if (!found) return;
+  const {template:t, category:cat}=found;
   editingTemplateId=id;
+  activeTplCategory=cat;
   document.getElementById('template-modal-title').textContent='Edit Template';
   document.getElementById('tpl-name').value=t.name||'';
   document.getElementById('tpl-body').value=t.body||'';
   document.getElementById('tpl-category').value=t.category||'';
+  const ts=document.getElementById('tpl-trigger-stage');
+  if(ts) ts.value=t.triggerStage||'';
+  _setTplModalForCat(cat);
   openModal('template-modal');
 }
 
 function saveTemplate() {
   const name=document.getElementById('tpl-name').value.trim();
   const body=document.getElementById('tpl-body').value.trim();
-  const category=document.getElementById('tpl-category').value.trim();
   if (!name) { toast('Template name is required','error'); return; }
-  if (!DB.templates) DB.templates=[];
+  const cat=activeTplCategory||'sales';
+  const arr=getTplArray(cat);
   if (editingTemplateId) {
-    const t=DB.templates.find(x=>x.id===editingTemplateId);
-    if (t) { t.name=name; t.body=body; t.category=category; }
+    const t=arr.find(x=>x.id===editingTemplateId);
+    if (t) {
+      t.name=name; t.body=body;
+      if(cat==='onboarding') {
+        t.triggerStage=document.getElementById('tpl-trigger-stage').value||'';
+      } else {
+        t.category=document.getElementById('tpl-category').value.trim();
+      }
+    }
     toast('Template updated','success');
   } else {
-    DB.templates.push({id:uid(),name,body,category,uses:0});
+    const obj={id:uid(),name,body,uses:0};
+    if(cat==='onboarding') {
+      obj.triggerStage=document.getElementById('tpl-trigger-stage').value||'';
+    } else {
+      obj.category=document.getElementById('tpl-category').value.trim();
+    }
+    arr.push(obj);
     toast('Template saved','success');
   }
   saveToStorage();
@@ -3036,19 +3325,26 @@ function saveTemplate() {
 
 function deleteTemplate(id) {
   if (!confirm('Delete this template?')) return;
-  DB.templates=(DB.templates||[]).filter(x=>x.id!==id);
+  const found=findTemplateById(id);
+  if(!found) return;
+  const arr=getTplArray(found.category);
+  const idx=arr.findIndex(x=>x.id===id);
+  if(idx>=0) arr.splice(idx,1);
   saveToStorage();
   renderCurrentPage();
   toast('Template deleted');
 }
 
 function duplicateTemplate(id) {
-  const t=(DB.templates||[]).find(x=>x.id===id);
-  if (!t) return;
+  const found=findTemplateById(id);
+  if (!found) return;
+  const {template:t, category:cat}=found;
   const copy={...t, id:uid(), name:'Copy of '+t.name, uses:0};
-  if (!DB.templates) DB.templates=[];
-  DB.templates.push(copy);
+  getTplArray(cat).push(copy);
   saveToStorage();
+  // Switch to correct tab before editing
+  activeTemplateTab=cat;
+  activeTplCategory=cat;
   renderCurrentPage();
   openEditTemplate(copy.id);
   toast('Template duplicated — edit to customise','success');
@@ -3056,11 +3352,15 @@ function duplicateTemplate(id) {
 
 // ---- Template preview modal ----
 function openTemplatePreview(tplId, prefillName='', prefillBrand='') {
-  const t=(DB.templates||[]).find(x=>x.id===tplId);
-  if (!t) return;
+  const found=findTemplateById(tplId);
+  if (!found) return;
+  const {template:t, category:cat}=found;
   previewingTemplateId=tplId;
   document.getElementById('tpl-prev-title').textContent=t.name;
-  document.getElementById('tpl-prev-category').textContent=t.category||'';
+  const catLabel={sales:'Sales',onboarding:'Onboarding',cs:'Customer Success'};
+  document.getElementById('tpl-prev-category').textContent=
+    cat==='onboarding'&&t.triggerStage ? `Onboarding · ⚡ ${ONB_TRIGGER_STAGE_LABELS[t.triggerStage]||t.triggerStage}` :
+    t.category ? `${catLabel[cat]||cat} · ${t.category}` : (catLabel[cat]||cat);
   document.getElementById('tpl-prev-name-input').value=prefillName;
   document.getElementById('tpl-prev-brand-input').value=prefillBrand;
   updateTemplatePreview();
@@ -3068,8 +3368,9 @@ function openTemplatePreview(tplId, prefillName='', prefillBrand='') {
 }
 
 function updateTemplatePreview() {
-  const t=(DB.templates||[]).find(x=>x.id===previewingTemplateId);
-  if (!t) return;
+  const found=findTemplateById(previewingTemplateId);
+  if (!found) return;
+  const t=found.template;
   const name=document.getElementById('tpl-prev-name-input').value;
   const brand=document.getElementById('tpl-prev-brand-input').value;
   const filled=(t.body||'')
@@ -3080,8 +3381,9 @@ function updateTemplatePreview() {
 }
 
 function copyTemplateMessage() {
-  const t=(DB.templates||[]).find(x=>x.id===previewingTemplateId);
-  if (!t) return;
+  const found=findTemplateById(previewingTemplateId);
+  if (!found) return;
+  const t=found.template;
   const name=document.getElementById('tpl-prev-name-input').value;
   const brand=document.getElementById('tpl-prev-brand-input').value;
   const filled=(t.body||'')
