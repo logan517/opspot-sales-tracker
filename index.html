@@ -2113,7 +2113,7 @@ function renderOnbGroupsView() {
         <span class="gc-stat">✅ ${done} complete</span>
         ${g.region?`<span class="gc-stat">🌍 ${esc(displayRegion(g.region))}</span>`:''}
       </div>
-      <button class="gc-add-site" onclick="event.stopPropagation();openAddOnb2Site('${g.id}')">+ Add site</button>
+      <button class="gc-add-site" onclick="openAddOnb2Site('${g.id}')">+ Add site</button>
     </div>`;
   }).join('')}</div>`;
 }
@@ -2302,8 +2302,15 @@ function deleteOnb2Group(groupId) {
 // Site CRUD
 function openAddOnb2Site(groupId) {
   addingOnbSiteForGroup = groupId;
-  document.getElementById('onb2-site-modal-title').textContent = 'Add site';
-  document.getElementById('onb2s-name').value = '';
+  // Always navigate to the group detail view first — avoids event propagation issues
+  if (String(onbNav.groupId) !== String(groupId) || onbNav.level !== 'group') {
+    onbNav = { level: 'group', groupId: groupId, expandedSite: null };
+    renderOnboarding();
+  }
+  const titleEl = document.getElementById('onb2-site-modal-title');
+  if (titleEl) titleEl.textContent = 'Add site';
+  const nameEl = document.getElementById('onb2s-name');
+  if (nameEl) nameEl.value = '';
   openModal('onb2-site-modal');
 }
 function saveOnb2Site() {
