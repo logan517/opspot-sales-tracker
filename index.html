@@ -208,8 +208,21 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 .tc2-days.expiring .dn{color:var(--amber)}
 .tc2-days.overdue .dn{color:var(--red)}
 .tc2-days.nodates .dn{color:#d1d5db;font-size:28px}
-.tc2-bar{background:#f0eeea;border-radius:6px;height:6px;overflow:hidden;margin-bottom:10px}
+.tc2-bar-wrap{position:relative;padding-bottom:22px;margin-bottom:4px}
+.tc2-bar{background:#f0eeea;border-radius:6px;height:6px;overflow:hidden}
 .tc2-bar-fill{height:100%;border-radius:6px;transition:width .4s}
+/* Touchpoint markers */
+.tc2-tp-dot{position:absolute;top:-3px;width:12px;height:12px;border-radius:50%;border:2px solid var(--white);transform:translateX(-50%);cursor:pointer;z-index:2;transition:transform .12s;box-shadow:0 1px 3px rgba(0,0,0,.18)}
+.tc2-tp-dot:hover{transform:translateX(-50%) scale(1.3)}
+.tc2-tp-dot.tp-future{background:#d1d5db;cursor:default}
+.tc2-tp-dot.tp-due{background:var(--amber);animation:tp-pulse 2.5s ease-in-out infinite}
+.tc2-tp-dot.tp-sent{background:var(--green)}
+.tc2-tp-lbl{position:absolute;top:11px;font-size:9px;font-weight:700;transform:translateX(-50%);white-space:nowrap;pointer-events:none;letter-spacing:.2px}
+.tc2-tp-lbl.tp-future{color:#9ca3af}
+.tc2-tp-lbl.tp-due{color:#b45309}
+.tc2-tp-lbl.tp-sent{color:#16a34a}
+@keyframes tp-pulse{0%,100%{box-shadow:0 1px 3px rgba(0,0,0,.18),0 0 0 0 rgba(245,158,11,0)}60%{box-shadow:0 1px 3px rgba(0,0,0,.18),0 0 0 5px rgba(245,158,11,.28)}}
+.tc2-tp-due-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;background:var(--amber-light);color:#92400e;border:1px solid #fcd34d;border-radius:20px;padding:2px 8px;vertical-align:middle}
 .tc2-date-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--text-muted);margin-bottom:12px}
 .tc2-footer{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 /* Trial/onboarding status badges */
@@ -1177,6 +1190,36 @@ let DB = {
 // STAGES: outreach → qualified → discovery → trials → onboarding
 const STAGES = ['outreach','qualified','discovery','trials','onboarding'];
 const STAGE_LABELS = {outreach:'Outreach',qualified:'Qualified',discovery:'Discovery',trials:'Trial',onboarding:'Onboarding'};
+
+const TRIAL_TOUCHPOINTS = [
+  {day:7,  key:'d7',  label:'7-Day Check-in',    emoji:'📧'},
+  {day:15, key:'d15', label:'Mid-Trial Update',   emoji:'📊'},
+  {day:30, key:'d30', label:'30-Day Report',       emoji:'📋'},
+];
+function getTrialTpDue(t) {
+  if (!t.startDate || t.status==='Finished') return [];
+  const sd = new Date(cleanDate(t.startDate));
+  if (isNaN(sd)) return [];
+  const elapsed = Math.floor((Date.now()-sd.getTime())/86400000);
+  const tps = t.touchpoints||{};
+  return TRIAL_TOUCHPOINTS.filter(tp=>elapsed>=tp.day && !tps[tp.key]);
+}
+function markTrialTp(trialId, key) {
+  const t = DB.trials.find(x=>String(x.id)===String(trialId));
+  if (!t) return;
+  if (!t.touchpoints) t.touchpoints={};
+  const tp = TRIAL_TOUCHPOINTS.find(x=>x.key===key);
+  const label = tp?tp.label:'Touchpoint';
+  if (t.touchpoints[key]) {
+    t.touchpoints[key]=null;
+    toast(`${label} unmarked`,'warning');
+  } else {
+    t.touchpoints[key]=Date.now();
+    toast(`${label} marked as sent ✓`,'success');
+  }
+  saveToStorage();
+  renderCurrentPage();
+}
 
 let currentPage = 'overview';
 let activeRegion = 'all';
@@ -2726,8 +2769,10 @@ function renderTrialProgress() {
   const rp = document.getElementById('tp-region-pill');
   if (rp) rp.textContent = activeRegion==='all'?'All regions':displayRegion(activeRegion);
 
+  const tpsDueCount = list.filter(t=>getTrialTpDue(t).length>0).length;
   document.getElementById('trial-progress-metrics').innerHTML = `
     ${mcv2('Active trials',active.length,'')}
+    ${mcv2('Touchpoints due',tpsDueCount,'emails to send',tpsDueCount>0?'red':'')}
     ${mcv2('Expiring soon',expiring.length,'within 7 days',expiring.length>0?'red':'')}
     ${mcv2('Overdue',overdue.length,'past end date',overdue.length>0?'red':'')}
   `;
@@ -2768,12 +2813,32 @@ function renderTrialProgress() {
       ?`<span style="color:#d1d5db">— → —</span><span>0% elapsed</span>`
       :`<span>${fmtDate(sd)} → ${fmtDate(endDate)}</span><span>${pct}% elapsed</span>`;
 
+    // ---- Touchpoint markers ----
+    const tps = t.touchpoints||{};
+    const tpDue = getTrialTpDue(t);
+    const tpMarkers = (!noDates && totalDays>0) ? TRIAL_TOUCHPOINTS.map(tp=>{
+      const pos = Math.min(97, Math.max(3, Math.round((tp.day/totalDays)*100)));
+      const state = tps[tp.key] ? 'sent' : (elapsedDays>=tp.day ? 'due' : 'future');
+      const sentDate = tps[tp.key] ? new Date(tps[tp.key]).toLocaleDateString('en-GB',{day:'numeric',month:'short'}) : '';
+      const title = state==='sent' ? `${tp.label} — sent ${sentDate} (click to unmark)` :
+                    state==='due'  ? `${tp.label} — DUE (click to mark as sent)` :
+                    `${tp.label} — due on day ${tp.day} (day ${elapsedDays} of ${totalDays})`;
+      const clickable = state!=='future' ? `onclick="event.stopPropagation();markTrialTp('${t.id}','${tp.key}')"` : '';
+      return `<div class="tc2-tp-dot tp-${state}" style="left:${pos}%" title="${title}" ${clickable}></div>
+              <div class="tc2-tp-lbl tp-${state}" style="left:${pos}%">${state==='sent'?'✓ '+tp.emoji:state==='due'?'⚡ '+tp.emoji:tp.emoji} ${tp.day}d</div>`;
+    }).join('') : '';
+
+    const dueBadge = tpDue.length ? `<span class="tc2-tp-due-badge">📬 ${tpDue.length} email${tpDue.length>1?'s':''} due</span>` : '';
+
     return `<div class="tc2">
       <div class="tc2-top">
-        <div><div class="tc2-name">${esc(t.brand)}</div><div class="tc2-sub">${esc(t.contact)}${t.role?' · '+esc(t.role):''}</div></div>
+        <div><div class="tc2-name">${esc(t.brand)} ${dueBadge}</div><div class="tc2-sub">${esc(t.contact)}${t.role?' · '+esc(t.role):''}</div></div>
         <div class="tc2-days ${daysCls}"><div class="dn">${daysDisplay}</div><div class="dl">${daysLabel}</div></div>
       </div>
-      <div class="tc2-bar"><div class="tc2-bar-fill" style="width:${pct}%;background:${barColor}"></div></div>
+      <div class="tc2-bar-wrap">
+        <div class="tc2-bar"><div class="tc2-bar-fill" style="width:${pct}%;background:${barColor}"></div></div>
+        ${tpMarkers}
+      </div>
       <div class="tc2-date-row">${dateRow}</div>
       <div class="tc2-footer">
         ${sbHtml}
@@ -2811,9 +2876,11 @@ function renderAlerts() {
     const d = daysUntil(addMonths(t.startDate,parseInt(t.duration||1)));
     return d>=0&&d<=7;
   });
+  const trialsWithTpsDue = DB.trials.filter(t=>getTrialTpDue(t).length>0);
   let html='';
   if (overdueFollowups.length) html+=`<div class="alert-strip red-strip" onclick="navigate('followups')">🔴 ${overdueFollowups.length} contact${overdueFollowups.length>1?'s':''} overdue for follow up →</div>`;
   if (pastEndTrials.length) html+=`<div class="alert-strip red-strip" onclick="navigate('trial-progress')">🔴 ${pastEndTrials.length} trial${pastEndTrials.length>1?'s':''} past end date →</div>`;
+  if (trialsWithTpsDue.length) html+=`<div class="alert-strip amber-strip" onclick="navigate('trial-progress')">📬 ${trialsWithTpsDue.length} trial${trialsWithTpsDue.length>1?'s have':' has'} touchpoint emails due → Trial progress</div>`;
   if (expiringTrials.length) html+=`<div class="alert-strip amber-strip" onclick="navigate('trial-progress')">🟡 ${expiringTrials.length} trial${expiringTrials.length>1?'s':''} expiring within 7 days →</div>`;
   document.getElementById('overview-alerts').innerHTML = html;
 }
