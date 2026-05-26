@@ -225,6 +225,50 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 .tc2-tp-due-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;background:var(--amber-light);color:#92400e;border:1px solid #fcd34d;border-radius:20px;padding:2px 8px;vertical-align:middle}
 .tc2-date-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--text-muted);margin-bottom:12px}
 .tc2-footer{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+/* Invoicing */
+.inv-tabs{display:flex;gap:0;padding:0 28px;flex-shrink:0;border-bottom:2px solid var(--border)}
+.inv-tab{padding:10px 20px;font-size:13px;font-weight:600;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .15s;user-select:none;white-space:nowrap}
+.inv-tab:hover{color:var(--navy)}
+.inv-tab.inv-tab-active{color:var(--blue);border-bottom-color:var(--blue)}
+.inv-metric-row{display:flex;gap:14px}
+.inv-metric-card{background:var(--white);border:0.5px solid var(--border);border-radius:12px;padding:16px 20px;flex:1}
+.inv-metric-card .imc-label{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted)}
+.inv-metric-card .imc-value{font-family:'DM Mono',monospace;font-size:28px;font-weight:500;margin-top:4px}
+.inv-metric-card .imc-value.red{color:var(--red)}
+.inv-metric-card .imc-value.green{color:var(--green)}
+.inv-section{padding-bottom:8px}
+.inv-section-hd{display:flex;align-items:center;gap:8px}
+.inv-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.inv-table{width:100%;border-collapse:collapse}
+.inv-table th{font-size:11px;text-transform:uppercase;color:var(--text-muted);font-weight:500;padding:8px 12px;border-bottom:0.5px solid var(--border);text-align:left}
+.inv-table td{font-size:13px;padding:10px 12px;border-bottom:0.5px solid var(--border);vertical-align:middle}
+.inv-table tr:last-child td{border-bottom:none}
+.inv-table tr.inv-row{cursor:pointer}
+.inv-table tr.inv-row:hover td{background:var(--bg)}
+.inv-badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:500}
+.inv-badge.paid{background:var(--green-light);color:#14532d}
+.inv-badge.overdue-soft{background:var(--amber-light);color:#78350f}
+.inv-badge.overdue-hard{background:var(--red-light);color:#7f1d1d}
+.inv-badge.due-soon{background:var(--amber-light);color:#78350f}
+.inv-badge.upcoming{background:var(--bg);color:var(--text-muted);border:0.5px solid var(--border)}
+.inv-customer-card{background:var(--white);border:0.5px solid var(--border);border-radius:12px;padding:20px;cursor:pointer;transition:box-shadow .15s}
+.inv-customer-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.inv-cust-avatar{width:40px;height:40px;background:var(--blue-light);color:var(--blue);font-weight:500;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:14px;flex-shrink:0}
+.inv-doc-card{background:var(--white);border:0.5px solid var(--border);border-radius:10px;padding:16px;flex:1}
+.inv-contract-table{width:100%}
+.inv-contract-table td{padding:6px 0;font-size:13px}
+.inv-contract-table td:first-child{width:40%;color:var(--text-muted)}
+.inv-contract-table td:last-child{font-weight:500}
+.inv-site-counter{display:flex;align-items:center;gap:12px;justify-content:center}
+.inv-site-btn{width:32px;height:32px;border-radius:50%;border:0.5px solid var(--border);background:var(--white);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+.inv-site-input{width:60px;text-align:center;font-size:22px;font-weight:500;border:0.5px solid var(--border);border-radius:8px;padding:4px;font-family:'DM Sans',sans-serif;outline:none}
+.inv-chart-wrap{display:flex;align-items:flex-end;gap:6px;height:100px;padding:0 4px}
+.inv-chart-bar{flex:1;background:var(--blue-light);border-radius:3px 3px 0 0;min-height:4px;position:relative}
+.inv-chart-bar.current{background:var(--blue)}
+.inv-chart-label{font-size:9px;text-align:center;color:var(--text-muted);margin-top:4px}
+.inv-breadcrumb{font-size:12px;color:var(--text-muted);display:flex;align-items:center;gap:6px;margin-bottom:12px}
+.inv-breadcrumb a{color:var(--blue);cursor:pointer;text-decoration:none}
+td.inv-td-amount{text-align:right;font-family:'DM Mono',monospace}
 /* Trial/onboarding status badges */
 .status-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:500}
 .status-badge::before{content:'';width:6px;height:6px;border-radius:50%;flex-shrink:0}
@@ -507,6 +551,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
   <div class="nav-item" data-page="templates" onclick="navigate('templates')">
     <div class="nav-item-left"><span class="nav-icon">📝</span> Templates</div>
     <span class="nav-badge" id="badge-templates">0</span>
+  </div>
+
+  <div class="nav-section-label-v2">Finance</div>
+  <div class="nav-item" data-page="invoicing" onclick="navigate('invoicing')">
+    <div class="nav-item-left"><span class="nav-icon">💷</span> Invoicing</div>
+    <span class="nav-badge" id="badge-invoicing">0</span>
   </div>
 
   <!-- REGIONS -->
@@ -1165,6 +1215,78 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
   </div>
 </div>
 
+<!-- INVOICING PAGE -->
+<div class="page" id="page-invoicing">
+  <div id="inv-page-content"></div>
+</div>
+
+<!-- INVOICE MODAL -->
+<div class="modal-overlay" id="inv-invoice-modal">
+  <div class="modal" style="max-width:480px">
+    <div class="modal-header">
+      <h2 id="inv-inv-modal-title">New invoice</h2>
+      <button class="modal-close" onclick="closeModal('inv-invoice-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group form-full">
+          <label>Customer</label>
+          <select id="inv-inv-customer"></select>
+        </div>
+        <div class="form-group">
+          <label>Period (month)</label>
+          <input type="month" id="inv-inv-period">
+        </div>
+        <div class="form-group">
+          <label>Due date</label>
+          <input type="date" id="inv-inv-due">
+        </div>
+        <div class="form-group">
+          <label>Site count</label>
+          <input type="number" id="inv-inv-sites" min="1" oninput="updateInvAmountPreview()">
+        </div>
+        <div class="form-group">
+          <label>Rate per site (£)</label>
+          <input type="number" id="inv-inv-rate" min="0" step="0.01" oninput="updateInvAmountPreview()">
+        </div>
+      </div>
+      <div style="background:var(--bg);border:0.5px solid var(--border);border-radius:8px;padding:12px;margin-top:12px;font-size:13px">
+        Amount: <strong id="inv-inv-amount-preview">£0</strong>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('inv-invoice-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveNewInvoice()">Save invoice</button>
+    </div>
+  </div>
+</div>
+
+<!-- INVOICE CUSTOMER MODAL -->
+<div class="modal-overlay" id="inv-customer-modal">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-header">
+      <h2>Add customer</h2>
+      <button class="modal-close" onclick="closeModal('inv-customer-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group form-full"><label>Customer name</label><input type="text" id="invc-name" placeholder="e.g. Tesco Express"></div>
+        <div class="form-group"><label>Account owner</label><input type="text" id="invc-owner"></div>
+        <div class="form-group"><label>Contract start</label><input type="date" id="invc-start"></div>
+        <div class="form-group"><label>Contract term (months)</label><input type="number" id="invc-term" value="12" min="1"></div>
+        <div class="form-group"><label>Billing day (1–31)</label><input type="number" id="invc-billing-day" value="1" min="1" max="31"></div>
+        <div class="form-group"><label>Payment terms (days)</label><input type="number" id="invc-pay-terms" value="30" min="1"></div>
+        <div class="form-group"><label>Rate per site (£)</label><input type="number" id="invc-rate" step="0.01" min="0"></div>
+        <div class="form-group"><label>Initial site count</label><input type="number" id="invc-sites" value="1" min="0"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('inv-customer-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveInvCustomer()">Add customer</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast-container"></div>
 
 <script>
@@ -1185,6 +1307,11 @@ let DB = {
   onboardingTemplates: [], // onboarding templates (with triggerStage)
   csTemplates: [],         // customer success templates
   activityLog: [],
+  invoiceCustomers: [],  // {id, name, accountOwner, contractStart, contractTermMonths, billingDay, paymentTermsDays, ratePerSite}
+  invoiceDocs: [],       // {id, customerId, type ('terms_of_use'|'order_form'), filename, fileUrl, signedDate, uploadedAt}
+  siteCountLog: [],      // {id, customerId, count, effectiveFrom, createdBy, createdAt} — append-only
+  invoices: [],          // {id, customerId, invoiceNumber, periodMonth, siteCount, amount, dueDate, paidDate (nullable)}
+  nextInvoiceNum: 1042,
 };
 
 // STAGES: outreach → qualified → discovery → trials → onboarding
@@ -1245,6 +1372,10 @@ let activeTplCategory = 'sales';   // context when modal is open
 // Onboarding trigger queue
 let onbTriggerQueue = [];
 let currentOnbTrigger = null;
+// Invoicing state
+let invTab = 'reminders';     // 'reminders' | 'customers'
+let invCustomerId = null;     // string|null — when viewing customer detail
+let invSiteInputVal = null;   // live input value for site counter widget
 
 const SALES_PAGES = ['outreach','qualified','discovery','trials','onboarding','followups','trial-progress','templates'];
 // Onboarding V2 checklist steps
@@ -1303,6 +1434,10 @@ function loadFromStorage() {
       if (!Array.isArray(DB.onboardingGroups)) DB.onboardingGroups = [];
       if (!Array.isArray(DB.onboardingTemplates)) DB.onboardingTemplates = [];
       if (!Array.isArray(DB.csTemplates)) DB.csTemplates = [];
+      if (!Array.isArray(DB.invoiceCustomers)) DB.invoiceCustomers = [];
+      if (!Array.isArray(DB.invoiceDocs)) DB.invoiceDocs = [];
+      if (!Array.isArray(DB.siteCountLog)) DB.siteCountLog = [];
+      if (!Array.isArray(DB.invoices)) DB.invoices = [];
     }
     const DEFAULT_SHEETS_URL = 'https://script.google.com/macros/s/AKfycby1qZgxXJWtkuFLMc6gK0kKuAiFQRUf4xrHbX8S7f9j1chSkYgwNh7VhozIWH0NHLz0/exec';
     const url = localStorage.getItem('opspot_sheets_url_v2') || DEFAULT_SHEETS_URL;
@@ -1461,6 +1596,7 @@ function renderCurrentPage() {
   else if (currentPage === 'trial-progress') renderTrialProgress();
   else if (currentPage === 'templates') renderTemplates();
   else if (currentPage === 'activity') renderActivity();
+  else if (currentPage === 'invoicing') renderInvoicing();
 }
 
 // ===================== HELPERS =====================
@@ -1573,6 +1709,13 @@ function updateAllBadges() {
   setRC('rc-MiddleEast',rc['Middle East']||0);
 
   document.querySelectorAll('.region-item-v2').forEach(el=>el.classList.toggle('active',el.dataset.region===activeRegion));
+
+  const invOverdueBadge = document.getElementById('badge-invoicing');
+  if (invOverdueBadge) {
+    const n = (DB.invoices||[]).filter(i=>getInvStatus(i)==='overdue').length;
+    invOverdueBadge.textContent = n || '';
+    invOverdueBadge.style.display = n ? '' : 'none';
+  }
 }
 
 // ===================== STAGE RENDER (outreach / qualified / discovery) =====================
@@ -3696,6 +3839,518 @@ document.addEventListener('keydown',e=>{
   }
 });
 
+// ===================== INVOICING =====================
+function fmtGBP(n) { return '£' + Math.round(n||0).toLocaleString('en-GB'); }
+
+function getInvStatus(inv) {
+  if (inv.paidDate) return 'paid';
+  if (!inv.dueDate) return 'upcoming';
+  const diff = daysUntil(inv.dueDate);
+  if (diff < 0) return 'overdue';
+  if (diff <= 7) return 'due_soon';
+  return 'upcoming';
+}
+
+function getOverdueDays(inv) {
+  if (!inv.dueDate) return 0;
+  return Math.max(0, -daysUntil(inv.dueDate));
+}
+
+function getCurrentSiteCount(customerId) {
+  const entries = (DB.siteCountLog||[])
+    .filter(e=>String(e.customerId)===String(customerId))
+    .sort((a,b)=>a.effectiveFrom<b.effectiveFrom?1:-1);
+  return entries.length ? entries[0].count : 0;
+}
+
+function getSiteCountForMonth(customerId, monthStr) {
+  const entries = (DB.siteCountLog||[])
+    .filter(e=>String(e.customerId)===String(customerId) && e.effectiveFrom <= monthStr)
+    .sort((a,b)=>a.effectiveFrom<b.effectiveFrom?1:-1);
+  return entries.length ? entries[0].count : 0;
+}
+
+function invNextNum() {
+  const n = DB.nextInvoiceNum || 1042;
+  DB.nextInvoiceNum = n + 1;
+  return 'INV-' + n;
+}
+
+function invStatusBadge(inv) {
+  const s = getInvStatus(inv);
+  if (s==='paid') return `<span class="inv-badge paid">Paid</span>`;
+  if (s==='overdue') {
+    const d = getOverdueDays(inv);
+    const cls = d >= 30 ? 'overdue-hard' : 'overdue-soft';
+    return `<span class="inv-badge ${cls}" title="Click to mark as paid" style="cursor:pointer" onclick="event.stopPropagation();markInvPaid('${inv.id}')">Overdue ${d}d</span>`;
+  }
+  if (s==='due_soon') return `<span class="inv-badge due-soon">Due in ${daysUntil(inv.dueDate)}d</span>`;
+  return `<span class="inv-badge upcoming">Upcoming</span>`;
+}
+
+function renderInvoicing() {
+  const el = document.getElementById('inv-page-content');
+  if (!el) return;
+  if (invCustomerId) {
+    renderInvCustomerDetail(el);
+  } else if (invTab === 'customers') {
+    renderInvCustomerList(el);
+  } else {
+    renderInvReminders(el);
+  }
+}
+
+function switchInvTab(tab) {
+  invTab = tab;
+  invCustomerId = null;
+  renderInvoicing();
+}
+function openInvCustomer(id) {
+  invCustomerId = String(id);
+  invSiteInputVal = null;
+  navigate('invoicing');
+}
+function backToInvCustomers() {
+  invCustomerId = null;
+  invTab = 'customers';
+  renderInvoicing();
+}
+
+function renderInvReminders(el) {
+  const now = new Date();
+  const allInv = DB.invoices || [];
+  const outstanding = allInv.filter(i=>!i.paidDate).reduce((s,i)=>s+(i.amount||0),0);
+  const overdueSum = allInv.filter(i=>getInvStatus(i)==='overdue').reduce((s,i)=>s+(i.amount||0),0);
+  const dueSoonSum = allInv.filter(i=>getInvStatus(i)==='due_soon').reduce((s,i)=>s+(i.amount||0),0);
+  const thisMonth = now.toISOString().slice(0,7);
+  const paidThisMonth = allInv.filter(i=>i.paidDate&&i.paidDate.slice(0,7)===thisMonth).reduce((s,i)=>s+(i.amount||0),0);
+
+  const overdueInvs = allInv.filter(i=>getInvStatus(i)==='overdue')
+    .sort((a,b)=>getOverdueDays(b)-getOverdueDays(a));
+  const dueSoonInvs = allInv.filter(i=>getInvStatus(i)==='due_soon')
+    .sort((a,b)=>daysUntil(a.dueDate)-daysUntil(b.dueDate));
+
+  function custName(cid) {
+    const c=(DB.invoiceCustomers||[]).find(x=>String(x.id)===String(cid));
+    return c?esc(c.name):'Unknown';
+  }
+  function custSites(cid) {
+    return getCurrentSiteCount(cid);
+  }
+
+  el.innerHTML = `
+  <div class="page-topbar">
+    <div class="ptb-left">
+      <h1>Invoicing</h1>
+      <div style="font-size:13px;color:var(--text-muted);margin-top:2px">Reminders and finance events</div>
+    </div>
+    <div class="ptb-right">
+      <button class="btn btn-secondary" onclick="switchInvTab('customers')">Customers</button>
+      <button class="btn btn-primary" onclick="openNewInvoiceModal(null)">+ New invoice</button>
+    </div>
+  </div>
+  <div class="inv-tabs">
+    <div class="inv-tab inv-tab-active" onclick="switchInvTab('reminders')">Reminders</div>
+    <div class="inv-tab" onclick="switchInvTab('customers')">Customers</div>
+  </div>
+  <div style="padding:20px 28px 0">
+    <div class="inv-metric-row">
+      <div class="inv-metric-card"><div class="imc-label">Outstanding</div><div class="imc-value">${fmtGBP(outstanding)}</div></div>
+      <div class="inv-metric-card"><div class="imc-label">Overdue</div><div class="imc-value red">${fmtGBP(overdueSum)}</div></div>
+      <div class="inv-metric-card"><div class="imc-label">Due in 7 days</div><div class="imc-value">${fmtGBP(dueSoonSum)}</div></div>
+      <div class="inv-metric-card"><div class="imc-label">Paid this month</div><div class="imc-value green">${fmtGBP(paidThisMonth)}</div></div>
+    </div>
+  </div>
+
+  <div class="inv-section" style="margin-top:24px">
+    <div class="inv-section-hd" style="padding:0 28px;margin-bottom:10px">
+      <span class="inv-dot" style="background:var(--red)"></span>
+      <span style="font-weight:500;font-size:14px">Overdue</span>
+      <span style="font-size:12px;color:var(--text-muted);margin-left:6px">${overdueInvs.length} invoice${overdueInvs.length!==1?'s':''}</span>
+    </div>
+    ${overdueInvs.length===0
+      ? `<div style="padding:20px 28px;color:var(--text-muted);font-size:13px">No overdue invoices</div>`
+      : `<div style="padding:0 28px"><table class="inv-table" style="width:100%">
+        <thead><tr>
+          <th>Customer</th><th>Invoice</th><th>Due date</th><th>Overdue by</th><th class="inv-td-amount">Amount</th>
+        </tr></thead>
+        <tbody>
+          ${overdueInvs.map(i=>{
+            const d=getOverdueDays(i);
+            const cls=d>=30?'overdue-hard':'overdue-soft';
+            return `<tr class="inv-row" onclick="openInvCustomer('${i.customerId}')">
+              <td><div style="font-weight:500">${custName(i.customerId)}</div><div style="font-size:11px;color:var(--text-muted)">${custSites(i.customerId)} sites</div></td>
+              <td>${esc(i.invoiceNumber)}</td>
+              <td>${fmtDate(i.dueDate)}</td>
+              <td><span class="inv-badge ${cls}">${d}d</span></td>
+              <td class="inv-td-amount">${fmtGBP(i.amount)}</td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table></div>`
+    }
+  </div>
+
+  <div class="inv-section" style="margin-top:24px">
+    <div class="inv-section-hd" style="padding:0 28px;margin-bottom:10px">
+      <span class="inv-dot" style="background:var(--amber)"></span>
+      <span style="font-weight:500;font-size:14px">Due soon</span>
+      <span style="font-size:12px;color:var(--text-muted);margin-left:6px">Next 7 days</span>
+    </div>
+    ${dueSoonInvs.length===0
+      ? `<div style="padding:20px 28px;color:var(--text-muted);font-size:13px">No invoices due in the next 7 days</div>`
+      : `<div style="padding:0 28px"><table class="inv-table" style="width:100%">
+        <thead><tr>
+          <th>Customer</th><th>Invoice</th><th>Due date</th><th>In</th><th class="inv-td-amount">Amount</th>
+        </tr></thead>
+        <tbody>
+          ${dueSoonInvs.map(i=>`<tr class="inv-row" onclick="openInvCustomer('${i.customerId}')">
+            <td><div style="font-weight:500">${custName(i.customerId)}</div><div style="font-size:11px;color:var(--text-muted)">${custSites(i.customerId)} sites</div></td>
+            <td>${esc(i.invoiceNumber)}</td>
+            <td>${fmtDate(i.dueDate)}</td>
+            <td><span class="inv-badge due-soon">${daysUntil(i.dueDate)}d</span></td>
+            <td class="inv-td-amount">${fmtGBP(i.amount)}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table></div>`
+    }
+  </div>`;
+}
+
+function renderInvCustomerList(el) {
+  const customers = DB.invoiceCustomers || [];
+  el.innerHTML = `
+  <div class="page-topbar">
+    <div class="ptb-left"><h1>Invoicing</h1></div>
+    <div class="ptb-right">
+      <button class="btn btn-secondary" onclick="switchInvTab('reminders')">Reminders</button>
+      <button class="btn btn-primary" onclick="openAddInvCustomer()">+ Add customer</button>
+    </div>
+  </div>
+  <div class="inv-tabs">
+    <div class="inv-tab" onclick="switchInvTab('reminders')">Reminders</div>
+    <div class="inv-tab inv-tab-active" onclick="switchInvTab('customers')">Customers</div>
+  </div>
+  <div style="padding:20px 28px;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">
+    ${customers.length===0
+      ? `<div class="empty-state" style="grid-column:1/-1"><div class="es-icon">💷</div><p>No customers yet. Add your first customer to get started.</p></div>`
+      : customers.map(c=>{
+          const sites = getCurrentSiteCount(c.id);
+          const unpaid = (DB.invoices||[]).filter(i=>String(i.customerId)===String(c.id)&&!i.paidDate);
+          const outstanding = unpaid.reduce((s,i)=>s+(i.amount||0),0);
+          const initials = (c.name||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+          return `<div class="inv-customer-card" onclick="openInvCustomer('${c.id}')">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+              <div class="inv-cust-avatar">${esc(initials)}</div>
+              <div><div style="font-weight:500;font-size:14px">${esc(c.name)}</div><div style="font-size:12px;color:var(--text-muted)">${esc(c.accountOwner||'')}</div></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;border-top:0.5px solid var(--border);padding-top:10px;margin-top:4px">
+              <span style="color:var(--text-muted)">${sites} sites · ${fmtGBP(c.ratePerSite||0)}/site</span>
+              ${outstanding>0?`<span style="color:var(--red);font-weight:500">${fmtGBP(outstanding)} outstanding</span>`:'<span style="color:var(--green)">Up to date</span>'}
+            </div>
+          </div>`;
+        }).join('')
+    }
+  </div>`;
+}
+
+function renderInvCustomerDetail(el) {
+  const cid = invCustomerId;
+  const c = (DB.invoiceCustomers||[]).find(x=>String(x.id)===String(cid));
+  if (!c) { el.innerHTML=`<div style="padding:40px">Customer not found.</div>`; return; }
+
+  const liveSites = invSiteInputVal !== null ? invSiteInputVal : getCurrentSiteCount(cid);
+  const monthlyInv = liveSites * (c.ratePerSite||0);
+  const unpaid = (DB.invoices||[]).filter(i=>String(i.customerId)===String(cid)&&!i.paidDate);
+  const outstanding = unpaid.reduce((s,i)=>s+(i.amount||0),0);
+
+  const termsDoc = (DB.invoiceDocs||[]).find(d=>String(d.customerId)===String(cid)&&d.type==='terms_of_use');
+  const orderDoc = (DB.invoiceDocs||[]).find(d=>String(d.customerId)===String(cid)&&d.type==='order_form');
+
+  const months = [];
+  const nowD = new Date();
+  for (let i=11;i>=0;i--) {
+    const d = new Date(nowD.getFullYear(), nowD.getMonth()-i, 1);
+    const ms = d.toISOString().slice(0,7)+'-01';
+    months.push({ label: d.toLocaleDateString('en-GB',{month:'short',year:'2-digit'}), monthStr: ms, count: getSiteCountForMonth(cid, ms) });
+  }
+  const maxCount = Math.max(1, ...months.map(m=>m.count));
+  const currentMonthStr = nowD.toISOString().slice(0,7)+'-01';
+
+  const custInvs = (DB.invoices||[]).filter(i=>String(i.customerId)===String(cid))
+    .sort((a,b)=>b.periodMonth>a.periodMonth?1:-1);
+
+  const started = c.contractStart ? new Date(c.contractStart).toLocaleDateString('en-GB',{month:'long',year:'numeric'}) : '—';
+
+  el.innerHTML = `
+  <div class="page-topbar" style="border-bottom:0.5px solid var(--border)">
+    <div class="ptb-left">
+      <div class="inv-breadcrumb">
+        <a onclick="switchInvTab('reminders')">Invoicing</a>
+        <span>›</span>
+        <a onclick="backToInvCustomers()">Customers</a>
+        <span>›</span>
+        <span style="color:var(--text)">${esc(c.name)}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="inv-cust-avatar" style="width:48px;height:48px;font-size:16px;flex-shrink:0">${esc((c.name||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2))}</div>
+        <div>
+          <h1 style="font-size:20px">${esc(c.name)}</h1>
+          <div style="font-size:13px;color:var(--text-muted)">Customer since ${started} · Account owner: ${esc(c.accountOwner||'—')}</div>
+        </div>
+      </div>
+    </div>
+    <div class="ptb-right">
+      <button class="btn btn-primary" onclick="openNewInvoiceModal('${cid}')">+ New invoice</button>
+    </div>
+  </div>
+
+  <div style="padding:20px 28px;overflow-y:auto;flex:1">
+    <div class="inv-metric-row" style="margin-bottom:20px">
+      <div class="inv-metric-card"><div class="imc-label">Current sites</div><div class="imc-value" id="inv-live-sites">${liveSites}</div></div>
+      <div class="inv-metric-card"><div class="imc-label">Rate per site</div><div class="imc-value">${fmtGBP(c.ratePerSite||0)}</div></div>
+      <div class="inv-metric-card"><div class="imc-label">Monthly invoice</div><div class="imc-value" id="inv-live-monthly">${fmtGBP(monthlyInv)}</div></div>
+      <div class="inv-metric-card"><div class="imc-label">Outstanding</div><div class="imc-value ${outstanding>0?'red':''}">${fmtGBP(outstanding)}</div></div>
+    </div>
+
+    <div style="display:flex;gap:14px;margin-bottom:20px">
+      ${renderInvDocCard(cid,'terms_of_use','Terms of use','📄',termsDoc)}
+      ${renderInvDocCard(cid,'order_form','Order form','📋',orderDoc)}
+    </div>
+
+    <div style="display:flex;gap:14px;margin-bottom:20px">
+      <div style="flex:1;background:var(--white);border:0.5px solid var(--border);border-radius:12px;padding:20px">
+        <div style="font-weight:500;font-size:14px;margin-bottom:14px">Contract details</div>
+        <table class="inv-contract-table" style="width:100%">
+          <tr><td>Start date</td><td>${c.contractStart?fmtDate(c.contractStart):'—'}</td></tr>
+          <tr><td>Term</td><td>${c.contractTermMonths||12} months, auto-renew</td></tr>
+          <tr><td>Billing cycle</td><td>Monthly, day ${c.billingDay||1}</td></tr>
+          <tr><td>Payment terms</td><td>Net ${c.paymentTermsDays||30}</td></tr>
+          <tr><td>Rate</td><td>${fmtGBP(c.ratePerSite||0)} per site / mo</td></tr>
+        </table>
+      </div>
+      <div style="flex:1;background:var(--white);border:0.5px solid var(--border);border-radius:12px;padding:20px">
+        <div style="font-weight:500;font-size:14px;margin-bottom:6px">Number of sites</div>
+        <div style="margin-bottom:16px">
+          <div class="inv-site-counter">
+            <button class="inv-site-btn" onclick="invSiteAdj('${cid}',-1)">−</button>
+            <input class="inv-site-input" type="number" min="0" id="inv-site-inp" value="${liveSites}" oninput="invSiteInputChange('${cid}',this.value)">
+            <button class="inv-site-btn" onclick="invSiteAdj('${cid}',1)">+</button>
+          </div>
+          <div style="font-size:11px;color:var(--text-muted);text-align:center;margin-top:8px">Effective from next invoice</div>
+        </div>
+        <button class="btn btn-primary" style="width:100%" onclick="saveSiteCount('${cid}')">Save site count</button>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:10px">
+          Last updated: ${(()=>{
+            const entries=(DB.siteCountLog||[]).filter(e=>String(e.customerId)===String(cid)).sort((a,b)=>a.effectiveFrom<b.effectiveFrom?1:-1);
+            return entries.length?fmtDate(entries[0].effectiveFrom):'Never';
+          })()}
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--white);border:0.5px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px">
+      <div style="font-weight:500;font-size:14px;margin-bottom:16px">Site count history</div>
+      <div class="inv-chart-wrap">
+        ${months.map(m=>`<div style="flex:1;display:flex;flex-direction:column;align-items:center">
+          <div class="inv-chart-bar${m.monthStr===currentMonthStr?' current':''}" style="width:100%;height:${Math.max(4,Math.round((m.count/maxCount)*80))}px" title="${m.count} sites"></div>
+          <div class="inv-chart-label">${m.label}</div>
+          <div style="font-size:9px;font-weight:500;text-align:center;color:var(--text-muted)">${m.count}</div>
+        </div>`).join('')}
+      </div>
+    </div>
+
+    <div style="background:var(--white);border:0.5px solid var(--border);border-radius:12px;padding:20px">
+      <div style="font-weight:500;font-size:14px;margin-bottom:14px">Invoice history</div>
+      ${custInvs.length===0
+        ? `<div style="color:var(--text-muted);font-size:13px;padding:20px 0;text-align:center">No invoices yet</div>`
+        : `<table class="inv-table" style="width:100%">
+          <thead><tr>
+            <th>Invoice</th><th>Period</th><th>Sites</th><th>Due date</th><th class="inv-td-amount">Amount</th><th>Status</th>
+          </tr></thead>
+          <tbody>
+            ${custInvs.map(i=>`<tr>
+              <td>${esc(i.invoiceNumber)}</td>
+              <td>${i.periodMonth?new Date(i.periodMonth).toLocaleDateString('en-GB',{month:'short',year:'numeric'}):''}</td>
+              <td>${i.siteCount||0}</td>
+              <td>${fmtDate(i.dueDate)}</td>
+              <td class="inv-td-amount">${fmtGBP(i.amount)}</td>
+              <td>${invStatusBadge(i)}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>`
+      }
+    </div>
+  </div>`;
+}
+
+function renderInvDocCard(cid, type, label, icon, doc) {
+  if (!doc) {
+    return `<div class="inv-doc-card">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:18px">${icon}</span>
+        <span style="font-weight:500;font-size:13px">${label}</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">Not uploaded</span>
+      </div>
+      <button class="btn btn-secondary btn-sm" onclick="invUploadDoc('${cid}','${type}')">Upload</button>
+    </div>`;
+  }
+  return `<div class="inv-doc-card">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+      <span style="font-size:18px">${icon}</span>
+      <span style="font-weight:500;font-size:13px">${label}</span>
+      <span class="inv-badge paid" style="margin-left:auto;font-size:10px">Signed</span>
+    </div>
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:10px">${esc(doc.filename||'')}${doc.signedDate?` · ${fmtDate(doc.signedDate)}`:''}</div>
+    <div style="display:flex;gap:6px">
+      ${doc.fileUrl?`<a href="${esc(doc.fileUrl)}" target="_blank" class="btn btn-secondary btn-sm">View</a>`:''}
+      <button class="btn btn-secondary btn-sm" onclick="invUploadDoc('${cid}','${type}')">Replace</button>
+    </div>
+  </div>`;
+}
+
+function invSiteInputChange(cid, val) {
+  invSiteInputVal = Math.max(0, parseInt(val)||0);
+  const lsEl = document.getElementById('inv-live-sites');
+  const lmEl = document.getElementById('inv-live-monthly');
+  const c = (DB.invoiceCustomers||[]).find(x=>String(x.id)===String(cid));
+  if (lsEl) lsEl.textContent = invSiteInputVal;
+  if (lmEl && c) lmEl.textContent = fmtGBP(invSiteInputVal*(c.ratePerSite||0));
+}
+function invSiteAdj(cid, delta) {
+  const inp = document.getElementById('inv-site-inp');
+  if (!inp) return;
+  const cur = Math.max(0, (parseInt(inp.value)||0)+delta);
+  inp.value = cur;
+  invSiteInputChange(cid, cur);
+}
+function saveSiteCount(cid) {
+  const inp = document.getElementById('inv-site-inp');
+  if (!inp) return;
+  const count = Math.max(0, parseInt(inp.value)||0);
+  const n = new Date(); n.setDate(1); n.setMonth(n.getMonth()+1);
+  const effectiveFrom = n.toISOString().slice(0,10);
+  if (!DB.siteCountLog) DB.siteCountLog=[];
+  DB.siteCountLog.push({ id:uid(), customerId:String(cid), count, effectiveFrom, createdBy: localStorage.getItem('opspot_user_v2')||'', createdAt: new Date().toISOString() });
+  invSiteInputVal = null;
+  saveToStorage();
+  toast('Site count saved','success');
+  renderInvoicing();
+}
+
+function markInvPaid(invoiceId) {
+  const inv = (DB.invoices||[]).find(i=>String(i.id)===String(invoiceId));
+  if (!inv) return;
+  inv.paidDate = today();
+  saveToStorage();
+  toast('Invoice marked as paid ✓','success');
+  renderCurrentPage();
+}
+
+function invUploadDoc(cid, type) {
+  const filename = prompt(`Enter filename for ${type==='terms_of_use'?'terms of use':'order form'} document (e.g. terms-2026.pdf):`);
+  if (!filename) return;
+  const signedDate = prompt('Signed date (YYYY-MM-DD):') || today();
+  if (!DB.invoiceDocs) DB.invoiceDocs=[];
+  const existing = DB.invoiceDocs.findIndex(d=>String(d.customerId)===String(cid)&&d.type===type);
+  const doc = { id:uid(), customerId:String(cid), type, filename, fileUrl:'', signedDate, uploadedAt:new Date().toISOString() };
+  if (existing>=0) DB.invoiceDocs.splice(existing,1,doc); else DB.invoiceDocs.push(doc);
+  saveToStorage();
+  toast('Document saved','success');
+  renderInvoicing();
+}
+
+function openNewInvoiceModal(prefillCid) {
+  const sel = document.getElementById('inv-inv-customer');
+  if (sel) {
+    sel.innerHTML = (DB.invoiceCustomers||[]).map(c=>`<option value="${c.id}" ${String(c.id)===String(prefillCid)?'selected':''}>${esc(c.name)}</option>`).join('');
+  }
+  const now = new Date();
+  const periodEl = document.getElementById('inv-inv-period');
+  if (periodEl) periodEl.value = now.toISOString().slice(0,7);
+  if (prefillCid) {
+    const c=(DB.invoiceCustomers||[]).find(x=>String(x.id)===String(prefillCid));
+    if (c) {
+      const rateEl=document.getElementById('inv-inv-rate');
+      if(rateEl) rateEl.value=c.ratePerSite||0;
+      const sitesEl=document.getElementById('inv-inv-sites');
+      if(sitesEl) sitesEl.value=getCurrentSiteCount(prefillCid);
+      const dueD=new Date(now.getFullYear(),now.getMonth(),c.billingDay||1);
+      dueD.setDate(dueD.getDate()+(c.paymentTermsDays||30));
+      const dueEl=document.getElementById('inv-inv-due');
+      if(dueEl) dueEl.value=dueD.toISOString().slice(0,10);
+    }
+  }
+  updateInvAmountPreview();
+  openModal('inv-invoice-modal');
+}
+function updateInvAmountPreview() {
+  const sites=parseInt(document.getElementById('inv-inv-sites')?.value)||0;
+  const rate=parseFloat(document.getElementById('inv-inv-rate')?.value)||0;
+  const el=document.getElementById('inv-inv-amount-preview');
+  if(el) el.textContent=fmtGBP(sites*rate);
+}
+function saveNewInvoice() {
+  const custId=document.getElementById('inv-inv-customer')?.value;
+  const period=document.getElementById('inv-inv-period')?.value;
+  const due=document.getElementById('inv-inv-due')?.value;
+  const sites=parseInt(document.getElementById('inv-inv-sites')?.value)||0;
+  const rate=parseFloat(document.getElementById('inv-inv-rate')?.value)||0;
+  if(!custId||!period||!due) { toast('Please fill all required fields','error'); return; }
+  if(!DB.invoices) DB.invoices=[];
+  DB.invoices.push({
+    id:uid(),
+    customerId:custId,
+    invoiceNumber:invNextNum(),
+    periodMonth:period+'-01',
+    siteCount:sites,
+    amount:sites*rate,
+    dueDate:due,
+    paidDate:null
+  });
+  saveToStorage();
+  closeModal('inv-invoice-modal');
+  toast('Invoice saved','success');
+  renderCurrentPage();
+}
+
+function openAddInvCustomer() {
+  ['invc-name','invc-owner','invc-start'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('invc-term').value='12';
+  document.getElementById('invc-billing-day').value='1';
+  document.getElementById('invc-pay-terms').value='30';
+  document.getElementById('invc-rate').value='';
+  document.getElementById('invc-sites').value='1';
+  openModal('inv-customer-modal');
+}
+function saveInvCustomer() {
+  const name=document.getElementById('invc-name')?.value.trim();
+  if(!name){toast('Customer name is required','error');return;}
+  if(!DB.invoiceCustomers) DB.invoiceCustomers=[];
+  const cid=uid();
+  DB.invoiceCustomers.push({
+    id:cid,
+    name,
+    accountOwner:document.getElementById('invc-owner')?.value.trim()||'',
+    contractStart:document.getElementById('invc-start')?.value||'',
+    contractTermMonths:parseInt(document.getElementById('invc-term')?.value)||12,
+    billingDay:parseInt(document.getElementById('invc-billing-day')?.value)||1,
+    paymentTermsDays:parseInt(document.getElementById('invc-pay-terms')?.value)||30,
+    ratePerSite:parseFloat(document.getElementById('invc-rate')?.value)||0,
+    createdAt:new Date().toISOString()
+  });
+  const initSites=parseInt(document.getElementById('invc-sites')?.value)||0;
+  if(initSites>0){
+    if(!DB.siteCountLog) DB.siteCountLog=[];
+    DB.siteCountLog.push({id:uid(),customerId:cid,count:initSites,effectiveFrom:today(),createdBy:localStorage.getItem('opspot_user_v2')||'',createdAt:new Date().toISOString()});
+  }
+  saveToStorage();
+  closeModal('inv-customer-modal');
+  toast('Customer added','success');
+  invCustomerId=cid;
+  renderInvoicing();
+}
+
 // ===================== SAMPLE DATA =====================
 function loadSampleData() {
   if (DB.contacts.length||DB.trials.length) return;
@@ -3718,6 +4373,42 @@ function loadSampleData() {
     {id:1,brand:'QuickShop',contact:'Ben Wright',role:'VP Sales',region:'North America',sector:'Grocery',owner:'Logan',dealValue:18000,status:'Setting up',notes:'Camera install scheduled',addedAt:Date.now()-10*86400000},
   ];
   DB.nextOnboardingId=2;
+
+  // Seed invoicing data
+  if (!(DB.invoiceCustomers||[]).length) {
+    const today_ = new Date();
+    const dd = (d) => { const x=new Date(today_); x.setDate(x.getDate()-d); return x.toISOString().slice(0,10); };
+    const firstOfMonth = (offsetMonths=0) => { const d=new Date(today_.getFullYear(),today_.getMonth()+offsetMonths,1); return d.toISOString().slice(0,10); };
+    const c1id=uid(), c2id=uid(), c3id=uid();
+    DB.invoiceCustomers = [
+      {id:c1id,name:'Pret A Manger',accountOwner:'Logan',contractStart:dd(180),contractTermMonths:12,billingDay:1,paymentTermsDays:30,ratePerSite:98,createdAt:new Date().toISOString()},
+      {id:c2id,name:'Greggs',accountOwner:'Tom',contractStart:dd(300),contractTermMonths:12,billingDay:15,paymentTermsDays:30,ratePerSite:85,createdAt:new Date().toISOString()},
+      {id:c3id,name:'Costa Coffee',accountOwner:'Logan',contractStart:dd(60),contractTermMonths:24,billingDay:1,paymentTermsDays:14,ratePerSite:120,createdAt:new Date().toISOString()},
+    ];
+    DB.siteCountLog = [
+      {id:uid(),customerId:c1id,count:30,effectiveFrom:dd(180),createdBy:'Logan',createdAt:new Date().toISOString()},
+      {id:uid(),customerId:c1id,count:34,effectiveFrom:dd(90),createdBy:'Logan',createdAt:new Date().toISOString()},
+      {id:uid(),customerId:c1id,count:37,effectiveFrom:dd(30),createdBy:'Logan',createdAt:new Date().toISOString()},
+      {id:uid(),customerId:c2id,count:20,effectiveFrom:dd(300),createdBy:'Tom',createdAt:new Date().toISOString()},
+      {id:uid(),customerId:c2id,count:22,effectiveFrom:dd(60),createdBy:'Tom',createdAt:new Date().toISOString()},
+      {id:uid(),customerId:c3id,count:10,effectiveFrom:dd(60),createdBy:'Logan',createdAt:new Date().toISOString()},
+      {id:uid(),customerId:c3id,count:12,effectiveFrom:dd(15),createdBy:'Logan',createdAt:new Date().toISOString()},
+    ];
+    const invs = [];
+    [[c1id,37,98],[c2id,22,85],[c3id,12,120]].forEach(([cid,sites,rate])=>{
+      for(let m=2;m>=0;m--){
+        const period=firstOfMonth(-m);
+        const billingDay = DB.invoiceCustomers.find(x=>String(x.id)===String(cid)).billingDay;
+        const payTerms = DB.invoiceCustomers.find(x=>String(x.id)===String(cid)).paymentTermsDays;
+        const dueD = new Date(today_.getFullYear(), today_.getMonth()-m, billingDay);
+        dueD.setDate(dueD.getDate()+payTerms);
+        const dueDate = dueD.toISOString().slice(0,10);
+        invs.push({id:uid(),customerId:cid,invoiceNumber:invNextNum(),periodMonth:period,siteCount:sites,amount:sites*rate,dueDate,paidDate:m===2?dd(50):null});
+      }
+    });
+    DB.invoices = invs;
+  }
+
   saveToStorage();
 }
 
