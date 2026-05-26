@@ -3787,6 +3787,12 @@ async function refreshFromSheets() {
     }
     if (json.trials) { DB.trials=json.trials; DB.trials.forEach(t=>{t.id=+t.id||t.id;}); }
     if (json.onboarding) { DB.onboarding=json.onboarding; DB.onboarding.forEach(o=>{o.id=+o.id||o.id;}); }
+    // Invoicing tables
+    if (json.invoiceCustomers) DB.invoiceCustomers=json.invoiceCustomers;
+    if (json.invoices)         DB.invoices=json.invoices;
+    if (json.siteCountLog)     DB.siteCountLog=json.siteCountLog;
+    if (json.invoiceDocs)      DB.invoiceDocs=json.invoiceDocs;
+    if (json.nextInvoiceNum)   DB.nextInvoiceNum=json.nextInvoiceNum;
     // Save locally only — do NOT call saveToStorage() here because that would
     // immediately POST back to the sheet and cause a green→red flash.
     localStorage.setItem(STORAGE_KEY, JSON.stringify(DB));
