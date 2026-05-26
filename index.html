@@ -226,7 +226,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 .tc2-date-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--text-muted);margin-bottom:12px}
 .tc2-footer{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 /* Invoicing */
-#inv-page-content{display:contents}
 .inv-tabs{display:flex;gap:0;padding:0 28px;flex-shrink:0;border-bottom:2px solid var(--border)}
 .inv-tab{padding:10px 20px;font-size:13px;font-weight:600;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .15s;user-select:none;white-space:nowrap}
 .inv-tab:hover{color:var(--navy)}
@@ -1217,9 +1216,7 @@ td.inv-td-amount{text-align:right;font-family:'DM Mono',monospace}
 </div>
 
 <!-- INVOICING PAGE -->
-<div class="page" id="page-invoicing">
-  <div id="inv-page-content"></div>
-</div>
+<div class="page" id="page-invoicing"></div>
 
 <!-- INVOICE MODAL -->
 <div class="modal-overlay" id="inv-invoice-modal">
@@ -3890,7 +3887,7 @@ function invStatusBadge(inv) {
 }
 
 function renderInvoicing() {
-  const el = document.getElementById('inv-page-content');
+  const el = document.getElementById('page-invoicing');
   if (!el) return;
   if (invCustomerId) {
     renderInvCustomerDetail(el);
