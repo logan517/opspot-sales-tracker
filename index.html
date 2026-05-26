@@ -226,6 +226,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 .tc2-date-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--text-muted);margin-bottom:12px}
 .tc2-footer{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 /* Invoicing */
+#inv-page-content{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;width:100%}
 .inv-tabs{display:flex;gap:0;padding:0 28px;flex-shrink:0;border-bottom:2px solid var(--border)}
 .inv-tab{padding:10px 20px;font-size:13px;font-weight:600;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .15s;user-select:none;white-space:nowrap}
 .inv-tab:hover{color:var(--navy)}
@@ -3953,6 +3954,7 @@ function renderInvReminders(el) {
     <div class="inv-tab inv-tab-active" onclick="switchInvTab('reminders')">Reminders</div>
     <div class="inv-tab" onclick="switchInvTab('customers')">Customers</div>
   </div>
+  <div style="flex:1;overflow-y:auto">
   <div style="padding:20px 28px 0">
     <div class="inv-metric-row">
       <div class="inv-metric-card"><div class="imc-label">Outstanding</div><div class="imc-value">${fmtGBP(outstanding)}</div></div>
@@ -4014,6 +4016,7 @@ function renderInvReminders(el) {
         </tbody>
       </table></div>`
     }
+  </div>
   </div>`;
 }
 
@@ -4031,7 +4034,7 @@ function renderInvCustomerList(el) {
     <div class="inv-tab" onclick="switchInvTab('reminders')">Reminders</div>
     <div class="inv-tab inv-tab-active" onclick="switchInvTab('customers')">Customers</div>
   </div>
-  <div style="padding:20px 28px;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">
+  <div style="flex:1;overflow-y:auto;padding:20px 28px;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;align-content:start">
     ${customers.length===0
       ? `<div class="empty-state" style="grid-column:1/-1"><div class="es-icon">💷</div><p>No customers yet. Add your first customer to get started.</p></div>`
       : customers.map(c=>{
