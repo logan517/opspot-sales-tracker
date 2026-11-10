@@ -2,7 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="OpSpot">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#F7F6F3">
+<link rel="apple-touch-icon" href="https://logan517.github.io/opspot-sales-tracker/apple-touch-icon.png">
+<link rel="manifest" href="https://logan517.github.io/opspot-sales-tracker/manifest.webmanifest">
 <title>OpSpot Sales Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -733,7 +740,12 @@ body.drawer-open #trial-drawer-backdrop{opacity:1;pointer-events:auto}
 #test-ribbon[hidden]{display:none}
 
 /* mobile */
-#mnav-btn,#mnav-backdrop{display:none}
+#mnav-btn,#mnav-backdrop,#tabbar{display:none}
+.mcards{display:none}
+@supports (height:100dvh){body,#sidebar,#partner-view{height:100dvh}}
+@media (hover:none){.table-v2 .td-actions{opacity:1}}
+.gate-code{height:42px;border:1px solid var(--border);border-radius:9px;padding:0 12px;font:600 18px 'DM Mono',monospace;letter-spacing:4px;text-align:center;outline:none}
+.gate-code:focus{border-color:var(--blue)}
 @media(max-width:860px){
   #sidebar{position:fixed;left:0;top:0;bottom:0;z-index:1500;transform:translateX(-100%);transition:transform .2s}
   body.nav-open #sidebar{transform:none}
@@ -760,6 +772,64 @@ body.drawer-open #trial-drawer-backdrop{opacity:1;pointer-events:auto}
   .dr-row{flex-wrap:wrap}
   .form-grid{grid-template-columns:1fr}
   .attn-list li{flex-wrap:wrap}
+  /* iPhone: no zoom on focus, comfortable taps, notch and home-bar safe areas */
+  input:not([type=checkbox]):not([type=radio]),select,textarea{font-size:16px!important}
+  .btn{min-height:38px}
+  .btn-sm{min-height:34px;padding:0 12px}
+  .btn-icon{width:36px;height:36px}
+  #mnav-btn{display:none!important}
+  .page-topbar{padding:calc(12px + env(safe-area-inset-top)) 16px 10px 16px}
+  .page-topbar .ptb-left h1{font-size:20px}
+  .ptb-right .tc-search input{min-width:0;width:100%}
+  #main{padding-bottom:calc(62px + env(safe-area-inset-bottom))}
+  #tabbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:1200;background:rgba(255,255,255,.96);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-top:1px solid var(--border);padding:4px 4px calc(4px + env(safe-area-inset-bottom))}
+  #tabbar button{flex:1;background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0 4px;font:600 10px 'DM Sans',sans-serif;color:#8b8f99;position:relative;-webkit-tap-highlight-color:transparent}
+  #tabbar button .ico{width:22px;height:22px}
+  #tabbar button.on{color:var(--navy)}
+  .tb-badge{position:absolute;top:2px;left:calc(50% + 6px);min-width:17px;height:17px;border-radius:9px;background:var(--red);color:#fff;font:700 10px/17px 'DM Sans',sans-serif;font-style:normal;padding:0 4px}
+  .tb-badge[hidden]{display:none}
+  body.drawer-open #tabbar,body.partner-mode #tabbar,body:has(.modal-overlay.open) #tabbar,body:has(#gate.open) #tabbar{display:none}
+  #sidebar{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
+  #toast-container{left:12px;right:12px;bottom:calc(74px + env(safe-area-inset-bottom))}
+  #test-ribbon{bottom:calc(70px + env(safe-area-inset-bottom))}
+  /* pop-ups become full-screen sheets */
+  .modal-overlay{align-items:stretch}
+  .modal{width:100%!important;max-width:100%!important;max-height:none;height:100%;border-radius:0}
+  .modal-header{padding-top:calc(16px + env(safe-area-inset-top))}
+  .modal-footer{padding-bottom:calc(16px + env(safe-area-inset-bottom))}
+  .modal-footer .btn{flex:1;justify-content:center}
+  /* trial panel */
+  .dr-head{padding-top:calc(16px + env(safe-area-inset-top))}
+  #trial-drawer-inner{padding-bottom:calc(30px + env(safe-area-inset-bottom))}
+  .dr-actions .btn{flex:1 1 auto;justify-content:center}
+  /* contact tables become cards */
+  #page-outreach .table-wrap-v2,#page-qualified .table-wrap-v2,#page-discovery .table-wrap-v2{display:none}
+  .mcards{display:flex;flex-direction:column;gap:10px;padding:0 16px 20px}
+  .mcard{background:var(--white);border:1px solid var(--border);border-left:4px solid #e5e7eb;border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:7px}
+  .mcard.overdue{border-left-color:var(--red)}.mcard.duesoon{border-left-color:var(--amber)}.mcard.frozen{opacity:.65}
+  .mcard-top{display:flex;align-items:flex-start;gap:10px}
+  .mcard-brand{font-weight:700;color:var(--navy);font-size:15px}
+  .mcard-sub{font-size:13px;color:var(--text-muted);margin-top:1px}
+  .mcard-tags{display:flex;flex-wrap:wrap;gap:5px}
+  .mcard-tags:empty{display:none}
+  .mcard-meta{font-size:12px;color:var(--text-muted)}
+  .mcard-actions{display:flex;flex-wrap:wrap;gap:6px}
+  .mcard-actions .btn{flex:1 1 auto;justify-content:center}
+  /* wide pages that overflowed */
+  #page-maintenance .table-v2,#page-invoicing table{display:block;overflow-x:auto;max-width:100%}
+  .inv-metric-row{flex-wrap:wrap;gap:8px}
+  .inv-metric-card{flex:1 1 calc(50% - 8px);padding:12px 14px;min-width:0}
+  .inv-metric-card .imc-value{font-size:22px}
+  .tpl-tabs{overflow-x:auto;padding:0 16px;-webkit-overflow-scrolling:touch}
+  .tpl-tabs>*{flex-shrink:0}
+  .bulk-bar,.table-v2 input[type=checkbox]{display:none}
+  .stage-header{display:none}
+  .metrics-bar-v2{gap:6px}
+  .mc-v2{flex:1 1 calc(50% - 6px);padding:9px 12px;border-radius:11px}
+  .mc-v2 .mcv-label{font-size:10px}
+  .mc-v2 .mcv-value{font-size:22px;margin:2px 0 0}
+  .mc-v2 .mcv-sub{display:none}
+  .pv-head{padding-top:calc(14px + env(safe-area-inset-top))}
   .pv-head{padding:14px 16px;flex-wrap:wrap}
   .pv-body{padding:16px}
   .pg-row{grid-template-columns:1fr;gap:12px;padding:14px 16px}
@@ -815,6 +885,13 @@ body.drawer-open #trial-drawer-backdrop{opacity:1;pointer-events:auto}
 <div id="test-ribbon" hidden></div>
 <button id="mnav-btn" aria-label="Menu" onclick="document.body.classList.toggle('nav-open')"><svg class="ico"><use href="#i-menu"/></svg></button>
 <div id="mnav-backdrop" onclick="document.body.classList.remove('nav-open')"></div>
+<nav id="tabbar" aria-label="Main sections">
+  <button data-page="overview" onclick="navigate('overview')"><svg class="ico"><use href="#i-grid"/></svg><span>Overview</span><i class="tb-badge" id="tb-badge-overview" hidden></i></button>
+  <button data-page="trials" onclick="navigate('trials')"><svg class="ico"><use href="#i-flask"/></svg><span>Trials</span></button>
+  <button data-page="followups" onclick="navigate('followups')"><svg class="ico"><use href="#i-bell"/></svg><span>Follow ups</span><i class="tb-badge" id="tb-badge-followups" hidden></i></button>
+  <button data-page="outreach" onclick="navigate('outreach')"><svg class="ico"><use href="#i-send"/></svg><span>Outreach</span></button>
+  <button onclick="document.body.classList.add('nav-open')"><svg class="ico"><use href="#i-menu"/></svg><span>More</span></button>
+</nav>
 
 <!-- SIDEBAR -->
 <div id="sidebar">
@@ -2121,8 +2198,12 @@ function showGate(state, extra) {
       <button class="btn btn-primary" type="submit" id="gate-send">Email me a sign-in link</button>
     </form>`;
   else if (state === 'sent') body.innerHTML = `
-    <p class="gate-msg"><b>Check your inbox.</b> We sent a sign-in link to ${e}. Open it on this device and you'll come straight back here.</p>
-    <button class="btn btn-secondary" onclick="showGate('signin')">Use a different email</button>`;
+    <p class="gate-msg"><b>Check your inbox.</b> We sent a sign-in email to ${e}. ${navigator.standalone ? 'Type the 6-digit code from it below (the link would open Safari instead of this app).' : 'Click the link in it, or type the 6-digit code below.'}</p>
+    <form onsubmit="event.preventDefault();verifyCode()">
+      <input id="gate-code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*" maxlength="8" placeholder="6-digit code" class="gate-code">
+      <button class="btn btn-primary" type="submit" id="gate-verify">Sign in with code</button>
+    </form>
+    <button class="btn btn-secondary" style="margin-top:8px;width:100%" onclick="showGate('signin')">Use a different email</button>`;
   else if (state === 'notmember') body.innerHTML = `
     <p class="gate-msg">${e} isn't on the team list yet. Ask Logan to add you in <b>Settings and team</b>, then reload this page.</p>
     <button class="btn btn-secondary" onclick="signOut()">Sign out</button>`;
@@ -2146,7 +2227,20 @@ async function sendMagicLink() {
   const btn = document.getElementById('gate-send'); if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
   const {error} = await Store.sb.auth.signInWithOtp({email, options:{emailRedirectTo: location.origin + location.pathname, shouldCreateUser:true}});
   if (error) { showGate('signin'); toast('Could not send the link: ' + esc(error.message), 'error'); return; }
+  Sync.pendingEmail = email;
   showGate('sent', email);
+}
+async function verifyCode() {
+  const token = (document.getElementById('gate-code').value || '').replace(/\s/g, '');
+  if (!token || !Sync.pendingEmail) return;
+  const btn = document.getElementById('gate-verify'); if (btn) { btn.disabled = true; btn.textContent = 'Checking…'; }
+  const {error} = await Store.sb.auth.verifyOtp({email: Sync.pendingEmail, token, type: 'email'});
+  if (error) {
+    if (btn) { btn.disabled = false; btn.textContent = 'Sign in with code'; }
+    toast('That code didn\'t work: ' + esc(error.message), 'error');
+    return;
+  }
+  // onAuthStateChange(SIGNED_IN) starts the app
 }
 async function signOut() {
   try { localStorage.removeItem(CACHE_KEY); } catch(e) {}
@@ -2544,6 +2638,8 @@ function navigate(page) {
   document.body.classList.remove('nav-open');
   currentPage = page;
   document.querySelectorAll('.nav-item').forEach(el => el.classList.toggle('active', el.dataset.page === page));
+  document.querySelectorAll('#tabbar button[data-page]').forEach(el => el.classList.toggle('on', el.dataset.page === page));
+  const mainEl = document.getElementById('page-' + page); if (mainEl) mainEl.scrollTop = 0;
   document.querySelectorAll('.page').forEach(el => el.classList.toggle('active', el.id === 'page-' + page));
   renderCurrentPage();
 }
@@ -2695,6 +2791,9 @@ function updateAllBadges() {
   }
   const ovBadge = document.getElementById('badge-overview');
   if (ovBadge) { const n = attentionItems().filter(i => i.sev >= 2).length; ovBadge.textContent = n; ovBadge.style.display = n ? '' : 'none'; }
+  const tbSet = (id, n) => { const el = document.getElementById(id); if (el) { el.textContent = n > 99 ? '99+' : n; el.hidden = !n; } };
+  tbSet('tb-badge-overview', ovBadge && ovBadge.style.display !== 'none' ? +ovBadge.textContent : 0);
+  tbSet('tb-badge-followups', fuCount);
 }
 
 // ===================== STAGE RENDER (outreach / qualified / discovery) =====================
@@ -2756,9 +2855,43 @@ function mchip(label,value,cls='') {
   return `<div class="metric-chip ${cls}"><div class="mc-label">${label}</div><div class="mc-value">${value}</div></div>`;
 }
 
+const PHONE_MQ = window.matchMedia('(max-width: 860px)');
+function isPhone() { return PHONE_MQ.matches; }
+PHONE_MQ.addEventListener('change', () => { if (Sync.started) renderCurrentPage(); });
+const mcardLimit = {};
+// On phones the wide contact tables become tappable cards
+function renderStageCards(tbody, list, stage) {
+  const wrap = tbody.closest('.table-wrap-v2'); if (!wrap) return;
+  let box = wrap.nextElementSibling;
+  if (!box || !box.classList.contains('mcards')) { box = document.createElement('div'); box.className = 'mcards'; wrap.after(box); }
+  if (!isPhone()) { box.innerHTML = ''; return; }
+  if (!list.length) { box.innerHTML = `<div class="empty-state"><p>No contacts here yet</p></div>`; return; }
+  const next = {outreach:['qualified','Qualified'], qualified:['discovery','Discovery']}[stage];
+  const limit = mcardLimit[stage] || 50;
+  box.innerHTML = list.slice(0, limit).map(c => {
+    const last = lastMsgDate(c), age = last ? daysSince(last) : null;
+    const cls = c.frozen ? 'frozen' : (c.messages > 0 && age >= 14) ? 'overdue' : (c.messages > 0 && age >= 10) ? 'duesoon' : '';
+    return `<div class="mcard ${cls}">
+      <div class="mcard-top" onclick="openEditContact(${c.id})">
+        <div class="grow"><div class="mcard-brand">${esc(c.brand)}</div><div class="mcard-sub">${esc(c.contact || '')}${c.role ? ' · ' + esc(c.role) : ''}</div></div>
+        <span class="msgs-pill" title="Messages sent">${msgCount(c)}</span>
+      </div>
+      <div class="mcard-tags">${c.region ? `<span class="badge badge-blue">${esc(displayRegion(c.region))}</span>` : ''}${sectorPill(c.sector)}${c.linkedin === 'Yes' ? '<span class="badge badge-green">LinkedIn ✓</span>' : ''}${stage === 'outreach' && c.replied === 'Yes' ? '<span class="badge badge-blue">Replied</span>' : ''}${c.frozen ? '<span class="badge badge-gray">Frozen</span>' : ''}</div>
+      <div class="mcard-meta">${last ? `Last message ${fmtShort(last)} · ${age}d ago` : 'No messages yet'}${c.owner ? ` · ${esc(c.owner)}` : ''}${c.followUpDate ? ` · Follow up ${fmtShort(c.followUpDate)}` : ''}</div>
+      <div class="mcard-actions">
+        <button class="btn btn-sm btn-secondary" onclick="openMsgHistory(${c.id})">Messages</button>
+        ${next ? `<button class="btn btn-sm btn-promote" onclick="promoteContact(${c.id},'${next[0]}')">→ ${next[1]}</button>` : ''}
+        ${stage === 'discovery' ? `<button class="btn btn-sm btn-teal" onclick="promoteToTrial(${c.id})">→ Trial</button>` : ''}
+        <button class="btn btn-sm btn-secondary" onclick="openEditContact(${c.id})">Edit</button>
+        <button class="btn btn-sm btn-secondary" onclick="${c.frozen ? `unfreezeContact(${c.id})` : `openFreezeModal(${c.id})`}">${c.frozen ? 'Unfreeze' : 'Freeze'}</button>
+      </div>
+    </div>`;
+  }).join('') + (list.length > limit ? `<button class="tcol-more" onclick="mcardLimit['${stage}']=${limit + 50};renderStage('${stage}')">Show ${Math.min(50, list.length - limit)} more (${list.length - limit} left)</button>` : '');
+}
 function renderStageTable(tbodyId, list, stage) {
   const tbody = document.getElementById(tbodyId);
   if (!tbody) return;
+  renderStageCards(tbody, list, stage);
   const sel = selectedIds[stage]||new Set();
 
   // Next stage label for promote button
