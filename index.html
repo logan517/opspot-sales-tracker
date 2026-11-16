@@ -693,6 +693,55 @@ body.drawer-open #trial-drawer-backdrop{opacity:1;pointer-events:auto}
 .mini-select.ph-live{background:var(--teal-light);color:#0f766e}
 .mini-select.ph-done{background:var(--green-light);color:#15803d}
 .dr-addphases{margin:12px 24px 0}
+/* Sales stage pages (Outreach, Qualified, Discovery) */
+.stage-header{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.stage-steps{display:flex;list-style:none;gap:4px;margin:0;padding:0}
+.stage-steps li{font-size:11.5px;font-weight:600;color:#9ca3af;padding:4px 10px;border-radius:20px;background:var(--white);border:1px solid var(--border);position:relative}
+.stage-steps li.done{color:var(--text-muted)}
+.stage-steps li.on{color:#fff;background:var(--navy);border-color:var(--navy)}
+.stage-hint{font-size:12.5px;color:var(--text-muted)}
+.stage-metrics .mc-v2{padding:12px 16px;border-radius:12px}
+.stage-metrics .mcv-value{font-size:26px;margin:3px 0 1px}
+.tc-search::before{content:'';width:14px;height:14px;opacity:.45;background:no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E")}
+.lead-table{overflow:clip}
+.lead-table thead th{font-size:10.5px}
+.lead-table td{padding:10px 12px}
+.lead-table .td-cb{width:34px;padding-right:0}
+.lead-table .td-cb input{cursor:pointer}
+.lead-table .td-lead{min-width:220px;max-width:300px}
+.lead-brand{font-weight:700;color:var(--navy);line-height:1.3;cursor:pointer;border-radius:4px}
+.lead-sub{font-size:12.5px;color:var(--text);margin-top:2px;line-height:1.35}
+.lead-sub .lead-role{color:var(--text-muted)}
+.lead-dot{color:#c4c7cf;margin:0 5px}
+.lead-sub span:first-child:empty+.lead-dot,.lead-sub .lead-dot:has(+.lead-role:empty){display:none}
+.lead-subtle{display:block;font-size:11.5px;color:#9ca3af;margin-top:2px}
+.lead-table .ie{cursor:pointer;border-radius:4px}
+.lead-table .ie:hover{background:#eef3ff}
+.lead-table .ie:empty::before{content:attr(data-ph);color:#c4c7cf;font-style:italic;font-size:11.5px;opacity:0}
+.lead-table tr:hover .ie:empty::before{opacity:1}
+.lead-table .td-loc{color:var(--text-muted);font-size:12.5px;white-space:nowrap}
+.lead-table .td-msgs{white-space:nowrap}
+.lead-table .td-msgs .lead-subtle{display:inline;margin-left:6px}
+.txt-red{color:var(--red)!important;font-weight:600}
+.txt-amber{color:#b45309!important;font-weight:600}
+.lead-table .td-notes{max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lead-table .td-act{width:1%;white-space:nowrap;position:sticky;right:0;background:var(--white);box-shadow:-8px 0 8px -8px rgba(15,31,61,.12)}
+.lead-table thead .th-actions{position:sticky;right:0;background:var(--white)}
+.lead-table tbody tr:hover .td-act{background:#fafaf8}
+.lead-table tbody tr.frozen-row .td-act{background:#f0f4ff}
+.lead-table .frozen-badge{margin-top:5px}
+.lead-table .frozen-badge .ico{width:11px;height:11px}
+.row-actions{display:flex;align-items:center;gap:2px}
+.act-btn{width:28px;height:28px;border:none;background:transparent;border-radius:7px;color:#9ca3af;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:background .12s,color .12s}
+.act-btn .ico{width:15px;height:15px}
+.act-btn:hover{background:var(--bg);color:var(--navy)}
+.act-btn.on{color:#1d4ed8;background:var(--ice-light)}
+.act-btn.danger:hover{background:#fee2e2;color:var(--red)}
+.act-promote{margin-left:6px;height:28px;padding:0 10px;border:none;border-radius:7px;background:var(--purple-light);color:var(--purple);font:600 12px 'DM Sans',sans-serif;display:inline-flex;align-items:center;gap:4px;cursor:pointer;white-space:nowrap}
+.act-promote .ico{width:13px;height:13px}
+.act-promote:hover{filter:brightness(.96)}
+.act-promote.teal{background:var(--teal-light);color:var(--teal)}
+.lead-table tbody tr.frozen-row .act-promote{opacity:.6}
 .dr-details>summary{list-style:none;cursor:pointer}
 .dr-details>summary::-webkit-details-marker{display:none}
 .dr-details>summary h4{margin-bottom:0}
@@ -876,6 +925,7 @@ body.drawer-open #trial-drawer-backdrop{opacity:1;pointer-events:auto}
   <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></symbol>
   <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></symbol>
   <symbol id="i-play" viewBox="0 0 24 24"><path d="M6 3l14 9-14 9z"/></symbol>
+  <symbol id="i-snow" viewBox="0 0 24 24"><path d="M12 2v20M4.9 7l14.2 10M4.9 17 19.1 7M9 4l3 2 3-2M9 20l3-2 3 2"/></symbol>
   <symbol id="i-pause" viewBox="0 0 24 24"><rect x="14" y="4" width="4" height="16" rx="1"/><rect x="6" y="4" width="4" height="16" rx="1"/></symbol>
   <symbol id="i-calendar" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
   <symbol id="i-award" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></symbol>
@@ -1005,12 +1055,12 @@ body.drawer-open #trial-drawer-backdrop{opacity:1;pointer-events:auto}
       </div>
       <div class="ptb-right">
         
-        <button class="btn btn-secondary" onclick="exportCSV('outreach')">⬇ Export</button>
-        <button class="btn btn-primary" onclick="openAddContact('outreach')">+ Add contact</button>
+        <button class="btn btn-secondary" onclick="exportCSV('outreach')"><svg class="ico"><use href="#i-download"/></svg> Export</button>
+        <button class="btn btn-primary" onclick="openAddContact('outreach')"><svg class="ico"><use href="#i-plus"/></svg> Add contact</button>
       </div>
     </div>
-    <div class="stage-header"><div class="stage-banner outreach">❄️ Stage 1 of 5 — Cold outreach. Move leads to Qualified once they reply.</div></div>
-    <div class="metrics-bar-v2" id="outreach-metrics"></div>
+    <div class="stage-header"><ol class="stage-steps outreach"><li class="on">Outreach</li><li class="">Qualified</li><li class="">Discovery</li><li class="">Trial</li><li class="">Onboarding</li></ol><span class="stage-hint">Move leads to Qualified once they reply.</span></div>
+    <div class="metrics-bar-v2 stage-metrics" id="outreach-metrics"></div>
     <div class="toolbar-card">
       <div class="tc-search"><input type="text" id="outreach-search" placeholder="Search brand, contact, owner…" oninput="renderStage('outreach')"></div>
       <select id="outreach-sector-filter" onchange="renderStage('outreach')">
@@ -1029,11 +1079,11 @@ body.drawer-open #trial-drawer-backdrop{opacity:1;pointer-events:auto}
       <span class="tc-count" id="outreach-count-label">0 contacts</span>
     </div>
     <div class="table-wrap-v2">
-      <table class="table-v2" id="outreach-table">
+      <table class="table-v2 lead-table" id="outreach-table">
         <thead><tr>
           <th style="width:36px"><input type="checkbox" id="outreach-select-all" onchange="toggleSelectAll('outreach',this.checked)" style="cursor:pointer"></th>
-          <th>Brand</th><th>Contact</th><th>Role</th><th>Location</th><th>Region</th><th>Sector</th>
-          <th>LinkedIn</th><th>Msgs</th><th>Replied</th><th>Owner</th><th>Notes</th><th>Status</th>
+          <th>Lead</th><th>Location</th><th>Sector</th>
+          <th>LinkedIn</th><th>Messages</th><th>Replied</th><th>Owner</th><th>Notes</th><th class="th-actions"></th>
         </tr></thead>
         <tbody id="outreach-tbody"></tbody>
       </table>
@@ -1056,12 +1106,12 @@ body.drawer-open #trial-drawer-backdrop{opacity:1;pointer-events:auto}
         <span class="region-pill" id="qualified-region-pill">All regions</span>
       </div>
       <div class="ptb-right">
-        <button class="btn btn-secondary" onclick="exportCSV('qualified')">⬇ Export</button>
-        <button class="btn btn-primary" onclick="openAddContact('qualified')">+ Add contact</button>
+        <button class="btn btn-secondary" onclick="exportCSV('qualified')"><svg class="ico"><use href="#i-download"/></svg> Export</button>
+        <button class="btn btn-primary" onclick="openAddContact('qualified')"><svg class="ico"><use href="#i-plus"/></svg> Add contact</button>
       </div>
     </div>
-    <div class="stage-header"><div class="stage-banner qualified">✅ Stage 2 of 5 — Qualified leads. Move to Discovery once a discovery call is booked.</div></div>
-    <div class="metrics-bar-v2" id="qualified-metrics"></div>
+    <div class="stage-header"><ol class="stage-steps qualified"><li class="done">Outreach</li><li class="on">Qualified</li><li class="">Discovery</li><li class="">Trial</li><li class="">Onboarding</li></ol><span class="stage-hint">Move to Discovery once a discovery call is booked.</span></div>
+    <div class="metrics-bar-v2 stage-metrics" id="qualified-metrics"></div>
     <div class="toolbar-card">
       <div class="tc-search"><input type="text" id="qualified-search" placeholder="Search brand, contact, owner…" oninput="renderStage('qualified')"></div>
       <select id="qualified-sector-filter" onchange="renderStage('qualified')">
@@ -1080,11 +1130,11 @@ body.drawer-open #trial-drawer-backdrop{opacity:1;pointer-events:auto}
       <span class="tc-count" id="qualified-count-label">0 contacts</span>
     </div>
     <div class="table-wrap-v2">
-      <table class="table-v2" id="qualified-table">
+      <table class="table-v2 lead-table" id="qualified-table">
         <thead><tr>
           <th style="width:36px"><input type="checkbox" id="qualified-select-all" onchange="toggleSelectAll('qualified',this.checked)" style="cursor:pointer"></th>
-          <th>Brand</th><th>Contact</th><th>Role</th><th>Location</th><th>Region</th><th>Sector</th>
-          <th>LinkedIn</th><th>Msgs</th><th>Owner</th><th>Notes</th><th>Status</th>
+          <th>Lead</th><th>Location</th><th>Sector</th>
+          <th>LinkedIn</th><th>Messages</th><th>Owner</th><th>Notes</th><th class="th-actions"></th>
         </tr></thead>
         <tbody id="qualified-tbody"></tbody>
       </table>
@@ -1107,12 +1157,12 @@ body.drawer-open #trial-drawer-backdrop{opacity:1;pointer-events:auto}
         <span class="region-pill" id="discovery-region-pill">All regions</span>
       </div>
       <div class="ptb-right">
-        <button class="btn btn-secondary" onclick="exportCSV('discovery')">⬇ Export</button>
-        <button class="btn btn-primary" onclick="openAddContact('discovery')">+ Add contact</button>
+        <button class="btn btn-secondary" onclick="exportCSV('discovery')"><svg class="ico"><use href="#i-download"/></svg> Export</button>
+        <button class="btn btn-primary" onclick="openAddContact('discovery')"><svg class="ico"><use href="#i-plus"/></svg> Add contact</button>
       </div>
     </div>
-    <div class="stage-header"><div class="stage-banner discovery">🔍 Stage 3 of 5 — Discovery. Move to Trial once a trial is agreed.</div></div>
-    <div class="metrics-bar-v2" id="discovery-metrics"></div>
+    <div class="stage-header"><ol class="stage-steps discovery"><li class="done">Outreach</li><li class="done">Qualified</li><li class="on">Discovery</li><li class="">Trial</li><li class="">Onboarding</li></ol><span class="stage-hint">Move to Trial once a trial is agreed.</span></div>
+    <div class="metrics-bar-v2 stage-metrics" id="discovery-metrics"></div>
     <div class="toolbar-card">
       <div class="tc-search"><input type="text" id="discovery-search" placeholder="Search brand, contact, owner…" oninput="renderStage('discovery')"></div>
       <select id="discovery-sector-filter" onchange="renderStage('discovery')">
@@ -1131,11 +1181,11 @@ body.drawer-open #trial-drawer-backdrop{opacity:1;pointer-events:auto}
       <span class="tc-count" id="discovery-count-label">0 contacts</span>
     </div>
     <div class="table-wrap-v2">
-      <table class="table-v2" id="discovery-table">
+      <table class="table-v2 lead-table" id="discovery-table">
         <thead><tr>
           <th style="width:36px"><input type="checkbox" id="discovery-select-all" onchange="toggleSelectAll('discovery',this.checked)" style="cursor:pointer"></th>
-          <th>Brand</th><th>Contact</th><th>Role</th><th>Location</th><th>Region</th><th>Sector</th>
-          <th>LinkedIn</th><th>Msgs</th><th>Owner</th><th>Notes</th><th>Status</th>
+          <th>Lead</th><th>Location</th><th>Sector</th>
+          <th>LinkedIn</th><th>Messages</th><th>Owner</th><th>Notes</th><th class="th-actions"></th>
         </tr></thead>
         <tbody id="discovery-tbody"></tbody>
       </table>
@@ -2846,13 +2896,12 @@ function renderStageMetrics(stage, list) {
   const frozen = getContactsByStage(stage).filter(c=>c.frozen).length;
   const linkedin = list.filter(c=>c.linkedin==='Yes').length;
   const msgs = list.reduce((s,c)=>s+(msgCount(c)),0);
-  const nextStage = {outreach:'Qualified',qualified:'Discovery',discovery:'Trial'}[stage]||'';
+  const overdue = list.filter(c=>{ if (c.frozen || !(c.messages>0)) return false; const d=lastMsgDate(c); return d && daysSince(d)>=14; }).length;
   el.innerHTML = `
-    ${mcv2(STAGE_LABELS[stage]+' leads', total, '')}
-    ${frozen>0?mcv2('Frozen','❄️ '+frozen,'paused'):''}
-    ${mcv2('LinkedIn connected', linkedin, '')}
+    ${mcv2(STAGE_LABELS[stage]+' leads', total, frozen ? `+ ${frozen} frozen` : 'in this stage')}
+    ${mcv2('LinkedIn connected', linkedin, total ? Math.round(linkedin/total*100)+'% of leads' : '')}
     ${mcv2('Messages sent', msgs, 'total')}
-    ${nextStage?mcv2('Move to '+nextStage, '→', 'use promote button'):''}
+    ${mcv2('No reply 14d+', overdue, overdue ? 'see Follow ups' : 'all on track', overdue ? 'red' : '')}
   `;
 }
 
@@ -2903,16 +2952,14 @@ function renderStageTable(tbodyId, list, stage) {
   renderStageCards(tbody, list, stage);
   const sel = selectedIds[stage]||new Set();
 
-  // Next stage label for promote button
-  const nextStageMap = {outreach:'qualified',qualified:'discovery',discovery:'trial'};
-  const nextStageLabel = {outreach:'→ Qualified',qualified:'→ Discovery',discovery:'→ Trial'};
-  const nextS = nextStageMap[stage];
 
   if (!list.length) {
-    tbody.innerHTML = `<tr><td colspan="13"><div class="empty-state"><div class="es-icon">📭</div><p>No contacts here yet</p></div></td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="13"><div class="empty-state"><p>No contacts here yet</p></div></td></tr>`;
     return;
   }
 
+  const hasTpl = (DB.templates||[]).length > 0;
+  const promoteTo = {outreach:['qualified','Qualified'], qualified:['discovery','Discovery']}[stage];
   tbody.innerHTML = list.map(c => {
     const lastDate = lastMsgDate(c);
     const age = lastDate ? daysSince(lastDate) : null;
@@ -2926,42 +2973,43 @@ function renderStageTable(tbodyId, list, stage) {
     const liIn = c.linkedin==='Yes';
     const hasUrl = !!(c.linkedinUrl&&c.linkedinUrl.trim());
     const liClick = hasUrl
-      ? `onclick="window.open('${esc(c.linkedinUrl)}','_blank')" style="cursor:pointer" title="${esc(c.linkedinUrl)}"`
-      : `onclick="toggleLinkedin(${c.id})" style="cursor:pointer"`;
-    const liLabel = liIn ? 'Yes'+(hasUrl?' ↗':'') : 'No';
+      ? `onclick="window.open('${esc(c.linkedinUrl)}','_blank')" title="${esc(c.linkedinUrl)}"`
+      : `onclick="toggleLinkedin(${c.id})" title="Click to toggle"`;
+    const liLabel = liIn ? 'Connected'+(hasUrl?' ↗':'') : 'No';
     const msgCnt = msgCount(c);
     const checked = sel.has(c.id)?'checked':'';
+    const ageTxt = lastDate ? (age===0 ? 'today' : `${age}d ago`) : 'none yet';
 
     const frozenBadge = c.frozen
-      ? `<span class="frozen-badge" title="${esc(c.frozenReason||'')}${c.frozenAt?' (frozen '+c.frozenAt+')':''}">❄️ Frozen${c.frozenReason?': '+esc(c.frozenReason.substring(0,20)):''}</span>`
+      ? `<span class="frozen-badge" title="${esc(c.frozenReason||'')}${c.frozenAt?' (frozen '+c.frozenAt+')':''}">${icon('snow')} Frozen${c.frozenReason?': '+esc(c.frozenReason.substring(0,24)):''}</span>`
       : '';
 
     return `<tr class="${rowClass}" id="cr-${c.id}">
-      <td style="width:36px"><input type="checkbox" class="${stage}-cb" data-id="${c.id}" ${checked} onchange="onRowCheck('${stage}',${c.id},this.checked)" style="cursor:pointer"></td>
-      <td><span class="td-brand ie" onclick="inlineEdit(this,'contacts',${c.id},'brand')">${esc(c.brand)}</span></td>
-      <td><span class="td-contact ie" onclick="inlineEdit(this,'contacts',${c.id},'contact')">${esc(c.contact)}</span></td>
-      <td><span class="td-role ie" onclick="inlineEdit(this,'contacts',${c.id},'role')">${esc(c.role)}</span></td>
-      <td class="td-plain ie" onclick="inlineEdit(this,'contacts',${c.id},'location')">${esc(c.location)}</td>
-      <td class="td-plain"><span class="ie" onclick="inlineRegionEdit(event,${c.id},'contacts')">${esc(displayRegion(c.region))}</span></td>
+      <td class="td-cb"><input type="checkbox" class="${stage}-cb" data-id="${c.id}" ${checked} onchange="onRowCheck('${stage}',${c.id},this.checked)"></td>
+      <td class="td-lead">
+        <div class="lead-brand ie" onclick="inlineEdit(this,'contacts',${c.id},'brand')" data-ph="Add brand">${esc(c.brand)}</div>
+        <div class="lead-sub"><span class="ie" onclick="inlineEdit(this,'contacts',${c.id},'contact')" data-ph="Add name">${esc(c.contact)}</span><span class="lead-dot">·</span><span class="ie lead-role" onclick="inlineEdit(this,'contacts',${c.id},'role')" data-ph="Add role">${esc(c.role)}</span></div>
+        ${frozenBadge}
+      </td>
+      <td class="td-loc">
+        <div class="ie" onclick="inlineEdit(this,'contacts',${c.id},'location')" data-ph="Add location">${esc(c.location)}</div>
+        <div class="lead-subtle"><span class="ie" onclick="inlineRegionEdit(event,${c.id},'contacts')" data-ph="Set region">${esc(displayRegion(c.region))}</span></div>
+      </td>
       <td>${sectorPill(c.sector)}</td>
-      <td><span class="bdot ${liIn?'bdot-green':'bdot-gray'}" ${liClick}>${liLabel}</span></td>
-      <td><span class="msgs-pill" onclick="inlineMsgEdit(${c.id})" title="Click to update">${msgCnt}</span></td>
-      ${stage!=='outreach'?'':'<td><span class="bdot '+(c.replied==='Yes'?'bdot-blue':'bdot-gray')+'" style="cursor:pointer" onclick="toggleReplied('+c.id+')">'+(c.replied==='Yes'?'Yes':'No')+'</span></td>'}
-      ${stage==='outreach'?'':''}
+      <td><span class="bdot ${liIn?'bdot-green':'bdot-gray'}" style="cursor:pointer" ${liClick}>${liLabel}</span></td>
+      <td class="td-msgs"><span class="msgs-pill" onclick="inlineMsgEdit(${c.id})" title="Click to update">${msgCnt}</span><span class="lead-subtle ${rowClass==='overdue'?'txt-red':rowClass==='due-soon'?'txt-amber':''}">${ageTxt}</span></td>
+      ${stage!=='outreach'?'':'<td><span class="bdot '+(c.replied==='Yes'?'bdot-blue':'bdot-gray')+'" style="cursor:pointer" title="Click to toggle" onclick="toggleReplied('+c.id+')">'+(c.replied==='Yes'?'Yes':'No')+'</span></td>'}
       <td class="td-plain ie" onclick="inlineEdit(this,'contacts',${c.id},'owner')">${esc(c.owner)}</td>
-      <td class="td-plain ie" onclick="inlineEdit(this,'contacts',${c.id},'notes')" style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(c.notes)}</td>
-      <td style="min-width:160px">
-        <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap">
-          ${frozenBadge}
-          <div class="td-actions" style="opacity:1">
-            <button class="btn-icon" title="Message history" onclick="openMsgHistory(${c.id})">📋</button>
-            ${(DB.templates||[]).length?`<button class="btn btn-sm" style="background:var(--teal-light);color:var(--teal);border:none" title="Send message from template" onclick="openUseTemplate(${c.id})">💬 Send</button>`:''}
-            <button class="btn-icon" onclick="openEditContact(${c.id})">✏️</button>
-            ${nextS&&stage!=='discovery'?`<button class="btn btn-sm btn-promote" onclick="promoteContact(${c.id},'${nextS}')">${nextStageLabel[stage]}</button>`:''}
-            ${stage==='discovery'?`<button class="btn btn-sm btn-promote" onclick="promoteToTrial(${c.id})" style="background:var(--teal-light);color:var(--teal)">→ Trial</button>`:''}
-            <button class="btn btn-sm btn-freeze ${c.frozen?'frozen':''}" onclick="${c.frozen?`unfreezeContact(${c.id})`:`openFreezeModal(${c.id})`}">${c.frozen?'❄️ Unfreeze':'❄️ Freeze'}</button>
-            <button class="btn-icon btn-danger-sm" onclick="deleteContact(${c.id})">🗑</button>
-          </div>
+      <td class="td-plain td-notes ie" onclick="inlineEdit(this,'contacts',${c.id},'notes')" title="${esc(c.notes)}">${esc(c.notes)}</td>
+      <td class="td-act">
+        <div class="row-actions">
+          <button class="act-btn" title="Message history" onclick="openMsgHistory(${c.id})">${icon('mail')}</button>
+          ${hasTpl?`<button class="act-btn" title="Send a message from a template" onclick="openUseTemplate(${c.id})">${icon('send')}</button>`:''}
+          <button class="act-btn" title="Edit contact" onclick="openEditContact(${c.id})">${icon('edit')}</button>
+          <button class="act-btn ${c.frozen?'on':''}" title="${c.frozen?'Unfreeze':'Freeze'}" onclick="${c.frozen?`unfreezeContact(${c.id})`:`openFreezeModal(${c.id})`}">${icon('snow')}</button>
+          <button class="act-btn danger" title="Delete contact" onclick="deleteContact(${c.id})">${icon('trash')}</button>
+          ${promoteTo?`<button class="act-promote" onclick="promoteContact(${c.id},'${promoteTo[0]}')">${promoteTo[1]} ${icon('arrow')}</button>`:''}
+          ${stage==='discovery'?`<button class="act-promote teal" onclick="promoteToTrial(${c.id})">Trial ${icon('arrow')}</button>`:''}
         </div>
       </td>
     </tr>`;
