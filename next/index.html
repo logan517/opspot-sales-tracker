@@ -1945,6 +1945,10 @@ const SupaStore = {
     const {error} = await this.sb.from('tracker_members').update({team: to}).eq('team', from);
     if (error) throw error;
   },
+  async sendSignInLink(email) {
+    const {error} = await this.sb.auth.signInWithOtp({email, options:{emailRedirectTo: location.origin + location.pathname, shouldCreateUser:true}});
+    if (error) throw error;
+  },
   async removeMember(email) {
     const {error} = await this.sb.from('tracker_members').delete().eq('email', email);
     if (error) throw error;
@@ -2014,6 +2018,7 @@ const LocalStore = {
   },
   async listMembers() { return [{email: Sync.me.email, name: Sync.me.name}]; },
   async addMember() { throw new Error('Team members are managed in the live version only.'); },
+  async sendSignInLink() { throw new Error('Test mode does not send emails.'); },
   async removeMember() { throw new Error('Team members are managed in the live version only.'); },
   async renameTeam() {},
   async readLegacy() { throw new Error('Use a backup file in test mode.'); },
@@ -6398,15 +6403,35 @@ async function renderTeamList() {
   try {
     const m = await Store.listMembers();
     m.sort((a, b) => (a.team ? 1 : 0) - (b.team ? 1 : 0) || String(a.team || '').localeCompare(String(b.team || '')) || a.name.localeCompare(b.name));
-    el.innerHTML = m.map(x => `<li><span class="grow"><b>${esc(x.name)}</b> <span class="muted">${esc(x.email)}</span> ${x.team ? `<span class="badge badge-purple">${esc(x.team)} · their trials only</span>` : `<span class="badge badge-gray">OpSpot</span>`}</span>${x.email !== (Sync.me && Sync.me.email) ? `<button class="link-btn danger" onclick="removeTeamMember('${esc(x.email)}')">Remove</button>` : '<span class="muted small">you</span>'}</li>`).join('');
+    el.innerHTML = m.map(x => `<li><span class="grow"><b>${esc(x.name)}</b> <span class="muted">${esc(x.email)}</span> ${x.team ? `<span class="badge badge-purple">${esc(x.team)} · their trials only</span>` : `<span class="badge badge-gray">OpSpot</span>`}</span>${x.email !== (Sync.me && Sync.me.email) ? `<button class="link-btn" onclick="sendTeamSignInLink('${esc(x.email)}','${esc(x.name).replace(/'/g, '&#39;')}')">Send sign-in email</button><button class="link-btn danger" onclick="removeTeamMember('${esc(x.email)}')">Remove</button>` : '<span class="muted small">you</span>'}</li>`).join('');
   } catch(e) { el.innerHTML = `<li class="muted">${esc(e.message)}</li>`; }
+}
+// Supabase's own errors are technical; say what they mean for the person adding a teammate
+function signInEmailError(e) {
+  const m = String((e && e.message) || e || '');
+  if (/not authori[sz]ed/i.test(m)) return 'Supabase would not email this address. Its built-in email only reaches members of your Supabase organisation; set up your own email (SMTP) in Supabase to fix this.';
+  if (/rate limit|too many|security purposes/i.test(m)) return 'Too many sign-in emails in the last hour. Try again later, or set up your own email (SMTP) in Supabase to lift the limit.';
+  return m;
+}
+async function sendTeamSignInLink(email, name, quiet) {
+  try {
+    await Store.sendSignInLink(email);
+    toast(`Sign-in email sent to ${esc(name || email)}`, 'success');
+    return true;
+  } catch(e) {
+    toast(`${quiet ? esc(name || email) + ' was added, but the email did not send. ' : ''}${esc(signInEmailError(e))}`, 'error');
+    return false;
+  }
 }
 async function addTeamMember() {
   const email = val('team-email').trim().toLowerCase(), name = val('team-name').trim(), team = val('team-company');
   if (!email || !name || !email.includes('@')) return toast('Enter a name and work email', 'error');
   if (team && !confirm(`${name} will only see trials where the dispute team is ${team}: brand, status, dates and progress. Nothing else. Add them?`)) return;
-  try { await Store.addMember(email, name, team); document.getElementById('team-email').value = ''; document.getElementById('team-name').value = ''; toast(`${esc(name)} can now sign in`, 'success'); renderTeamList(); }
-  catch(e) { toast(esc(e.message), 'error'); }
+  try { await Store.addMember(email, name, team); }
+  catch(e) { return toast(esc(e.message), 'error'); }
+  document.getElementById('team-email').value = ''; document.getElementById('team-name').value = '';
+  renderTeamList();
+  await sendTeamSignInLink(email, name, true);
 }
 async function removeTeamMember(email) {
   if (!confirm(`Remove ${email} from the team? They will lose access straight away.`)) return;
@@ -7111,7 +7136,8 @@ document.addEventListener('DOMContentLoaded', boot);
       <section>
         <h4>Team members <span class="muted small">Only these emails can sign in and see the data</span></h4>
         <ul class="dr-list" id="team-list"></ul>
-        <div class="dr-row wrap"><input id="team-name" placeholder="Name"><input id="team-email" type="email" placeholder="work@email.com"><select id="team-company"></select><button class="btn btn-sm btn-secondary" onclick="addTeamMember()">Add</button></div>
+        <div class="dr-row wrap"><input id="team-name" placeholder="Name"><input id="team-email" type="email" placeholder="work@email.com"><select id="team-company"></select><button class="btn btn-sm btn-secondary" onclick="addTeamMember()">Add and email invite</button></div>
+        <p class="hint">Adding someone emails them a sign-in link straight away. Use <b>Send sign-in email</b> to send another.</p>
         <p class="hint">Dispute team logins only ever see their own trials: brand, status, dates and progress. No contacts, notes, sales figures or outcomes.</p>
       </section>
       <section>
