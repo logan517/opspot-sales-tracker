@@ -693,6 +693,14 @@ body.drawer-open #trial-drawer-backdrop{opacity:1;pointer-events:auto}
 .mini-select.ph-live{background:var(--teal-light);color:#0f766e}
 .mini-select.ph-done{background:var(--green-light);color:#15803d}
 .dr-addphases{margin:12px 24px 0}
+.dr-details>summary{list-style:none;cursor:pointer}
+.dr-details>summary::-webkit-details-marker{display:none}
+.dr-details>summary h4{margin-bottom:0}
+.dr-details>summary h4::after{content:'Show';margin-left:auto;font-size:12px;font-weight:600;color:var(--blue)}
+.dr-details[open]>summary h4{margin-bottom:10px}
+.dr-details[open]>summary h4::after{content:'Hide'}
+.dr-links-out{margin:12px 24px 0;border-top:none;padding-top:0}
+.dr-links-out:empty{display:none}
 .dr-timeline{list-style:none;margin-top:10px;display:flex;flex-direction:column;gap:8px}
 .dr-timeline li{border-left:3px solid #e5e7eb;padding:2px 0 2px 10px;font-size:13px}
 .dr-timeline li.tl-system{border-color:#c7d2fe}
@@ -769,6 +777,7 @@ body.drawer-open #trial-drawer-backdrop{opacity:1;pointer-events:auto}
   .dr-head,.dr-actions{padding-left:16px;padding-right:16px}
   .dr-facts{padding:12px 16px 0}
   .dr-sec{margin:10px 12px 0}
+  .dr-links-out{margin:10px 12px 0}
   .dr-row{flex-wrap:wrap}
   .form-grid{grid-template-columns:1fr}
   .attn-list li{flex-wrap:wrap}
@@ -3706,7 +3715,12 @@ function renderTrialDrawer() {
   const kept = {};
   drawerChanged.forEach(k => { const el = inner.querySelector(`[data-k="${k}"]`); if (el) kept[k] = el.value; });
   const scroll = inner.scrollTop;
+  // Details stay folded unless the user opened them on this trial (or has unsaved edits there)
+  const prevDet = inner.querySelector('#dr-details');
+  const detOpen = (prevDet && prevDet.open && inner.dataset.tid === String(t.id)) || [...drawerChanged].some(k => k.startsWith('f-'));
+  inner.dataset.tid = String(t.id);
   inner.innerHTML = trialDrawerHtml(t);
+  if (detOpen) { const d = inner.querySelector('#dr-details'); if (d) d.open = true; }
   Object.entries(kept).forEach(([k, v]) => { const el = inner.querySelector(`[data-k="${k}"]`); if (el) el.value = v; });
   if (kept['res-metric'] === '__other') { const c = document.getElementById('dr-res-custom'); if (c) c.hidden = false; }
   inner.scrollTop = scroll;
@@ -3761,49 +3775,39 @@ function trialDrawerHtml(t) {
           : `<button class="link-btn muted" onclick="markTrialTouchpoint('${id}','${p.key}')">Mark sent early</button>`}</li>`;
     }).join('')}</ul></section>` : '';
 
+  // Success criteria, results and rollout phases are no longer asked for. Older trials
+  // that already have entries still show them (read-only, removable) so nothing is lost.
   const crit = t.criteria || [];
-  const critSec = `<section class="dr-sec"><h4>${icon('check')} Success criteria <span class="muted small">What does a win look like? Agree these at kick-off.</span></h4>
+  const critSec = crit.length ? `<section class="dr-sec"><h4>${icon('check')} Success criteria</h4>
     <ul class="dr-list">${crit.map(c => `<li><button class="crit-state ${c.met === true ? 'met' : c.met === false ? 'missed' : ''}" title="Click to change: not assessed, met, not met" onclick="cycleCriterion('${id}','${esc(String(c.id))}')">${c.met === true ? '✓' : c.met === false ? '✗' : '–'}</button>
       <span class="grow">${esc(c.text)}${c.target ? ` <span class="muted">· target ${esc(c.target)}</span>` : ''}</span>
-      <button class="icon-btn" title="Remove" onclick="removeTrialListItem('${id}','criteria','${esc(String(c.id))}')">${icon('x')}</button></li>`).join('') || '<li class="muted">No criteria yet</li>'}</ul>
-    <div class="dr-row"><input id="dr-crit-text" data-k="crit-text" placeholder="e.g. Dispute win rate above current provider"><input id="dr-crit-target" data-k="crit-target" placeholder="Target, e.g. 70%" style="max-width:130px"><button class="btn btn-sm btn-secondary" onclick="addTrialListItem('${id}','criteria')">Add</button></div>
-  </section>`;
+      <button class="icon-btn" title="Remove" onclick="removeTrialListItem('${id}','criteria','${esc(String(c.id))}')">${icon('x')}</button></li>`).join('')}</ul>
+  </section>` : '';
 
-  const metrics = RESULT_METRICS[t.product === 'iq' ? 'iq' : 'disputes'];
   const res = [...(t.results || [])].sort((a, b) => (b.date || '').localeCompare(a.date || ''));
-  const resSec = `<section class="dr-sec"><h4>${icon('chart')} Results</h4>
-    ${res.length ? `<table class="dr-table"><thead><tr><th>Date</th><th>Measure</th><th>Value</th><th>Note</th><th></th></tr></thead><tbody>${res.map(r => `<tr><td>${fmtShort(r.date)}</td><td>${esc(r.metric)}</td><td><b>${esc(r.value)}</b></td><td class="muted">${esc(r.note || '')}</td><td><button class="icon-btn" onclick="removeTrialListItem('${id}','results','${esc(String(r.id))}')">${icon('x')}</button></td></tr>`).join('')}</tbody></table>` : '<p class="muted small">No results logged yet. Add figures as they come in and the final report writes itself.</p>'}
-    <div class="dr-row wrap">
-      <select id="dr-res-metric" data-k="res-metric" onchange="document.getElementById('dr-res-custom').hidden=this.value!=='__other'">${metrics.map(m => `<option>${esc(m)}</option>`).join('')}<option value="__other">Other…</option></select>
-      <input id="dr-res-custom" data-k="res-custom" placeholder="Measure name" hidden>
-      <input id="dr-res-value" data-k="res-value" placeholder="Value" style="max-width:100px">
-      <input id="dr-res-date" data-k="res-date" type="date" value="${today()}" style="max-width:150px">
-      <input id="dr-res-note" data-k="res-note" placeholder="Note (optional)">
-      <button class="btn btn-sm btn-secondary" onclick="addTrialListItem('${id}','results')">Add</button>
-    </div>
-  </section>`;
+  const resSec = res.length ? `<section class="dr-sec"><h4>${icon('chart')} Results</h4>
+    <table class="dr-table"><thead><tr><th>Date</th><th>Measure</th><th>Value</th><th>Note</th><th></th></tr></thead><tbody>${res.map(r => `<tr><td>${fmtShort(r.date)}</td><td>${esc(r.metric)}</td><td><b>${esc(r.value)}</b></td><td class="muted">${esc(r.note || '')}</td><td><button class="icon-btn" onclick="removeTrialListItem('${id}','results','${esc(String(r.id))}')">${icon('x')}</button></td></tr>`).join('')}</tbody></table>
+  </section>` : '';
 
   const phases = t.phases || [];
-  const showPhases = t.product === 'iq' || phases.length;
-  const phSec = showPhases ? `<section class="dr-sec"><h4>${icon('layers')} Rollout phases <span class="muted small">Stage the rollout by channel</span></h4>
-    ${phases.length ? `<table class="dr-table"><thead><tr><th>Phase</th><th>Channel</th><th>Status</th><th>Dates</th><th></th></tr></thead><tbody>${phases.map(p => `<tr>
+  const phSec = phases.length ? `<section class="dr-sec"><h4>${icon('layers')} Rollout phases</h4>
+    <table class="dr-table"><thead><tr><th>Phase</th><th>Channel</th><th>Status</th><th>Dates</th><th></th></tr></thead><tbody>${phases.map(p => `<tr>
       <td><b>${esc(p.name)}</b></td><td>${esc(p.channel || '')}</td>
       <td><select class="mini-select ph-${(p.status || 'Planned').toLowerCase()}" onchange="updateTrialListItem('${id}','phases','${esc(String(p.id))}','status',this.value)">${PHASE_STATUSES.map(s => `<option ${p.status === s ? 'selected' : ''}>${s}</option>`).join('')}</select></td>
       <td class="muted">${p.start ? fmtShort(p.start) : '?'} → ${p.end ? fmtShort(p.end) : '?'}</td>
-      <td><button class="icon-btn" onclick="removeTrialListItem('${id}','phases','${esc(String(p.id))}')">${icon('x')}</button></td></tr>`).join('')}</tbody></table>` : ''}
-    <div class="dr-row wrap"><input id="dr-ph-name" data-k="ph-name" placeholder="e.g. Phase 1: Delivery"><select id="dr-ph-channel" data-k="ph-channel">${TRIAL_CHANNELS.map(c => `<option>${c}</option>`).join('')}</select><input id="dr-ph-start" data-k="ph-start" type="date" title="Start" style="max-width:150px"><input id="dr-ph-end" data-k="ph-end" type="date" title="End" style="max-width:150px"><button class="btn btn-sm btn-secondary" onclick="addTrialListItem('${id}','phases')">Add phase</button></div>
-  </section>` : `<button class="link-btn dr-addphases" onclick="mutateTrial('${id}',t=>{t.phases=t.phases||[];t.phases.push({id:uid(),name:'Phase 1',channel:'Delivery',status:'Planned',start:'',end:''})})">${icon('plus')} Add rollout phases</button>`;
+      <td><button class="icon-btn" onclick="removeTrialListItem('${id}','phases','${esc(String(p.id))}')">${icon('x')}</button></td></tr>`).join('')}</tbody></table>
+  </section>` : '';
 
   const tl = [...(t.timeline || [])].sort((a, b) => (b.ts || 0) - (a.ts || 0));
-  const tlSec = `<section class="dr-sec"><h4>${icon('clock')} Timeline</h4>
-    <div class="dr-row"><select id="dr-tl-type" data-k="tl-type" style="max-width:120px">${Object.entries(TIMELINE_TYPES).filter(([k]) => k !== 'system').map(([k, l]) => `<option value="${k}">${l}</option>`).join('')}</select><input id="dr-tl-text" data-k="tl-text" placeholder="Log a call, email, issue or update…" onkeydown="if(event.key==='Enter')addTrialListItem('${id}','timeline')"><button class="btn btn-sm btn-secondary" onclick="addTrialListItem('${id}','timeline')">Add</button></div>
-    <ul class="dr-timeline">${tl.map(e => `<li class="tl-${e.type}"><div class="tl-meta">${fmtShort(e.date)} · ${TIMELINE_TYPES[e.type] || e.type}${e.by ? ` · ${esc(e.by)}` : ''}</div><div>${esc(e.text)}</div></li>`).join('') || '<li class="muted small">Nothing logged yet</li>'}</ul>
+  const tlSec = `<section class="dr-sec"><h4>${icon('clock')} Updates</h4>
+    <div class="dr-row"><input id="dr-tl-text" data-k="tl-text" placeholder="Add an update, e.g. Called Jamie, claims start Monday" onkeydown="if(event.key==='Enter')addTrialListItem('${id}','timeline')"><button class="btn btn-sm btn-secondary" onclick="addTrialListItem('${id}','timeline')">Add</button></div>
+    <ul class="dr-timeline">${tl.map(e => `<li class="tl-${e.type}"><div class="tl-meta">${fmtShort(e.date)}${e.type !== 'note' ? ` · ${TIMELINE_TYPES[e.type] || e.type}` : ''}${e.by ? ` · ${esc(e.by)}` : ''}</div><div>${esc(e.text)}</div></li>`).join('') || '<li class="muted small">Nothing logged yet</li>'}</ul>
   </section>`;
 
   const inp = (f, label, type='text', extra='') => `<div class="form-group"><label>${label}</label><input id="dr-f-${f}" data-k="f-${f}" type="${type}" value="${esc(t[f] == null ? '' : String(t[f]))}" ${extra}></div>`;
   const sel = (f, label, opts) => `<div class="form-group"><label>${label}</label><select id="dr-f-${f}" data-k="f-${f}">${opts.map(([v, l]) => `<option value="${esc(v)}" ${String(t[f] || '') === String(v) ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select></div>`;
   const comps = [...new Set([...(DB.competitors || []), ...(t.disputed && t.disputed !== 'none' ? [t.disputed] : [])])];
-  const details = `<section class="dr-sec"><h4>${icon('edit')} Details</h4>
+  const details = `<details class="dr-sec dr-details" id="dr-details"><summary><h4>${icon('edit')} Details <span class="muted small">contact, region, sites, dates, notes</span></h4></summary>
     <div class="form-grid">
       ${inp('brand', 'Brand', 'text', 'list="brand-list-dl"')}
       ${sel('product', 'Product', Object.entries(TRIAL_PRODUCTS))}
@@ -3818,13 +3822,13 @@ function trialDrawerHtml(t) {
       <div class="form-group form-full"><label>Note for the dispute team <span class="muted">(${t.disputed && t.disputed !== 'none' ? esc(t.disputed) + ' can see this' : 'visible once a dispute team is set'})</span></label><textarea id="dr-f-partnerNote" data-k="f-partnerNote" placeholder="e.g. Claims from all 17 sites should start coming through from Monday">${esc(t.partnerNote || '')}</textarea></div>
     </div>
     <div class="dr-row end"><button class="btn btn-primary btn-sm" onclick="saveTrialDetails('${id}')">Save details</button></div>
-    <div class="dr-links">
+  </details>
+    <div class="dr-links dr-links-out">
       ${linkedContact ? `<button class="link-btn" onclick="openEditContact(${Number(linkedContact.id)})">${icon('user')} Contact record: ${esc(linkedContact.contact || linkedContact.brand)}</button>` : ''}
       ${linkedGroup ? `<button class="link-btn" onclick="openTrialOnboarding('${id}')">${icon('flag')} Onboarding group: ${esc(linkedGroup.brand)}</button>` : ''}
       ${(t.extensions || []).length ? `<div class="muted small">Extended ${t.extensions.length} time${t.extensions.length > 1 ? 's' : ''}: ${t.extensions.map(x => `${fmtShort(x.from)} → ${fmtShort(x.to)}${x.reason ? ` (${esc(x.reason)})` : ''}`).join('; ')}</div>` : ''}
       ${t.status === 'Won' || t.status === 'Lost' ? `<div class="muted small">Outcome: <b>${t.status}</b>${t.lossReason ? ` · ${esc(t.lossReason)}` : ''}${t.closeNote ? ` · ${esc(t.closeNote)}` : ''}</div>` : ''}
-    </div>
-  </section>`;
+    </div>`;
 
   return `<div class="dr-head">
       <div class="grow"><div class="dr-title">${esc(t.brand)}</div>
@@ -3850,19 +3854,12 @@ function openNewTrial(opts = {}) {
       <div class="form-group form-full"><label>Brand *</label><input id="nt-brand" list="brand-list-dl" value="${esc(c ? c.brand : '')}" placeholder="Brand name…"></div>
       <div class="form-group form-full"><label>Product</label><div class="seg wide" id="nt-product">${Object.entries(TRIAL_PRODUCTS).map(([k, l], i) => `<button type="button" data-v="${k}" class="${i === 0 ? 'on' : ''}" onclick="segPick(this)">${l}</button>`).join('')}</div></div>
       <div class="form-group"><label>Main contact</label><input id="nt-contact" value="${esc(c ? c.contact : '')}"></div>
-      <div class="form-group"><label>Role</label><input id="nt-role" value="${esc(c ? c.role : '')}"></div>
       <div class="form-group"><label>Owner</label><input id="nt-owner" list="owner-list-dl" value="${esc(c ? (c.owner || currentUser()) : currentUser())}"></div>
-      <div class="form-group"><label>Region</label><select id="nt-region"><option value="">Select region</option>${REGIONS.map(r => `<option value="${esc(r)}" ${c && c.region === r ? 'selected' : ''}>${esc(displayRegion(r))}</option>`).join('')}</select></div>
-      <div class="form-group"><label>Sector</label><select id="nt-sector"><option value="">Select sector</option>${['Restaurant','Grocery','Other'].map(s => `<option ${c && c.sector === s ? 'selected' : ''}>${s}</option>`).join('')}</select></div>
       <div class="form-group"><label>Dispute team</label><select id="nt-disputed"><option value="none">None</option>${comps.map(x => `<option>${esc(x)}</option>`).join('')}</select></div>
-      <div class="form-group"><label>Sites in trial</label><input id="nt-sites" type="number" min="0"></div>
       <div class="form-group form-full"><label>Has the trial started?</label>
         <div class="seg wide" id="nt-status"><button type="button" data-v="Pending" class="on" onclick="segPick(this);ntToggleStart()">Not yet · start date to be confirmed</button><button type="button" data-v="Active" onclick="segPick(this);ntToggleStart()">Yes · it's running</button></div></div>
       <div class="form-group form-full" id="nt-pending-box"><label>Expected start (optional)</label><input id="nt-expected" type="date"><div class="hint">Leave blank if you don't know yet. When it actually starts, click <b>Start trial</b> and set the real date.</div></div>
       <div class="form-full" id="nt-active-box" hidden>${startFieldsHtml('nt', today(), '1m', '')}</div>
-      <div class="form-group"><label>Next step</label><input id="nt-next" placeholder="e.g. Confirm install date with Jack"></div>
-      <div class="form-group"><label>Due</label><input id="nt-next-date" type="date"></div>
-      <div class="form-group form-full"><label>Notes</label><textarea id="nt-notes"></textarea></div>
     </div>`;
   document.getElementById('trial-modal-save').textContent = 'Create trial';
   openModal('trial-modal');
@@ -3891,6 +3888,16 @@ function saveTrial() {
   if (trialModalCtx && trialModalCtx.mode === 'new') return saveNewTrial();
   confirmTrialAction();
 }
+// The contact a new trial is for: the one it was started from, else the only contact
+// with this brand (and name, if given). Used to fill role, region and sector.
+function ntSourceContact(brand, contactName) {
+  const ctx = trialModalCtx;
+  if (ctx && ctx.fromContactId) { const c = DB.contacts.find(x => String(x.id) === String(ctx.fromContactId)); if (c) return c; }
+  const low = v => String(v || '').trim().toLowerCase();
+  let m = DB.contacts.filter(c => low(c.brand) === low(brand));
+  if (contactName && m.length > 1) m = m.filter(c => low(c.contact) === low(contactName));
+  return m.length === 1 ? m[0] : null;
+}
 function saveNewTrial() {
   const brand = val('nt-brand').trim();
   if (!brand) return toast('Brand is required', 'error');
@@ -3898,15 +3905,18 @@ function saveNewTrial() {
   const start = val('nt-start'), end = val('nt-end');
   if (status === 'Active' && (!start || !end)) return toast('Set the start and end dates', 'error');
   if (status === 'Active' && end <= start) return toast('The end date must be after the start date', 'error');
+  // Role, region and sector come from the contact record rather than being asked again
+  const contactName = val('nt-contact').trim();
+  const src = ntSourceContact(brand, contactName);
   const t = {
     id: newNumId(), brand, product: segVal('nt-product') || 'disputes', status,
-    contact: val('nt-contact').trim(), role: val('nt-role').trim(), owner: val('nt-owner').trim(),
-    region: val('nt-region'), sector: val('nt-sector'), disputed: val('nt-disputed') || 'none',
-    dealValue: parseFloat(val('nt-sites')) || 0,
+    contact: contactName, role: (src && src.role) || '', owner: val('nt-owner').trim(),
+    region: (src && src.region) || '', sector: (src && src.sector) || '', disputed: val('nt-disputed') || 'none',
+    dealValue: 0,
     expectedStart: status === 'Pending' ? val('nt-expected') : '',
     startDate: status === 'Active' ? start : '', endDate: status === 'Active' ? end : '',
-    nextAction: val('nt-next').trim(), nextActionDate: val('nt-next').trim() ? val('nt-next-date') : '',
-    notes: val('nt-notes').trim(), touchpoints: {}, criteria: [], results: [], phases: [], timeline: [], extensions: [],
+    nextAction: '', nextActionDate: '',
+    notes: '', touchpoints: {}, criteria: [], results: [], phases: [], timeline: [], extensions: [],
     addedAt: Date.now(), createdBy: currentUser(), schema: 3,
   };
   trialLog(t, 'system', status === 'Active' ? `Trial created and started ${fmtShort(start)}` : 'Trial agreed, start date to be confirmed');
