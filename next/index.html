@@ -693,20 +693,62 @@ body.drawer-open #trial-drawer-backdrop{opacity:1;pointer-events:auto}
 .mini-select.ph-live{background:var(--teal-light);color:#0f766e}
 .mini-select.ph-done{background:var(--green-light);color:#15803d}
 .dr-addphases{margin:12px 24px 0}
-/* Sales stage pages (Outreach, Qualified, Discovery) */
-.stage-header{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.stage-steps{display:flex;list-style:none;gap:4px;margin:0;padding:0}
-.stage-steps li{font-size:11.5px;font-weight:600;color:#9ca3af;padding:4px 10px;border-radius:20px;background:var(--white);border:1px solid var(--border);position:relative}
-.stage-steps li.done{color:var(--text-muted)}
-.stage-steps li.on{color:#fff;background:var(--navy);border-color:var(--navy)}
-.stage-hint{font-size:12.5px;color:var(--text-muted)}
-.stage-metrics .mc-v2{padding:12px 16px;border-radius:12px}
-.stage-metrics .mcv-value{font-size:26px;margin:3px 0 1px}
+/* Sales stage pages (Outreach, Qualified, Discovery): refined table */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.ptb-stage{flex-direction:column;align-items:flex-start;gap:8px}
+.ptb-title{display:flex;align-items:center;gap:10px}
+.ptb-stage h1{font-size:28px;letter-spacing:-.4px}
+.page-topbar:has(.ptb-stage){align-items:flex-end;padding-top:24px}
+.stage-steps{display:flex;align-items:center;list-style:none;gap:6px;margin:0;padding:0;font-size:12px;font-weight:600}
+.stage-steps li{color:var(--text-muted)}
+.stage-steps li.on{color:#fff;background:var(--navy);padding:4px 10px;border-radius:20px}
+.stage-steps li.sep{color:#c4c7cf}
+.stage-hint{margin:0;font-size:13.5px;color:#5b6170}
+.stage-metrics{gap:0;background:var(--white);border:1px solid var(--border);border-radius:14px;margin:0 28px 16px;padding:0}
+.stage-metrics .mc-v2{border:none;border-radius:0;background:transparent;border-right:1px solid #efede8;padding:14px 20px}
+.stage-metrics .mc-v2:last-child{border-right:none}
+.stage-metrics .mcv-label{text-transform:none;letter-spacing:0;font-size:12px;color:#5b6170}
+.stage-metrics .mcv-value{font-size:26px;font-weight:500;margin:4px 0 0;display:inline-block}
+.stage-metrics .mcv-sub{display:inline-block;margin-left:8px;font-size:12.5px;color:#6b7280}
+.stage-metrics .mcv-value.red{color:#b91c1c}
+.lead-card{background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.lead-card .toolbar-card{margin:0;border:none;border-bottom:1px solid #efede8;border-radius:0;padding:12px 14px}
+.lead-card .tc-search input{height:38px;border-radius:9px;min-width:240px;background:#fafaf8}
+.lead-card .tc-right{display:flex;gap:8px;margin-left:auto;flex-wrap:wrap}
+.lead-card .toolbar-card select,.lead-card .btn-myview{height:38px;border-radius:9px;background:var(--white)}
+.qf{display:flex;background:#f2f1ed;border-radius:9px;padding:3px;gap:2px}
+.qf button{height:32px;padding:0 12px;border:none;border-radius:7px;background:transparent;color:#5b6170;font:600 13px 'DM Sans',sans-serif;cursor:pointer;white-space:nowrap}
+.qf button span{font-family:'DM Mono',monospace;font-size:11.5px;opacity:.75}
+.qf button.on{background:var(--white);color:var(--navy);box-shadow:0 1px 2px rgba(15,31,61,.12)}
+.qf button.chase:not(.on){color:#b91c1c}
+.lead-scroll{overflow-x:auto}
+.lead-card .table-v2{border:none;border-radius:0}
+.lead-foot{padding:12px 16px;border-top:1px solid #efede8;font-size:12.5px;color:#6b7280}
 .tc-search::before{content:'';width:14px;height:14px;opacity:.45;background:no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E")}
 .lead-table{overflow:clip}
-.lead-table thead th{font-size:10.5px}
-.lead-table td{padding:10px 12px}
-.lead-table .td-cb{width:34px;padding-right:0}
+.lead-table thead th{font-size:12px;text-transform:none;letter-spacing:0;color:#5b6170;padding:10px 8px}
+.lead-table td{padding:12px 8px;font-size:13.5px}
+.lead-table tbody tr{border-bottom:1px solid #f1efea}
+.lead-table tbody tr.overdue,.lead-table tbody tr.due-soon{border-left:none}
+.lead-table tbody tr.overdue td:first-child{box-shadow:inset 3px 0 0 #dc2626}
+.lead-table tbody tr.due-soon td:first-child{box-shadow:inset 3px 0 0 #d97706}
+.lead-table tbody tr.frozen-row{opacity:1;background:#f6f8ff}
+.lead-table .td-cb{width:34px;padding-left:14px;padding-right:0}
+.lead-wrap{display:flex;align-items:center;gap:11px}
+.lead-av{width:34px;height:34px;flex:none;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.lead-text{min-width:0}
+.frozen-chip{font-size:11px;font-weight:600;color:#1d4ed8;background:#e8f0ff;padding:2px 8px;border-radius:20px;white-space:nowrap}
+.li-pill{border:none;font:600 12.5px 'DM Sans',sans-serif;color:#4b5563;background:#f1f1ef;padding:3px 9px;border-radius:20px;cursor:pointer;white-space:nowrap}
+.li-pill.on{color:#065f46;background:#dcfce7}
+.msgs-count{border:none;font:500 12.5px 'DM Mono',monospace;background:#eef0ff;color:#3730a3;border-radius:6px;padding:2px 7px;cursor:pointer}
+.msg-age{font-size:12.5px;color:#5b6170;margin-left:8px}
+.link-plain{border:none;background:none;padding:0;font:inherit;color:#3f4451;cursor:pointer}
+.row-menu{position:fixed;z-index:3000;min-width:200px;background:var(--white);border:1px solid var(--border);border-radius:10px;box-shadow:0 10px 30px rgba(15,31,61,.16);padding:5px;display:flex;flex-direction:column}
+.row-menu button{display:flex;align-items:center;gap:9px;height:36px;padding:0 10px;border:none;background:none;border-radius:7px;font:500 13.5px 'DM Sans',sans-serif;color:var(--text);cursor:pointer;text-align:left}
+.row-menu button:hover,.row-menu button:focus{background:var(--bg);outline:none}
+.row-menu button.danger{color:#b91c1c}
+.row-menu .ico{width:15px;height:15px;color:#6b7280}
+.row-menu button.danger .ico{color:#b91c1c}
 .lead-table .td-cb input{cursor:pointer}
 .lead-table .td-lead{min-width:220px;max-width:300px}
 .lead-brand{font-weight:700;color:var(--navy);line-height:1.3;cursor:pointer;border-radius:4px}
@@ -719,9 +761,9 @@ body.drawer-open #trial-drawer-backdrop{opacity:1;pointer-events:auto}
 .lead-table .ie:hover{background:#eef3ff}
 .lead-table .ie:empty::before{content:attr(data-ph);color:#c4c7cf;font-style:italic;font-size:11.5px;opacity:0}
 .lead-table tr:hover .ie:empty::before{opacity:1}
-.lead-table .td-loc{color:var(--text-muted);font-size:12.5px;white-space:nowrap}
+.lead-table .td-loc{color:#3f4451;white-space:nowrap}
+.lead-table .td-loc .lead-subtle{font-size:12px;color:#6b7280}
 .lead-table .td-msgs{white-space:nowrap}
-.lead-table .td-msgs .lead-subtle{display:inline;margin-left:6px}
 .txt-red{color:var(--red)!important;font-weight:600}
 .txt-amber{color:#b45309!important;font-weight:600}
 .lead-table .td-notes{max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -732,12 +774,12 @@ body.drawer-open #trial-drawer-backdrop{opacity:1;pointer-events:auto}
 .lead-table .frozen-badge{margin-top:5px}
 .lead-table .frozen-badge .ico{width:11px;height:11px}
 .row-actions{display:flex;align-items:center;gap:2px}
-.act-btn{width:28px;height:28px;border:none;background:transparent;border-radius:7px;color:#9ca3af;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:background .12s,color .12s}
+.act-btn{width:32px;height:32px;border:none;background:transparent;border-radius:7px;color:#9ca3af;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:background .12s,color .12s}
 .act-btn .ico{width:15px;height:15px}
 .act-btn:hover{background:var(--bg);color:var(--navy)}
 .act-btn.on{color:#1d4ed8;background:var(--ice-light)}
 .act-btn.danger:hover{background:#fee2e2;color:var(--red)}
-.act-promote{margin-left:6px;height:28px;padding:0 10px;border:none;border-radius:7px;background:var(--purple-light);color:var(--purple);font:600 12px 'DM Sans',sans-serif;display:inline-flex;align-items:center;gap:4px;cursor:pointer;white-space:nowrap}
+.act-promote{margin-left:6px;height:32px;padding:0 12px;border:none;border-radius:8px;background:var(--purple-light);color:var(--purple);font:600 12px 'DM Sans',sans-serif;display:inline-flex;align-items:center;gap:4px;cursor:pointer;white-space:nowrap}
 .act-promote .ico{width:13px;height:13px}
 .act-promote:hover{filter:brightness(.96)}
 .act-promote.teal{background:var(--teal-light);color:var(--teal)}
@@ -861,7 +903,13 @@ body.drawer-open #trial-drawer-backdrop{opacity:1;pointer-events:auto}
   #trial-drawer-inner{padding-bottom:calc(30px + env(safe-area-inset-bottom))}
   .dr-actions .btn{flex:1 1 auto;justify-content:center}
   /* contact tables become cards */
-  #page-outreach .table-wrap-v2,#page-qualified .table-wrap-v2,#page-discovery .table-wrap-v2{display:none}
+  #page-outreach .table-wrap-v2,#page-qualified .table-wrap-v2,#page-discovery .table-wrap-v2{flex:none;overflow:visible;padding:0 16px 12px}
+  .lead-scroll,.lead-foot{display:none}
+  .lead-card .tc-right{margin-left:0}
+  .lead-card .tc-search,.lead-card .tc-search input{width:100%;min-width:0}
+  .qf{overflow-x:auto;max-width:100%}
+  .stage-steps,.stage-hint{display:none}
+  .stage-metrics{margin:0 16px 12px}
   .mcards{display:flex;flex-direction:column;gap:10px;padding:0 16px 20px}
   .mcard{background:var(--white);border:1px solid var(--border);border-left:4px solid #e5e7eb;border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:7px}
   .mcard.overdue{border-left-color:var(--red)}.mcard.duesoon{border-left-color:var(--amber)}.mcard.frozen{opacity:.65}
@@ -925,6 +973,7 @@ body.drawer-open #trial-drawer-backdrop{opacity:1;pointer-events:auto}
   <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></symbol>
   <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></symbol>
   <symbol id="i-play" viewBox="0 0 24 24"><path d="M6 3l14 9-14 9z"/></symbol>
+  <symbol id="i-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></symbol>
   <symbol id="i-snow" viewBox="0 0 24 24"><path d="M12 2v20M4.9 7l14.2 10M4.9 17 19.1 7M9 4l3 2 3-2M9 20l3-2 3 2"/></symbol>
   <symbol id="i-pause" viewBox="0 0 24 24"><rect x="14" y="4" width="4" height="16" rx="1"/><rect x="6" y="4" width="4" height="16" rx="1"/></symbol>
   <symbol id="i-calendar" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
@@ -1049,9 +1098,10 @@ body.drawer-open #trial-drawer-backdrop{opacity:1;pointer-events:auto}
   <!-- OUTREACH PAGE -->
   <div class="page" id="page-outreach">
     <div class="page-topbar">
-      <div class="ptb-left">
-        <h1>Outreach</h1>
-        <span class="region-pill" id="outreach-region-pill">All regions</span>
+      <div class="ptb-left ptb-stage">
+        <ol class="stage-steps outreach"><li class="on">Outreach</li><li class="sep" aria-hidden="true">›</li><li class="">Qualified</li><li class="sep" aria-hidden="true">›</li><li class="">Discovery</li><li class="sep" aria-hidden="true">›</li><li class="">Trial</li><li class="sep" aria-hidden="true">›</li><li class="">Onboarding</li></ol>
+        <div class="ptb-title"><h1>Outreach</h1><span class="region-pill" id="outreach-region-pill">All regions</span></div>
+        <p class="stage-hint">Move leads to Qualified once they reply.</p>
       </div>
       <div class="ptb-right">
         
@@ -1059,10 +1109,13 @@ body.drawer-open #trial-drawer-backdrop{opacity:1;pointer-events:auto}
         <button class="btn btn-primary" onclick="openAddContact('outreach')"><svg class="ico"><use href="#i-plus"/></svg> Add contact</button>
       </div>
     </div>
-    <div class="stage-header"><ol class="stage-steps outreach"><li class="on">Outreach</li><li class="">Qualified</li><li class="">Discovery</li><li class="">Trial</li><li class="">Onboarding</li></ol><span class="stage-hint">Move leads to Qualified once they reply.</span></div>
-    <div class="metrics-bar-v2 stage-metrics" id="outreach-metrics"></div>
-    <div class="toolbar-card">
-      <div class="tc-search"><input type="text" id="outreach-search" placeholder="Search brand, contact, owner…" oninput="renderStage('outreach')"></div>
+        <div class="metrics-bar-v2 stage-metrics" id="outreach-metrics"></div>
+    <div class="table-wrap-v2">
+      <div class="lead-card">
+      <div class="toolbar-card">
+      <div class="tc-search"><label class="sr-only" for="outreach-search">Search leads</label><input type="text" id="outreach-search" placeholder="Search brand, name or owner" oninput="renderStage('outreach')"></div>
+      <div class="qf" role="group" aria-label="Quick filter" id="outreach-qf"></div>
+      <div class="tc-right">
       <select id="outreach-sector-filter" onchange="renderStage('outreach')">
         <option value="">All sectors</option><option>Restaurant</option><option>Grocery</option><option>Other</option>
       </select>
@@ -1072,21 +1125,21 @@ body.drawer-open #trial-drawer-backdrop{opacity:1;pointer-events:auto}
         <option value="brand">Brand A–Z</option>
       </select>
       <select id="outreach-owner-filter" onchange="renderStage('outreach')"><option value="">All owners</option></select>
-      <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-muted);cursor:pointer">
-        <input type="checkbox" id="outreach-show-frozen" onchange="renderStage('outreach')"> Show frozen
-      </label>
-      <button class="btn-myview" id="outreach-myview-btn" onclick="toggleMyView('outreach')">My view</button>
-      <span class="tc-count" id="outreach-count-label">0 contacts</span>
+      <button class="btn-myview" id="outreach-myview-btn" onclick="toggleMyView('outreach')">My leads</button>
+      </div>
     </div>
-    <div class="table-wrap-v2">
+      <div class="lead-scroll">
       <table class="table-v2 lead-table" id="outreach-table">
         <thead><tr>
           <th style="width:36px"><input type="checkbox" id="outreach-select-all" onchange="toggleSelectAll('outreach',this.checked)" style="cursor:pointer"></th>
-          <th>Lead</th><th>Location</th><th>Sector</th>
-          <th>LinkedIn</th><th>Messages</th><th>Replied</th><th>Owner</th><th>Notes</th><th class="th-actions"></th>
+          <th>Lead</th><th>Location</th>
+          <th>LinkedIn</th><th>Last message</th><th>Replied</th><th>Owner</th><th>Notes</th><th class="th-actions"></th>
         </tr></thead>
         <tbody id="outreach-tbody"></tbody>
       </table>
+      </div>
+      <div class="lead-foot"><span id="outreach-count-label">0 leads</span></div>
+      </div>
       <div id="outreach-bulk-bar" class="bulk-bar" style="display:none">
         <span class="bb-count" id="outreach-bulk-count">0 selected</span>
         <button class="btn-bulk" onclick="bulkAssignOwner('outreach')">Assign owner</button>
@@ -1101,19 +1154,23 @@ body.drawer-open #trial-drawer-backdrop{opacity:1;pointer-events:auto}
   <!-- QUALIFIED PAGE -->
   <div class="page" id="page-qualified">
     <div class="page-topbar">
-      <div class="ptb-left">
-        <h1>Qualified Leads</h1>
-        <span class="region-pill" id="qualified-region-pill">All regions</span>
+      <div class="ptb-left ptb-stage">
+        <ol class="stage-steps qualified"><li class="done">Outreach</li><li class="sep" aria-hidden="true">›</li><li class="on">Qualified</li><li class="sep" aria-hidden="true">›</li><li class="">Discovery</li><li class="sep" aria-hidden="true">›</li><li class="">Trial</li><li class="sep" aria-hidden="true">›</li><li class="">Onboarding</li></ol>
+        <div class="ptb-title"><h1>Qualified Leads</h1><span class="region-pill" id="qualified-region-pill">All regions</span></div>
+        <p class="stage-hint">Move to Discovery once a discovery call is booked.</p>
       </div>
       <div class="ptb-right">
         <button class="btn btn-secondary" onclick="exportCSV('qualified')"><svg class="ico"><use href="#i-download"/></svg> Export</button>
         <button class="btn btn-primary" onclick="openAddContact('qualified')"><svg class="ico"><use href="#i-plus"/></svg> Add contact</button>
       </div>
     </div>
-    <div class="stage-header"><ol class="stage-steps qualified"><li class="done">Outreach</li><li class="on">Qualified</li><li class="">Discovery</li><li class="">Trial</li><li class="">Onboarding</li></ol><span class="stage-hint">Move to Discovery once a discovery call is booked.</span></div>
-    <div class="metrics-bar-v2 stage-metrics" id="qualified-metrics"></div>
-    <div class="toolbar-card">
-      <div class="tc-search"><input type="text" id="qualified-search" placeholder="Search brand, contact, owner…" oninput="renderStage('qualified')"></div>
+        <div class="metrics-bar-v2 stage-metrics" id="qualified-metrics"></div>
+    <div class="table-wrap-v2">
+      <div class="lead-card">
+      <div class="toolbar-card">
+      <div class="tc-search"><label class="sr-only" for="qualified-search">Search leads</label><input type="text" id="qualified-search" placeholder="Search brand, name or owner" oninput="renderStage('qualified')"></div>
+      <div class="qf" role="group" aria-label="Quick filter" id="qualified-qf"></div>
+      <div class="tc-right">
       <select id="qualified-sector-filter" onchange="renderStage('qualified')">
         <option value="">All sectors</option><option>Restaurant</option><option>Grocery</option><option>Other</option>
       </select>
@@ -1123,21 +1180,21 @@ body.drawer-open #trial-drawer-backdrop{opacity:1;pointer-events:auto}
         <option value="brand">Brand A–Z</option>
       </select>
       <select id="qualified-owner-filter" onchange="renderStage('qualified')"><option value="">All owners</option></select>
-      <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-muted);cursor:pointer">
-        <input type="checkbox" id="qualified-show-frozen" onchange="renderStage('qualified')"> Show frozen
-      </label>
-      <button class="btn-myview" id="qualified-myview-btn" onclick="toggleMyView('qualified')">My view</button>
-      <span class="tc-count" id="qualified-count-label">0 contacts</span>
+      <button class="btn-myview" id="qualified-myview-btn" onclick="toggleMyView('qualified')">My leads</button>
+      </div>
     </div>
-    <div class="table-wrap-v2">
+      <div class="lead-scroll">
       <table class="table-v2 lead-table" id="qualified-table">
         <thead><tr>
           <th style="width:36px"><input type="checkbox" id="qualified-select-all" onchange="toggleSelectAll('qualified',this.checked)" style="cursor:pointer"></th>
-          <th>Lead</th><th>Location</th><th>Sector</th>
-          <th>LinkedIn</th><th>Messages</th><th>Owner</th><th>Notes</th><th class="th-actions"></th>
+          <th>Lead</th><th>Location</th>
+          <th>LinkedIn</th><th>Last message</th><th>Owner</th><th>Notes</th><th class="th-actions"></th>
         </tr></thead>
         <tbody id="qualified-tbody"></tbody>
       </table>
+      </div>
+      <div class="lead-foot"><span id="qualified-count-label">0 leads</span></div>
+      </div>
       <div id="qualified-bulk-bar" class="bulk-bar" style="display:none">
         <span class="bb-count" id="qualified-bulk-count">0 selected</span>
         <button class="btn-bulk" onclick="bulkAssignOwner('qualified')">Assign owner</button>
@@ -1152,19 +1209,23 @@ body.drawer-open #trial-drawer-backdrop{opacity:1;pointer-events:auto}
   <!-- DISCOVERY PAGE -->
   <div class="page" id="page-discovery">
     <div class="page-topbar">
-      <div class="ptb-left">
-        <h1>Discovery</h1>
-        <span class="region-pill" id="discovery-region-pill">All regions</span>
+      <div class="ptb-left ptb-stage">
+        <ol class="stage-steps discovery"><li class="done">Outreach</li><li class="sep" aria-hidden="true">›</li><li class="done">Qualified</li><li class="sep" aria-hidden="true">›</li><li class="on">Discovery</li><li class="sep" aria-hidden="true">›</li><li class="">Trial</li><li class="sep" aria-hidden="true">›</li><li class="">Onboarding</li></ol>
+        <div class="ptb-title"><h1>Discovery</h1><span class="region-pill" id="discovery-region-pill">All regions</span></div>
+        <p class="stage-hint">Move to Trial once a trial is agreed.</p>
       </div>
       <div class="ptb-right">
         <button class="btn btn-secondary" onclick="exportCSV('discovery')"><svg class="ico"><use href="#i-download"/></svg> Export</button>
         <button class="btn btn-primary" onclick="openAddContact('discovery')"><svg class="ico"><use href="#i-plus"/></svg> Add contact</button>
       </div>
     </div>
-    <div class="stage-header"><ol class="stage-steps discovery"><li class="done">Outreach</li><li class="done">Qualified</li><li class="on">Discovery</li><li class="">Trial</li><li class="">Onboarding</li></ol><span class="stage-hint">Move to Trial once a trial is agreed.</span></div>
-    <div class="metrics-bar-v2 stage-metrics" id="discovery-metrics"></div>
-    <div class="toolbar-card">
-      <div class="tc-search"><input type="text" id="discovery-search" placeholder="Search brand, contact, owner…" oninput="renderStage('discovery')"></div>
+        <div class="metrics-bar-v2 stage-metrics" id="discovery-metrics"></div>
+    <div class="table-wrap-v2">
+      <div class="lead-card">
+      <div class="toolbar-card">
+      <div class="tc-search"><label class="sr-only" for="discovery-search">Search leads</label><input type="text" id="discovery-search" placeholder="Search brand, name or owner" oninput="renderStage('discovery')"></div>
+      <div class="qf" role="group" aria-label="Quick filter" id="discovery-qf"></div>
+      <div class="tc-right">
       <select id="discovery-sector-filter" onchange="renderStage('discovery')">
         <option value="">All sectors</option><option>Restaurant</option><option>Grocery</option><option>Other</option>
       </select>
@@ -1174,21 +1235,21 @@ body.drawer-open #trial-drawer-backdrop{opacity:1;pointer-events:auto}
         <option value="brand">Brand A–Z</option>
       </select>
       <select id="discovery-owner-filter" onchange="renderStage('discovery')"><option value="">All owners</option></select>
-      <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-muted);cursor:pointer">
-        <input type="checkbox" id="discovery-show-frozen" onchange="renderStage('discovery')"> Show frozen
-      </label>
-      <button class="btn-myview" id="discovery-myview-btn" onclick="toggleMyView('discovery')">My view</button>
-      <span class="tc-count" id="discovery-count-label">0 contacts</span>
+      <button class="btn-myview" id="discovery-myview-btn" onclick="toggleMyView('discovery')">My leads</button>
+      </div>
     </div>
-    <div class="table-wrap-v2">
+      <div class="lead-scroll">
       <table class="table-v2 lead-table" id="discovery-table">
         <thead><tr>
           <th style="width:36px"><input type="checkbox" id="discovery-select-all" onchange="toggleSelectAll('discovery',this.checked)" style="cursor:pointer"></th>
-          <th>Lead</th><th>Location</th><th>Sector</th>
-          <th>LinkedIn</th><th>Messages</th><th>Owner</th><th>Notes</th><th class="th-actions"></th>
+          <th>Lead</th><th>Location</th>
+          <th>LinkedIn</th><th>Last message</th><th>Owner</th><th>Notes</th><th class="th-actions"></th>
         </tr></thead>
         <tbody id="discovery-tbody"></tbody>
       </table>
+      </div>
+      <div class="lead-foot"><span id="discovery-count-label">0 leads</span></div>
+      </div>
       <div id="discovery-bulk-bar" class="bulk-bar" style="display:none">
         <span class="bb-count" id="discovery-bulk-count">0 selected</span>
         <button class="btn-bulk" onclick="bulkAssignOwner('discovery')">Assign owner</button>
@@ -2861,11 +2922,17 @@ function updateAllBadges() {
 }
 
 // ===================== STAGE RENDER (outreach / qualified / discovery) =====================
+// Quick filters on the Sales tables: views of data already in the tracker
+const quickFilter = {outreach:'all', qualified:'all', discovery:'all'};
+const QF_DEFS = [
+  ['all', 'All', c => !c.frozen],
+  ['chase', 'Needs a chase', c => { if (c.frozen || !(msgCount(c) > 0)) return false; const d = lastMsgDate(c); return !!d && daysSince(d) >= 14; }],
+  ['new', 'Not messaged', c => !c.frozen && msgCount(c) === 0],
+  ['frozen', 'Frozen', c => !!c.frozen],
+];
+function setQuickFilter(stage, key) { quickFilter[stage] = key; renderStage(stage); }
 function renderStage(stage) {
   let list = getContactsByStage(stage);
-  const showFrozen = document.getElementById(`${stage}-show-frozen`)?.checked || false;
-  if (!showFrozen) list = list.filter(c=>!c.frozen);
-
   const q = document.getElementById(`${stage}-search`)?.value||'';
   const sectorF = document.getElementById(`${stage}-sector-filter`)?.value||'';
   const sortV = document.getElementById(`${stage}-sort`)?.value||'newest';
@@ -2877,19 +2944,24 @@ function renderStage(stage) {
     const me = currentUser()||'';
     if (me) list=list.filter(c=>(c.owner||'').toLowerCase()===me.toLowerCase());
   }
-  list = sortContacts(list, sortV);
+  const qfKey = quickFilter[stage] || 'all';
+  const qfEl = document.getElementById(`${stage}-qf`);
+  if (qfEl) qfEl.innerHTML = QF_DEFS.map(([k, label, fn]) => `<button type="button" class="${k === qfKey ? 'on' : ''}${k === 'chase' ? ' chase' : ''}" aria-pressed="${k === qfKey}" onclick="setQuickFilter('${stage}','${k}')">${label} <span>${list.filter(fn).length}</span></button>`).join('');
+  const active = list.filter(c => !c.frozen);
+  const frozenCount = list.length - active.length;
+  list = sortContacts(list.filter((QF_DEFS.find(d => d[0] === qfKey) || QF_DEFS[0])[2]), sortV);
 
   updateOwnerFilter(`${stage}-owner-filter`, getContactsByStage(stage));
 
   const rp = document.getElementById(`${stage}-region-pill`);
   if (rp) rp.textContent = activeRegion==='all'?'All regions':displayRegion(activeRegion);
   const cl = document.getElementById(`${stage}-count-label`);
-  if (cl) cl.textContent = list.length + ' contact' + (list.length!==1?'s':'');
+  if (cl) cl.textContent = `Showing ${list.length} of ${active.length} lead${active.length!==1?'s':''}` + (qfKey !== 'frozen' && frozenCount ? ` · ${frozenCount} frozen hidden` : '');
 
   const mvBtn = document.getElementById(`${stage}-myview-btn`);
   if (mvBtn) mvBtn.classList.toggle('active', myViewActive[stage]);
 
-  renderStageMetrics(stage, list);
+  renderStageMetrics(stage, active);
   renderStageTable(`${stage}-tbody`, list, stage);
   updateBulkBar(stage);
 }
@@ -2903,10 +2975,10 @@ function renderStageMetrics(stage, list) {
   const msgs = list.reduce((s,c)=>s+(msgCount(c)),0);
   const overdue = list.filter(c=>{ if (c.frozen || !(c.messages>0)) return false; const d=lastMsgDate(c); return d && daysSince(d)>=14; }).length;
   el.innerHTML = `
-    ${mcv2(STAGE_LABELS[stage]+' leads', total, frozen ? `+ ${frozen} frozen` : 'in this stage')}
+    ${mcv2('Leads in '+STAGE_LABELS[stage], total, frozen ? `+${frozen} frozen` : 'in this stage')}
     ${mcv2('LinkedIn connected', linkedin, total ? Math.round(linkedin/total*100)+'% of leads' : '')}
-    ${mcv2('Messages sent', msgs, 'total')}
-    ${mcv2('No reply 14d+', overdue, overdue ? 'see Follow ups' : 'all on track', overdue ? 'red' : '')}
+    ${mcv2('Messages sent', msgs, 'all time')}
+    ${mcv2('No reply in 14+ days', overdue, overdue ? 'chase in Follow ups' : 'all on track', overdue ? 'red' : '')}
   `;
 }
 
@@ -2963,8 +3035,8 @@ function renderStageTable(tbodyId, list, stage) {
     return;
   }
 
-  const hasTpl = (DB.templates||[]).length > 0;
   const promoteTo = {outreach:['qualified','Qualified'], qualified:['discovery','Discovery']}[stage];
+  const AV = [['#dbe4ff','#1e3a8a'],['#fde7d3','#9a3412'],['#d9f2e6','#065f46'],['#efe4ff','#5b21b6'],['#fbe0e6','#9f1239']];
   tbody.innerHTML = list.map(c => {
     const lastDate = lastMsgDate(c);
     const age = lastDate ? daysSince(lastDate) : null;
@@ -2979,47 +3051,70 @@ function renderStageTable(tbodyId, list, stage) {
     const hasUrl = !!(c.linkedinUrl&&c.linkedinUrl.trim());
     const liClick = hasUrl
       ? `onclick="window.open('${esc(c.linkedinUrl)}','_blank')" title="${esc(c.linkedinUrl)}"`
-      : `onclick="toggleLinkedin(${c.id})" title="Click to toggle"`;
-    const liLabel = liIn ? 'Connected'+(hasUrl?' ↗':'') : 'No';
-    const msgCnt = msgCount(c);
+      : `onclick="toggleLinkedin(${c.id})" title="Click to change"`;
     const checked = sel.has(c.id)?'checked':'';
-    const ageTxt = lastDate ? (age===0 ? 'today' : `${age}d ago`) : 'none yet';
-
-    const frozenBadge = c.frozen
-      ? `<span class="frozen-badge" title="${esc(c.frozenReason||'')}${c.frozenAt?' (frozen '+c.frozenAt+')':''}">${icon('snow')} Frozen${c.frozenReason?': '+esc(c.frozenReason.substring(0,24)):''}</span>`
-      : '';
+    const ageTxt = lastDate ? (rowClass==='overdue' ? `${age} days · chase` : age===0 ? 'today' : `${age} day${age===1?'':'s'} ago`) : 'Not messaged';
+    const words = String(c.brand||c.contact||'?').trim().split(/\s+/);
+    const initials = (words.length > 1 ? words[0][0] + words[1][0] : words[0].slice(0,2)).toUpperCase();
+    const [avBg, avFg] = AV[Math.abs(String(c.id).split('').reduce((h,ch)=>h*31+ch.charCodeAt(0)|0,7)) % AV.length];
+    const loc2 = [displayRegion(c.region), c.sector].filter(Boolean).join(' · ');
 
     return `<tr class="${rowClass}" id="cr-${c.id}">
-      <td class="td-cb"><input type="checkbox" class="${stage}-cb" data-id="${c.id}" ${checked} onchange="onRowCheck('${stage}',${c.id},this.checked)"></td>
-      <td class="td-lead">
-        <div class="lead-brand ie" onclick="inlineEdit(this,'contacts',${c.id},'brand')" data-ph="Add brand">${esc(c.brand)}</div>
-        <div class="lead-sub"><span class="ie" onclick="inlineEdit(this,'contacts',${c.id},'contact')" data-ph="Add name">${esc(c.contact)}</span><span class="lead-dot">·</span><span class="ie lead-role" onclick="inlineEdit(this,'contacts',${c.id},'role')" data-ph="Add role">${esc(c.role)}</span></div>
-        ${frozenBadge}
-      </td>
+      <td class="td-cb"><input type="checkbox" class="${stage}-cb" data-id="${c.id}" ${checked} aria-label="Select ${esc(c.brand||c.contact)}" onchange="onRowCheck('${stage}',${c.id},this.checked)"></td>
+      <td class="td-lead"><div class="lead-wrap">
+        <span class="lead-av" aria-hidden="true" style="background:${avBg};color:${avFg}">${esc(initials)}</span>
+        <div class="lead-text">
+          <div class="lead-brand ie" onclick="inlineEdit(this,'contacts',${c.id},'brand')" data-ph="Add brand">${esc(c.brand)}</div>
+          <div class="lead-sub"><span class="ie" onclick="inlineEdit(this,'contacts',${c.id},'contact')" data-ph="Add name">${esc(c.contact)}</span><span class="lead-dot">·</span><span class="ie lead-role" onclick="inlineEdit(this,'contacts',${c.id},'role')" data-ph="Add role">${esc(c.role)}</span></div>
+        </div>
+        ${c.frozen ? `<span class="frozen-chip" title="${esc(c.frozenReason||'')}${c.frozenAt?' (frozen '+c.frozenAt+')':''}">Frozen${c.frozenReason?' · '+esc(c.frozenReason.substring(0,24)):''}</span>` : ''}
+      </div></td>
       <td class="td-loc">
         <div class="ie" onclick="inlineEdit(this,'contacts',${c.id},'location')" data-ph="Add location">${esc(c.location)}</div>
-        <div class="lead-subtle"><span class="ie" onclick="inlineRegionEdit(event,${c.id},'contacts')" data-ph="Set region">${esc(displayRegion(c.region))}</span></div>
+        <div class="lead-subtle"><span class="ie" onclick="inlineRegionEdit(event,${c.id},'contacts')" data-ph="Set region">${esc(loc2)}</span></div>
       </td>
-      <td>${sectorPill(c.sector)}</td>
-      <td><span class="bdot ${liIn?'bdot-green':'bdot-gray'}" style="cursor:pointer" ${liClick}>${liLabel}</span></td>
-      <td class="td-msgs"><span class="msgs-pill" onclick="inlineMsgEdit(${c.id})" title="Click to update">${msgCnt}</span><span class="lead-subtle ${rowClass==='overdue'?'txt-red':rowClass==='due-soon'?'txt-amber':''}">${ageTxt}</span></td>
-      ${stage!=='outreach'?'':'<td><span class="bdot '+(c.replied==='Yes'?'bdot-blue':'bdot-gray')+'" style="cursor:pointer" title="Click to toggle" onclick="toggleReplied('+c.id+')">'+(c.replied==='Yes'?'Yes':'No')+'</span></td>'}
+      <td><button type="button" class="li-pill ${liIn?'on':''}" ${liClick}>${liIn ? 'Connected'+(hasUrl?' ↗':'') : 'Not yet'}</button></td>
+      <td class="td-msgs"><button type="button" class="msgs-count" onclick="inlineMsgEdit(${c.id})" title="Click to update">${msgCount(c)}</button><span class="msg-age ${rowClass==='overdue'?'txt-red':rowClass==='due-soon'?'txt-amber':''}">${ageTxt}</span></td>
+      ${stage!=='outreach'?'':`<td><button type="button" class="link-plain" title="Click to change" onclick="toggleReplied(${c.id})">${c.replied==='Yes'?'Yes':'No'}</button></td>`}
       <td class="td-plain ie" onclick="inlineEdit(this,'contacts',${c.id},'owner')">${esc(c.owner)}</td>
       <td class="td-plain td-notes ie" onclick="inlineEdit(this,'contacts',${c.id},'notes')" title="${esc(c.notes)}">${esc(c.notes)}</td>
       <td class="td-act">
         <div class="row-actions">
-          <button class="act-btn" title="Message history" onclick="openMsgHistory(${c.id})">${icon('mail')}</button>
-          ${hasTpl?`<button class="act-btn" title="Send a message from a template" onclick="openUseTemplate(${c.id})">${icon('send')}</button>`:''}
-          <button class="act-btn" title="Edit contact" onclick="openEditContact(${c.id})">${icon('edit')}</button>
-          <button class="act-btn ${c.frozen?'on':''}" title="${c.frozen?'Unfreeze':'Freeze'}" onclick="${c.frozen?`unfreezeContact(${c.id})`:`openFreezeModal(${c.id})`}">${icon('snow')}</button>
-          <button class="act-btn danger" title="Delete contact" onclick="deleteContact(${c.id})">${icon('trash')}</button>
-          ${promoteTo?`<button class="act-promote" onclick="promoteContact(${c.id},'${promoteTo[0]}')">${promoteTo[1]} ${icon('arrow')}</button>`:''}
-          ${stage==='discovery'?`<button class="act-promote teal" onclick="promoteToTrial(${c.id})">Trial ${icon('arrow')}</button>`:''}
+          <button class="act-btn" type="button" title="Message history" aria-label="Message history" onclick="openMsgHistory(${c.id})">${icon('mail')}</button>
+          <button class="act-btn" type="button" title="Edit contact" aria-label="Edit contact" onclick="openEditContact(${c.id})">${icon('edit')}</button>
+          <button class="act-btn" type="button" title="More actions" aria-label="More actions" aria-haspopup="menu" onclick="openRowMenu(event,${c.id})">${icon('dots')}</button>
+          ${promoteTo?`<button class="act-promote" type="button" onclick="promoteContact(${c.id},'${promoteTo[0]}')">${promoteTo[1]} →</button>`:''}
+          ${stage==='discovery'?`<button class="act-promote teal" type="button" onclick="promoteToTrial(${c.id})">Trial →</button>`:''}
         </div>
       </td>
     </tr>`;
   }).join('');
 }
+
+// "More actions" menu on a contact row: template send, freeze, delete
+function closeRowMenu() { const m = document.getElementById('row-menu'); if (m) m.remove(); }
+function openRowMenu(ev, id) {
+  ev.stopPropagation();
+  const was = document.getElementById('row-menu');
+  closeRowMenu();
+  if (was && was.dataset.id === String(id)) return;
+  const c = DB.contacts.find(x => String(x.id) === String(id)); if (!c) return;
+  const r = ev.currentTarget.getBoundingClientRect();
+  const m = document.createElement('div');
+  m.id = 'row-menu'; m.className = 'row-menu'; m.setAttribute('role', 'menu'); m.dataset.id = String(id);
+  const item = (label, fn, cls = '') => `<button type="button" role="menuitem" class="${cls}" onclick="closeRowMenu();${fn}">${label}</button>`;
+  m.innerHTML = ((DB.templates||[]).length ? item(`${icon('send')} Send from template`, `openUseTemplate(${c.id})`) : '')
+    + (c.frozen ? item(`${icon('snow')} Unfreeze`, `unfreezeContact(${c.id})`) : item(`${icon('snow')} Freeze`, `openFreezeModal(${c.id})`))
+    + item(`${icon('trash')} Delete contact`, `deleteContact(${c.id})`, 'danger');
+  document.body.appendChild(m);
+  const mh = m.offsetHeight, mw = m.offsetWidth;
+  m.style.top = (r.bottom + 4 + mh > innerHeight ? r.top - mh - 4 : r.bottom + 4) + 'px';
+  m.style.left = Math.max(8, Math.min(r.right - mw, innerWidth - mw - 8)) + 'px';
+  const first = m.querySelector('button'); if (first) first.focus();
+}
+document.addEventListener('click', e => { if (!e.target.closest || !e.target.closest('#row-menu')) closeRowMenu(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeRowMenu(); });
+window.addEventListener('scroll', closeRowMenu, true);
 
 // ===================== FREEZE =====================
 function openFreezeModal(id) {
