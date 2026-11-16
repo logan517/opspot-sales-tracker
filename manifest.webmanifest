@@ -1,0 +1,13 @@
+{
+  "name": "OpSpot Sales Tracker",
+  "short_name": "OpSpot",
+  "start_url": "/opspot-sales-tracker/",
+  "scope": "/opspot-sales-tracker/",
+  "display": "standalone",
+  "background_color": "#F7F6F3",
+  "theme_color": "#F7F6F3",
+  "icons": [
+    { "src": "/opspot-sales-tracker/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "/opspot-sales-tracker/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
