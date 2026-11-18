@@ -1379,7 +1379,7 @@ body.drawer-open #trial-drawer-backdrop{opacity:1;pointer-events:auto}
           <label>Sector</label>
           <select id="f-sector"><option value="">Select sector</option><option>Restaurant</option><option>Grocery</option><option>Other</option></select>
         </div>
-        <div class="form-group"><label>Owner</label><input type="text" id="f-owner" placeholder="Team member…"></div>
+        <div class="form-group"><label>Owner</label><input type="text" id="f-owner" list="owner-list-dl" placeholder="Team member…"></div>
         <div class="form-group">
           <label>LinkedIn connected</label>
           <select id="f-linkedin"><option value="No">No</option><option value="Yes">Yes</option></select>
@@ -3176,6 +3176,8 @@ function openAddContact(stage) {
   document.getElementById('contact-modal-title').textContent = 'Add Contact';
   clearContactForm();
   document.getElementById('f-stage').value = stage||'outreach';
+  // New contacts belong to whoever adds them; they can still change it
+  document.getElementById('f-owner').value = currentUser() || '';
   openModal('contact-modal');
 }
 
